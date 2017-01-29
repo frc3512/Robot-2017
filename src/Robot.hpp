@@ -2,16 +2,30 @@
 
 #pragma once
 
-#include <iostream>
-#include <memory>
-#include <string>
-
 #include <Joystick.h>
-#include <RobotDrive.h>
 #include <SampleRobot.h>
-#include <Timer.h>
+
+#include "Constants.hpp"
+#include "DSDisplay.hpp"
+#include "LiveGrapher/GraphHost.hpp"
+#include "Subsystems/DriveTrain.hpp"
 
 class Robot : public SampleRobot {
 public:
+	Robot();
+	void OperatorControl();
+    void Autonomous();
+    void Disabled();
+    void Test();
+
+	void AutoNoop();
+
+	void DS_PrintOut();
 private:
+    // Used for sending data to the Driver Station
+    DSDisplay& dsDisplay{DSDisplay::GetInstance(k_dsPort)};
+
+    // The LiveGrapher host
+    GraphHost pidGraph{3513};
+
 };

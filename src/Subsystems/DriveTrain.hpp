@@ -5,7 +5,6 @@
 #include <memory>
 
 #include "../Constants.hpp"
-#include "../Differential.hpp"
 #include "../SM/StateMachine.hpp"
 #include "../Utility.hpp"
 #include "../WPILib/PIDController.hpp"
@@ -79,9 +78,4 @@ private:
 
     GearBox m_leftGrbx{-1, -1, -1, k_leftDriveMasterID, k_leftDriveSlaveID};
     GearBox m_rightGrbx{-1, -1, -1, k_rightDriveMasterID, k_rightDriveSlaveID};
-
-    Differential m_diff{&m_leftGrbx, &m_rightGrbx};
-    frc::PIDController m_diffPID{k_diffDriveP, k_diffDriveI, k_diffDriveD,
-                                 k_diffDriveV, k_diffDriveA, &m_diff,
-                                 &m_diff};
 };
