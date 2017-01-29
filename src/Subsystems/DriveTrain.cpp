@@ -5,10 +5,9 @@
 #include <cmath>
 
 #include "../WPILib/PIDController.hpp"
+#include "Utility.hpp"
 
 DriveTrain::DriveTrain() {
-    m_sensitivity = k_lowGearSensitive;
-
     m_leftGrbx.SetInverted(true);
 
 #ifdef PRACTICE_ROBOT
@@ -49,9 +48,6 @@ void DriveTrain::Drive(float throttle, float turn, bool isQuickTurn) {
     /* Apply joystick deadband
      * (Negate turn since joystick X-axis is reversed)
      */
-    throttle = ApplyDeadband(throttle, m_deadband);
-    turn = ApplyDeadband(turn, m_deadband);
-
     double negInertia = turn - m_oldTurn;
     m_oldTurn = turn;
 
@@ -102,9 +98,6 @@ void DriveTrain::Drive(float throttle, float turn, bool isQuickTurn) {
 
         angularPower = turn;
     } else {
-        angularPower =
-            std::fabs(throttle) * turn * m_sensitivity - m_quickStopAccumulator;
-
         if (m_quickStopAccumulator > 1) {
             m_quickStopAccumulator -= 1;
         } else if (m_quickStopAccumulator < -1) {
@@ -152,8 +145,6 @@ void DriveTrain::Drive(float throttle, float turn, bool isQuickTurn) {
     m_rightGrbx.Set(rightPwm);
 }
 
-void DriveTrain::SetDeadband(float band) { m_deadband = band; }
-
 void DriveTrain::ReloadPID() {}
 
 void DriveTrain::ResetEncoders() {
@@ -184,31 +175,3 @@ double DriveTrain::DiffPIDGet() { return m_diff.PIDGet(); }
 void DriveTrain::EnablePID() { m_diffPID.Enable(); }
 
 void DriveTrain::DisablePID() { m_diffPID.Disable(); }
-/*
- *  PIDState DriveTrain::GetLeftSetpoint() const {
- *   //std::cout << m_leftPID->IsEnabled() << std::endl;
- *   //std::cout << "LeftPID Get: " <<m_leftPID->Get() << std::endl;
- *   return m_leftPID->GetSetpoint();
- *  }
- *
- *  PIDState DriveTrain::GetRightSetpoint() const {
- *   return m_rightPID->GetSetpoint();
- *  }
- *
- *  PIDState DriveTrain::GetLeftGoal() const {
- *   return m_leftProfile->GetGoal();
- *  }
- *  void DriveTrain::SetGoal(PIDState goal) {
- *   m_leftProfile->SetGoal(goal);
- *   m_rightProfile->SetGoal(goal);
- *  }
- *
- *  bool DriveTrain::AtGoal() const {
- *   return m_leftProfile->AtGoal() && m_rightProfile->AtGoal();
- *  }
- *
- *  void DriveTrain::ResetProfile() {
- *   m_leftProfile->ResetProfile();
- *   m_rightProfile->ResetProfile();
- *  }
- */

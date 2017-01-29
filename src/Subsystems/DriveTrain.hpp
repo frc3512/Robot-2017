@@ -7,7 +7,6 @@
 #include "../Constants.hpp"
 #include "../Differential.hpp"
 #include "../SM/StateMachine.hpp"
-#include "../Utility.hpp"
 #include "../WPILib/PIDController.hpp"
 #include "GearBox.hpp"
 #include "SubsystemBase.hpp"
@@ -69,9 +68,6 @@ public:
     void ResetProfile();
 
 private:
-    float m_deadband = k_joystickDeadband;
-    float m_sensitivity;
-
     // Cheesy Drive variables
     float m_oldTurn = 0.f;
     float m_quickStopAccumulator = 0.f;
