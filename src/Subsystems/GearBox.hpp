@@ -6,11 +6,10 @@
 #include <memory>
 #include <vector>
 
+#include <CANTalon.h>
 #include <PIDOutput.h>
 #include <PIDSource.h>
 #include <Solenoid.h>
-
-#include "../WPILib/CANTalon.hpp"
 
 namespace frc {
 class DigitalInput;
@@ -43,7 +42,7 @@ public:
 
     void SetDistancePerPulse(double distancePerPulse);
 
-    void SetFeedbackDevice(frc::CANTalon::FeedbackDevice device);
+    void SetFeedbackDevice(CANTalon::FeedbackDevice device);
 
     // Resets encoder distance to 0
     void ResetEncoder();
@@ -92,7 +91,7 @@ private:
     double m_distancePerPulse = 1.0;
 
     // Feedback device
-    frc::CANTalon::FeedbackDevice m_feedbackDevice = frc::CANTalon::QuadEncoder;
+    CANTalon::FeedbackDevice m_feedbackDevice = CANTalon::QuadEncoder;
 
     std::unique_ptr<frc::Solenoid> m_shifter;
 
@@ -102,5 +101,5 @@ private:
     // Prevents motor from rotating in reverse when switch is pressed
     frc::DigitalInput* m_reverseLimit = nullptr;
 
-    std::vector<std::unique_ptr<frc::CANTalon>> m_motors;
+    std::vector<std::unique_ptr<CANTalon>> m_motors;
 };
