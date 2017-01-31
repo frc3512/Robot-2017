@@ -4,16 +4,20 @@
 
 #include <memory>
 
+#include <ADXRS450_Gyro.h>
+
 #include "../Constants.hpp"
-#include "../Differential.hpp"
+#include "../CtrlSys/Output.hpp"
+#include "../CtrlSys/PIDNode.hpp"
+#include "../CtrlSys/RefInput.hpp"
+#include "../CtrlSys/Sensor.hpp"
+#include "../CtrlSys/SumNode.hpp"
 #include "../SM/StateMachine.hpp"
 #include "../Utility.hpp"
-#include "../WPILib/PIDController.hpp"
 #include "GearBox.hpp"
 #include "SubsystemBase.hpp"
 
 class GearBox;
-class PIDController;
 
 /**
  * Provides an interface for this year's drive train
@@ -21,6 +25,7 @@ class PIDController;
 class DriveTrain : public SubsystemBase {
 public:
     DriveTrain();
+    virtual ~DriveTrain() = default;
 
     int32_t GetLeftRaw() const;
     int32_t GetRightRaw() const;
@@ -33,13 +38,8 @@ public:
     // Sets joystick deadband
     void SetDeadband(double band);
 
-    // Reload PID constants
-    void ReloadPID();
-
     // Set encoder distances to 0
     void ResetEncoders();
-
-    void DiffDrive(double output);
 
     // Directly set wheel speeds [0..1] (see GearBox::SetManual(double))
     void SetLeftManual(double value);
@@ -53,20 +53,12 @@ public:
     double GetLeftRate() const;
     double GetRightRate() const;
 
-    double DiffPIDGet();
-
     void EnablePID();
     void DisablePID();
 
     // Returns encoder PID loop setpoints
-    PIDState GetLeftSetpoint() const;
-    PIDState GetRightSetpoint() const;
-
-    PIDState GetLeftGoal() const;
-
-    void SetGoal(PIDState goal);
-    bool AtGoal() const;
-    void ResetProfile();
+    double GetLeftSetpoint() const;
+    double GetRightSetpoint() const;
 
 private:
     double m_deadband = k_joystickDeadband;
@@ -77,11 +69,27 @@ private:
     double m_quickStopAccumulator = 0.0;
     double m_negInertiaAccumulator = 0.0;
 
-    GearBox m_leftGrbx{-1, -1, -1, k_leftDriveMasterID, k_leftDriveSlaveID};
-    GearBox m_rightGrbx{-1, -1, -1, k_rightDriveMasterID, k_rightDriveSlaveID};
+    ADXRS450_Gyro m_gyro;
+    Sensor m_rotateSensor{&m_gyro};
+    RefInput m_rotateRef{0.0};
+    SumNode m_rotatePIDInput{&m_rotateRef, true, &m_rotateSensor, false};
+    PIDNode m_rotatePID{k_rotateP, k_rotateI, k_rotateD, &m_rotatePIDInput};
 
-    Differential m_diff{&m_leftGrbx, &m_rightGrbx};
-    frc::PIDController m_diffPID{k_diffDriveP, k_diffDriveI, k_diffDriveD,
-                                 k_diffDriveV, k_diffDriveA, &m_diff,
-                                 &m_diff};
+    GearBox m_leftGrbx{-1, -1, -1, k_leftDriveMasterID, k_leftDriveSlaveID};
+    Sensor m_leftSensor{&m_leftGrbx};
+    RefInput m_leftRef{0.0};
+    SumNode m_leftPIDInput{&m_leftRef, true, &m_leftSensor, false};
+    PIDNode m_leftPID{k_speedP, k_speedI, k_speedD, &m_leftPIDInput};
+
+    GearBox m_rightGrbx{-1, -1, -1, k_rightDriveMasterID, k_rightDriveSlaveID};
+    Sensor m_rightSensor{&m_rightGrbx};
+    RefInput m_rightRef{0.0};
+    SumNode m_rightPIDInput{&m_rightRef, true, &m_rightSensor, false};
+    PIDNode m_rightPID{k_speedP, k_speedI, k_speedD, &m_rightPIDInput};
+
+    SumNode m_leftSum{&m_leftPID, true, &m_rotatePID, false};
+    Output m_leftOutput{&m_leftSum, &m_leftGrbx};
+
+    SumNode m_rightSum{&m_rightPID, true, &m_rotatePID, true};
+    Output m_rightOutput{&m_leftSum, &m_leftGrbx};
 };

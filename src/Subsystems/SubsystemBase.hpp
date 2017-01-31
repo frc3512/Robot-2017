@@ -9,6 +9,5 @@ class SubsystemBase {
 public:
     virtual ~SubsystemBase() = default;
 
-    virtual void ReloadPID() = 0;
     virtual void ResetEncoders() = 0;
 };

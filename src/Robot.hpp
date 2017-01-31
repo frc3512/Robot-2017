@@ -4,6 +4,7 @@
 
 #include <Joystick.h>
 #include <SampleRobot.h>
+#include <Timer.h>
 
 #include "Constants.hpp"
 #include "DSDisplay.hpp"
@@ -13,6 +14,8 @@
 class Robot : public SampleRobot {
 public:
     Robot();
+    virtual ~Robot() = default;
+
     void OperatorControl();
     void Autonomous();
     void Disabled();
