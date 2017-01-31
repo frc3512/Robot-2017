@@ -4,8 +4,6 @@
 
 #include <cmath>
 
-#include "../WPILib/PIDController.hpp"
-
 DriveTrain::DriveTrain() {
     m_sensitivity = k_lowGearSensitive;
 
@@ -24,11 +22,6 @@ DriveTrain::DriveTrain() {
 
     m_leftGrbx.Set(0.0);
     m_rightGrbx.Set(0.0);
-
-    // m_diffPID.SetOutputRange(-0.05,-0.05);
-    m_diffPID.SetSetpoint(PIDState(0.0, 0.0, 0.0));
-
-    ReloadPID();
 }
 
 int32_t DriveTrain::GetLeftRaw() const { return m_leftGrbx.Get(); }
@@ -151,14 +144,10 @@ void DriveTrain::Drive(double throttle, double turn, bool isQuickTurn) {
 
 void DriveTrain::SetDeadband(double band) { m_deadband = band; }
 
-void DriveTrain::ReloadPID() {}
-
 void DriveTrain::ResetEncoders() {
     m_leftGrbx.ResetEncoder();
     m_rightGrbx.ResetEncoder();
 }
-void DriveTrain::DiffDrive(double output) { m_diff.SetForward(output); }
-
 void DriveTrain::SetLeftManual(double value) { m_leftGrbx.Set(value); }
 
 void DriveTrain::SetRightManual(double value) { m_rightGrbx.Set(value); }
@@ -175,8 +164,10 @@ double DriveTrain::GetLeftRate() const { return m_leftGrbx.GetSpeed(); }
 
 double DriveTrain::GetRightRate() const { return m_rightGrbx.GetSpeed(); }
 
-double DriveTrain::DiffPIDGet() { return m_diff.PIDGet(); }
+void DriveTrain::EnablePID() { m_leftOutput.Start(); }
 
-void DriveTrain::EnablePID() { m_diffPID.Enable(); }
+void DriveTrain::DisablePID() { m_leftOutput.Stop(); }
 
-void DriveTrain::DisablePID() { m_diffPID.Disable(); }
+double DriveTrain::GetVelSetpoint() const { return m_velRef.Get(); }
+
+double DriveTrain::GetRotateSetpoint() const { return m_rotateRef.Get(); }
