@@ -33,19 +33,19 @@ class PIDController : public LiveWindowSendable,
                       public PIDInterface,
                       public ITableListener {
 public:
-    PIDController(float p, float i, float d, PIDSource* source,
-                  PIDOutput* output, float period = 0.05);
-    PIDController(float p, float i, float d, float v, float a,
-                  PIDSource* source, PIDOutput* output, float period = 0.05);
+    PIDController(double p, double i, double d, PIDSource* source,
+                  PIDOutput* output, double period = 0.05);
+    PIDController(double p, double i, double d, double v, double a,
+                  PIDSource* source, PIDOutput* output, double period = 0.05);
     virtual ~PIDController();
 
     PIDController(const PIDController&) = delete;
     PIDController& operator=(const PIDController) = delete;
 
-    virtual float Get() const;
+    virtual double Get() const;
     virtual void SetContinuous(bool continuous = true);
-    virtual void SetInputRange(float minimumInput, float maximumInput);
-    virtual void SetOutputRange(float minimumOutput, float maximumOutput);
+    virtual void SetInputRange(double minimumInput, double maximumInput);
+    virtual void SetOutputRange(double minimumOutput, double maximumOutput);
     virtual void SetPID(double p, double i, double d) override;
     virtual void SetPID(double p, double i, double d, double v, double a);
     virtual double GetP() const override;
@@ -57,14 +57,14 @@ public:
     virtual void SetSetpoint(PIDState setpoint) override;
     virtual PIDState GetSetpoint() const override;
 
-    virtual float GetError() const;
+    virtual double GetError() const;
 
     virtual void SetPIDSourceType(PIDSourceType pidSource);
     virtual PIDSourceType GetPIDSourceType() const;
 
-    virtual void SetTolerance(float percent);
-    virtual void SetAbsoluteTolerance(float absValue);
-    virtual void SetPercentTolerance(float percentValue);
+    virtual void SetTolerance(double percent);
+    virtual void SetAbsoluteTolerance(double absValue);
+    virtual void SetPercentTolerance(double percentValue);
     virtual bool OnTarget() const;
 
     virtual void Enable() override;
@@ -89,14 +89,14 @@ private:
     double m_D;  // factor for "derivative" control
     double m_V;  // factor for "velocity feed forward" control
     double m_A;  // factor for "acceleration feed forward" control
-    float m_maximumOutput = 1.0;   // |maximum output|
-    float m_minimumOutput = -1.0;  // |minimum output|
-    float m_maximumInput = 0;      // maximum input - limit setpoint to this
-    float m_minimumInput = 0;      // minimum input - limit setpoint to this
+    double m_maximumOutput = 1.0;   // |maximum output|
+    double m_minimumOutput = -1.0;  // |minimum output|
+    double m_maximumInput = 0;      // maximum input - limit setpoint to this
+    double m_minimumInput = 0;      // minimum input - limit setpoint to this
     bool m_continuous =
         false;  // do the endpoints wrap around? eg. Absolute encoder
     bool m_enabled = false;  // is the pid controller enabled
-    float m_prevError = 0;   // the prior error (used to compute velocity)
+    double m_prevError = 0;   // the prior error (used to compute velocity)
     double m_totalError =
         0;  // the sum of the errors for use in the integral calc
     enum {
@@ -106,19 +106,19 @@ private:
     } m_toleranceType = kNoTolerance;
 
     // the percentage or absolute error that is considered on target.
-    float m_tolerance = 0.05;
+    double m_tolerance = 0.05;
     PIDState m_setpoint;
     PIDState m_prevSetpoint;
-    float m_error = 0;
-    float m_result = 0;
-    float m_period;
+    double m_error = 0;
+    double m_result = 0;
+    double m_period;
 
     mutable priority_recursive_mutex m_mutex;
 
     std::unique_ptr<Notifier> m_controlLoop;
 
-    void Initialize(float p, float i, float d, float v, float a,
-                    PIDSource* source, PIDOutput* output, float period = 0.05);
+    void Initialize(double p, double i, double d, double v, double a,
+                    PIDSource* source, PIDOutput* output, double period = 0.05);
 
     virtual std::shared_ptr<ITable> GetTable() const override;
     virtual std::string GetSmartDashboardType() const override;

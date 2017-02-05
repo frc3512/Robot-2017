@@ -36,8 +36,8 @@ using namespace frc;
  * calculations of the
  * integral and differental terms. The default is 50ms.
  */
-PIDController::PIDController(float Kp, float Ki, float Kd, PIDSource* source,
-                             PIDOutput* output, float period) {
+PIDController::PIDController(double Kp, double Ki, double Kd, PIDSource* source,
+                             PIDOutput* output, double period) {
     Initialize(Kp, Ki, Kd, 0.0f, 0.0f, source, output, period);
 }
 
@@ -52,15 +52,15 @@ PIDController::PIDController(float Kp, float Ki, float Kd, PIDSource* source,
  * calculations of the
  * integral and differental terms. The default is 50ms.
  */
-PIDController::PIDController(float Kp, float Ki, float Kd, float Kv, float Ka,
+PIDController::PIDController(double Kp, double Ki, double Kd, double Kv, double Ka,
                              PIDSource* source, PIDOutput* output,
-                             float period) {
+                             double period) {
     Initialize(Kp, Ki, Kd, Kv, Ka, source, output, period);
 }
 
-void PIDController::Initialize(float Kp, float Ki, float Kd, float Kv, float Ka,
+void PIDController::Initialize(double Kp, double Ki, double Kd, double Kv, double Ka,
                                PIDSource* source, PIDOutput* output,
-                               float period) {
+                               double period) {
     m_controlLoop = std::make_unique<Notifier>(&PIDController::Calculate, this);
 
     m_P = Kp;
@@ -111,8 +111,8 @@ void PIDController::Calculate() {
 
     if (enabled) {
         std::lock_guard<priority_recursive_mutex> sync(m_mutex);
-        float input = pidInput->PIDGet();
-        float result;
+        double input = pidInput->PIDGet();
+        double result;
         PIDOutput* pidOutput;
 
         if (m_pidInput->GetPIDSourceType() == PIDSourceType::kRate) {
@@ -305,7 +305,7 @@ double PIDController::GetA() const {
  * This is always centered on zero and constrained the the max and min outs
  * @return the latest calculated output
  */
-float PIDController::Get() const {
+double PIDController::Get() const {
     std::lock_guard<priority_recursive_mutex> sync(m_mutex);
     return m_result;
 }
@@ -328,7 +328,7 @@ void PIDController::SetContinuous(bool continuous) {
  * @param minimumInput the minimum value expected from the input
  * @param maximumInput the maximum value expected from the output
  */
-void PIDController::SetInputRange(float minimumInput, float maximumInput) {
+void PIDController::SetInputRange(double minimumInput, double maximumInput) {
     {
         std::lock_guard<priority_recursive_mutex> sync(m_mutex);
         m_minimumInput = minimumInput;
@@ -344,7 +344,7 @@ void PIDController::SetInputRange(float minimumInput, float maximumInput) {
  * @param minimumOutput the minimum value to write to the output
  * @param maximumOutput the maximum value to write to the output
  */
-void PIDController::SetOutputRange(float minimumOutput, float maximumOutput) {
+void PIDController::SetOutputRange(double minimumOutput, double maximumOutput) {
     {
         std::lock_guard<priority_recursive_mutex> sync(m_mutex);
         m_minimumOutput = minimumOutput;
@@ -396,7 +396,7 @@ PIDState PIDController::GetSetpoint() const {
  * Returns the current difference of the input from the setpoint
  * @return the current error
  */
-float PIDController::GetError() const {
+double PIDController::GetError() const {
     double pidInput;
     {
         std::lock_guard<priority_recursive_mutex> sync(m_mutex);
@@ -424,7 +424,7 @@ PIDSourceType PIDController::GetPIDSourceType() const {
  * OnTarget.
  * @param percentage error which is tolerable
  */
-void PIDController::SetTolerance(float percent) {
+void PIDController::SetTolerance(double percent) {
     {
         std::lock_guard<priority_recursive_mutex> sync(m_mutex);
         m_toleranceType = kPercentTolerance;
@@ -437,7 +437,7 @@ void PIDController::SetTolerance(float percent) {
  * OnTarget.
  * @param percentage error which is tolerable
  */
-void PIDController::SetPercentTolerance(float percent) {
+void PIDController::SetPercentTolerance(double percent) {
     {
         std::lock_guard<priority_recursive_mutex> sync(m_mutex);
         m_toleranceType = kPercentTolerance;
@@ -450,7 +450,7 @@ void PIDController::SetPercentTolerance(float percent) {
  * OnTarget.
  * @param percentage error which is tolerable
  */
-void PIDController::SetAbsoluteTolerance(float absTolerance) {
+void PIDController::SetAbsoluteTolerance(double absTolerance) {
     {
         std::lock_guard<priority_recursive_mutex> sync(m_mutex);
         m_toleranceType = kAbsoluteTolerance;
