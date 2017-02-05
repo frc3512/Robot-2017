@@ -4,22 +4,17 @@
 
 using namespace std::chrono_literals;
 
-Robot::Robot() {
-    dsDisplay.AddAutoMethod("No-op", &Robot::AutoNoop, this);
-
-}
+Robot::Robot() { dsDisplay.AddAutoMethod("No-op", &Robot::AutoNoop, this); }
 
 void Robot::OperatorControl() {
     while (IsEnabled() && IsOperatorControl()) {
         if (driveStick1.GetTrigger()) {
-            robotDrive.Drive(driveStick1.GetY() * 0.5,
-                             driveStick2.GetX() * 0.5,
+            robotDrive.Drive(driveStick1.GetY() * 0.5, driveStick2.GetX() * 0.5,
                              driveStick2.GetRawButton(2));
         } else {
             robotDrive.Drive(driveStick1.GetY(), driveStick2.GetX(),
                              driveStick2.GetRawButton(2));
         }
-
     }
 }
 
@@ -39,15 +34,12 @@ void Robot::Disabled() {
 }
 
 void Robot::Test() {
-        while (IsEnabled() && IsTest()) {
-
-            DS_PrintOut();
-            std::this_thread::sleep_for(10ms);
-        }
+    while (IsEnabled() && IsTest()) {
+        DS_PrintOut();
+        std::this_thread::sleep_for(10ms);
     }
-
-void Robot::DS_PrintOut() {
 }
 
+void Robot::DS_PrintOut() {}
 
 START_ROBOT_CLASS(Robot)

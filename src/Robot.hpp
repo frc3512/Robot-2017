@@ -12,15 +12,16 @@
 
 class Robot : public SampleRobot {
 public:
-	Robot();
-	void OperatorControl();
+    Robot();
+    void OperatorControl();
     void Autonomous();
     void Disabled();
     void Test();
 
-	void AutoNoop();
+    void AutoNoop();
 
-	void DS_PrintOut();
+    void DS_PrintOut();
+
 private:
     DriveTrain robotDrive;
 
@@ -35,5 +36,4 @@ private:
 
     // The LiveGrapher host
     GraphHost pidGraph{3513};
-
 };
