@@ -50,9 +50,6 @@ void DriveTrain::Drive(double throttle, double turn, bool isQuickTurn) {
     throttle = ApplyDeadband(throttle, m_deadband);
     turn = ApplyDeadband(turn, m_deadband);
 
-    double negInertia = turn - m_oldTurn;
-    m_oldTurn = turn;
-
     double turnNonLinearity = k_turnNonLinearity;
 
     /* Apply a sine function that's scaled to make turning sensitivity feel
@@ -64,6 +61,9 @@ void DriveTrain::Drive(double throttle, double turn, bool isQuickTurn) {
     double angularPower = 0.0;
     double linearPower = throttle;
     double leftPwm = linearPower, rightPwm = linearPower;
+
+    double negInertia = turn - m_oldTurn;
+    m_oldTurn = turn;
 
     // Negative inertia!
     double negInertiaScalar;
