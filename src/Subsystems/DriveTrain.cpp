@@ -9,8 +9,6 @@
 DriveTrain::DriveTrain() {
     m_sensitivity = k_lowGearSensitive;
 
-    m_leftGrbx.SetInverted(true);
-
 #ifdef PRACTICE_ROBOT
     m_leftGrbx.SetSensorDirection(true);
 #else
