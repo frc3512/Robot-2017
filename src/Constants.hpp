@@ -32,10 +32,10 @@ constexpr double k_joystickDeadband = 0.02;
  */
 
 // DriveTrain GearBox ID
-constexpr int k_leftDriveMasterID = 8;
-constexpr int k_leftDriveSlaveID = 10;
-constexpr int k_rightDriveMasterID = 4;
-constexpr int k_rightDriveSlaveID = 6;
+constexpr int k_leftDriveMasterID = 1;
+constexpr int k_leftDriveSlaveID = 2;
+constexpr int k_rightDriveMasterID = 13;
+constexpr int k_rightDriveSlaveID = 14;
 
 // DriveTrain distance per pulse
 constexpr double k_driveDpP = 36.0 / 575.0;  // in/pulse
