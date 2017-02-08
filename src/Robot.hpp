@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <ADXRS450_Gyro.h>
 #include <Joystick.h>
 #include <SampleRobot.h>
 
@@ -19,11 +20,13 @@ public:
     void Test();
 
     void AutoNoop();
+    void AutoLeftGear();
 
     void DS_PrintOut();
 
 private:
     DriveTrain robotDrive;
+    ADXRS450_Gyro robotGyro;
 
     frc::Joystick driveStick1{k_driveStick1Port};
     frc::Joystick driveStick2{k_driveStick2Port};

@@ -4,7 +4,10 @@
 
 using namespace std::chrono_literals;
 
-Robot::Robot() { dsDisplay.AddAutoMethod("No-op", &Robot::AutoNoop, this); }
+Robot::Robot() {
+    dsDisplay.AddAutoMethod("No-op", &Robot::AutoNoop, this);
+    dsDisplay.AddAutoMethod("LeftGear", &Robot::AutoLeftGear, this);
+}
 
 void Robot::OperatorControl() {
     while (IsEnabled() && IsOperatorControl()) {
