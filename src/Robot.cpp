@@ -18,6 +18,12 @@ void Robot::OperatorControl() {
             robotDrive.Drive(driveStick1.GetY(), driveStick2.GetX(),
                              driveStick2.GetRawButton(2));
         }
+        if (grabberStick.GetPOV() == 0) {
+            robotWinch.Set(1.0);
+        } else if (grabberStick.GetPOV() == 180) {
+            robotWinch.Set(-1.0);
+        }
+        GPU.Pickup();
     }
 }
 
