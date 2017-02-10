@@ -3,6 +3,7 @@
 #pragma once
 
 #include <ADXRS450_Gyro.h>
+#include <CANTalon.h>
 #include <Joystick.h>
 #include <SampleRobot.h>
 #include <Timer.h>
@@ -11,6 +12,7 @@
 #include "DSDisplay.hpp"
 #include "LiveGrapher/GraphHost.hpp"
 #include "Subsystems/DriveTrain.hpp"
+#include "Subsystems/GearPickup.hpp"
 
 class Robot : public SampleRobot {
 public:
@@ -24,15 +26,20 @@ public:
 
     void AutoNoop();
     void AutoLeftGear();
+    void AutoCenterGear();
 
     void DS_PrintOut();
 
 private:
     DriveTrain robotDrive;
     ADXRS450_Gyro robotGyro;
+    GearPickup GPU;
+
+    GearBox robotWinch{-1, -1, -1, 3};
 
     frc::Joystick driveStick1{k_driveStick1Port};
     frc::Joystick driveStick2{k_driveStick2Port};
+    frc::Joystick grabberStick{k_grabberStickPort};
 
     frc::Timer autoTimer;
     frc::Timer displayTimer;
