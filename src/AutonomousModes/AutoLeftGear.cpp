@@ -29,6 +29,8 @@ void Robot::AutoLeftGear() {
     state->CheckTransition = [this](const std::string& event) {
         if (1 /*at setpoint */) {
             return "Rotate";
+        } else {
+            return "";
         }
     };
     leftGear.AddState(std::move(state));
@@ -43,6 +45,8 @@ void Robot::AutoLeftGear() {
     state->CheckTransition = [this](const std::string& event) {
         if (1 /*at angle */) {
             return "Final-Forward";
+        } else {
+            return "";
         }
     };
     leftGear.AddState(std::move(state));
@@ -55,6 +59,8 @@ void Robot::AutoLeftGear() {
     state->CheckTransition = [this](const std::string& event) {
         if (1 /*at setpoint */) {
             return "Idle";
+        } else {
+            return "";
         }
     };
     leftGear.AddState(std::move(state));
