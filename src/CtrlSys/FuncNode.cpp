@@ -4,4 +4,9 @@
 
 FuncNode::FuncNode(std::function<double()> func) { m_func = func; }
 
-double FuncNode::Get() { return m_func(); }
+double FuncNode::Get() {
+    const auto& constWrapper = *this;
+    return constWrapper.Get();
+}
+
+double FuncNode::Get() const { return m_func(); }

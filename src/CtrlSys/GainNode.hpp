@@ -10,6 +10,7 @@ public:
     virtual ~GainNode() = default;
 
     double Get() override;
+    double Get() const;
 
     void SetGain(double K);
     double GetGain() const;
