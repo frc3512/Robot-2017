@@ -7,6 +7,7 @@
 DriveTrain::DriveTrain() {
     m_sensitivity = k_lowGearSensitive;
 
+    m_rightGrbx.SetInverted(true);
 #ifdef PRACTICE_ROBOT
     m_leftGrbx.SetSensorDirection(true);
 #else
@@ -171,3 +172,8 @@ void DriveTrain::DisablePID() { m_leftOutput.Stop(); }
 double DriveTrain::GetVelSetpoint() const { return m_velRef.Get(); }
 
 double DriveTrain::GetRotateSetpoint() const { return m_rotateRef.Get(); }
+
+void DriveTrain::Debug() {
+    std::cout << "Left Encoder: " << m_leftEncoder.Get() << std::endl;
+    std::cout << "Right Encoder: " << m_rightEncoder.Get() << std::endl;
+}

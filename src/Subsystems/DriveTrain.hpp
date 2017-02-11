@@ -5,6 +5,7 @@
 #include <memory>
 
 #include <ADXRS450_Gyro.h>
+#include <Encoder.h>
 
 #include "../Constants.hpp"
 #include "../CtrlSys/FuncNode.hpp"
@@ -61,6 +62,8 @@ public:
     double GetVelSetpoint() const;
     double GetRotateSetpoint() const;
 
+    void Debug();
+
 private:
     double m_deadband = k_joystickDeadband;
     double m_sensitivity;
@@ -76,10 +79,11 @@ private:
     SumNode m_rotatePIDInput{&m_rotateRef, true, &m_rotateSensor, false};
     PIDNode m_rotatePID{k_rotateP, k_rotateI, k_rotateD, &m_rotatePIDInput};
 
-    GearBox m_leftGrbx{-1, -1, -1, k_leftDriveMasterID, k_leftDriveSlaveID};
-    GearBox m_rightGrbx{-1, -1, -1, k_rightDriveMasterID, k_rightDriveSlaveID};
-    Sensor m_leftSensor{&m_leftGrbx};
-    Sensor m_rightSensor{&m_rightGrbx};
+    Encoder m_leftEncoder{k_leftEncoderA, k_leftEncoderB};
+    Sensor m_leftSensor{&m_leftEncoder};
+
+    Encoder m_rightEncoder{k_rightEncoderA, k_rightEncoderB};
+    Sensor m_rightSensor{&m_rightEncoder};
 
     RefInput m_velRef{0.0};
     FuncNode m_velCalc{[](auto& inputs) {
@@ -90,8 +94,10 @@ private:
     PIDNode m_velPID{k_speedP, k_speedI, k_speedD, &m_velPIDInput};
 
     SumNode m_leftMotorInput{&m_velPID, true, &m_rotatePID, false};
+    GearBox m_leftGrbx{-1, -1, -1, k_leftDriveMasterID, k_leftDriveSlaveID};
     Output m_leftOutput{&m_leftMotorInput, &m_leftGrbx};
 
     SumNode m_rightMotorInput{&m_velPID, true, &m_rotatePID, true};
+    GearBox m_rightGrbx{-1, -1, -1, k_rightDriveMasterID, k_rightDriveSlaveID};
     Output m_rightOutput{&m_rightMotorInput, &m_rightGrbx};
 };

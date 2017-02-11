@@ -22,7 +22,7 @@ constexpr double k_dsPort = 1130;
 // Joystick ports
 constexpr int k_driveStick1Port = 0;
 constexpr int k_driveStick2Port = 1;
-constexpr int k_grabber = 2;
+constexpr int k_grabberStickPort = 2;
 
 // Joystick axis deadband range
 constexpr double k_joystickDeadband = 0.02;
@@ -36,6 +36,12 @@ constexpr int k_leftDriveMasterID = 1;
 constexpr int k_leftDriveSlaveID = 2;
 constexpr int k_rightDriveMasterID = 13;
 constexpr int k_rightDriveSlaveID = 14;
+
+// DriveTrain Encoders
+constexpr int k_leftEncoderA = 3;
+constexpr int k_leftEncoderB = 4;
+constexpr int k_rightEncoderA = 5;
+constexpr int k_rightEncoderB = 6;
 
 // DriveTrain distance per pulse
 constexpr double k_driveDpP = 36.0 / 575.0;  // in/pulse
