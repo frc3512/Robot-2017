@@ -1,6 +1,7 @@
 // Copyright (c) FRC Team 3512, Spartatroniks 2016-2017. All Rights Reserved.
 
 #include "../Robot.hpp"
+#include "../Subsystems/DriveTrain.hpp"
 
 using namespace std::chrono_literals;
 
@@ -13,7 +14,7 @@ void Robot::AutoLeftGear() {
     // Idle
     auto state = std::make_unique<State>("Idle");
     state->Entry = [this] {
-        robotGyro.Reset();
+        robotDrive.ResetGyro();
         robotDrive.ResetEncoders();
     };
     state->CheckTransition = [this](const std::string& event) {
@@ -33,11 +34,11 @@ void Robot::AutoLeftGear() {
     };
     leftGear.AddState(std::move(state));
 
-    // Rotate
+    // Rotate TODO: Add PID function for rotation
     state = std::make_unique<State>("Rotate");
     state->Entry = [this] {
-        while (robotGyro.GetAngle() < 45.0) {
-            // anything but cheesy drive ?
+        while (robotDrive.GetAngle() < 45.0) {
+            robotDrive.Drive(0, 0.5, true);
         }
     };
     state->CheckTransition = [this](const std::string& event) {
@@ -50,6 +51,7 @@ void Robot::AutoLeftGear() {
     // Final-Forward
     state = std::make_unique<State>("Final-Forward");
     state->Entry = [this] {
+        robotDrive.ResetEncoders();
         // setpoint at x
     };
     state->CheckTransition = [this](const std::string& event) {
