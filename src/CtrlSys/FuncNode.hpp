@@ -15,6 +15,7 @@ public:
     FuncNode(std::function<double()> func);  // NOLINT
 
     double Get() override;
+    double Get() const;
 
 private:
     std::function<double()> m_func;
