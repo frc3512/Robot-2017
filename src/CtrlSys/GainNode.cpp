@@ -14,7 +14,12 @@ GainNode::GainNode(double K, NodeBase* input) {
     m_input = input;
 }
 
-double GainNode::Get() { return m_K * m_input->Get(); }
+double GainNode::Get() {
+    const auto& constWrapper = *this;
+    return constWrapper.Get();
+}
+
+double GainNode::Get() const { return m_K * m_input->Get(); }
 
 /**
  * Set gain applied to node output.
