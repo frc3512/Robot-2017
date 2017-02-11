@@ -33,11 +33,11 @@ void Robot::AutoLeftGear() {
     };
     leftGear.AddState(std::move(state));
 
-    // Rotate
+    // Rotate TODO: Add PID function for rotation
     state = std::make_unique<State>("Rotate");
     state->Entry = [this] {
         while (robotGyro.GetAngle() < 45.0) {
-            // anything but cheesy drive ?
+            robotDrive.Drive(0, 0.5, true);
         }
     };
     state->CheckTransition = [this](const std::string& event) {
@@ -50,6 +50,7 @@ void Robot::AutoLeftGear() {
     // Final-Forward
     state = std::make_unique<State>("Final-Forward");
     state->Entry = [this] {
+        robotDrive.ResetEncoders();
         // setpoint at x
     };
     state->CheckTransition = [this](const std::string& event) {
