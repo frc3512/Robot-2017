@@ -18,6 +18,33 @@ void Robot::OperatorControl() {
             robotDrive.Drive(driveStick1.GetY(), driveStick2.GetX(),
                              driveStick2.GetRawButton(2));
         }
+        if (grabberStick.GetRawButton(4)) {
+            robotGrabber.Set(0.5);
+        } else if (grabberStick.GetRawButton(6)) {
+            robotGrabber.Set(-0.5);
+        } else {
+            robotGrabber.Set(0);
+        }
+
+        if (grabberStick.GetTrigger()) {
+            solenoidSwitch->Set(true);
+        } else {
+            solenoidSwitch->Set(false);
+        }
+        if (grabberStick.GetPOV() == 0) {
+            robotWinch.Set(1.0);
+        } else if (grabberStick.GetPOV() == 180) {
+            robotWinch.Set(-1.0);
+        } else {
+            robotWinch.Set(0);
+        }
+
+        std::cout << "DIO 0 Backward Limit: "
+                  << DigitalInputHandler::Get(0)->Get() << std::endl;
+        std::cout << "DIO 1 Forward Limit: "
+                  << DigitalInputHandler::Get(1)->Get() << std::endl;
+
+        // GPU.GearPickup();
     }
 }
 
