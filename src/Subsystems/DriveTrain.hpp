@@ -5,6 +5,7 @@
 #include <memory>
 
 #include <ADXRS450_Gyro.h>
+#include <Encoder.h>
 
 #include "../Constants.hpp"
 #include "../CtrlSys/FuncNode.hpp"
@@ -61,6 +62,8 @@ public:
     double GetVelSetpoint() const;
     double GetRotateSetpoint() const;
 
+    void Debug();
+
 private:
     double m_deadband = k_joystickDeadband;
     double m_sensitivity;
@@ -78,14 +81,18 @@ private:
 
     GearBox m_leftGrbx{-1, -1, -1, k_leftDriveMasterID, k_leftDriveSlaveID};
     GearBox m_rightGrbx{-1, -1, -1, k_rightDriveMasterID, k_rightDriveSlaveID};
-    Sensor m_leftSensor{&m_leftGrbx};
-    Sensor m_rightSensor{&m_rightGrbx};
+
+    FuncNode m_leftEncoder{
+        [&](auto& inputs) { return m_leftGrbx.GetPosition(); }};
+
+    FuncNode m_rightEncoder{
+        [&](auto& inputs) { return m_rightGrbx.GetPosition(); }};
 
     RefInput m_velRef{0.0};
     FuncNode m_velCalc{[](auto& inputs) {
                            return (inputs[0]->Get() + inputs[1]->Get()) / 2.0;
                        },
-                       &m_leftSensor, &m_rightSensor};
+                       &m_leftEncoder, &m_rightEncoder};
     SumNode m_velPIDInput{&m_velRef, true, &m_velCalc, false};
     PIDNode m_velPID{k_speedP, k_speedI, k_speedD, &m_velPIDInput};
 

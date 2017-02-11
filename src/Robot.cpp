@@ -7,6 +7,8 @@ using namespace std::chrono_literals;
 Robot::Robot() {
     dsDisplay.AddAutoMethod("No-op", &Robot::AutoNoop, this);
     dsDisplay.AddAutoMethod("LeftGear", &Robot::AutoLeftGear, this);
+
+    robotGrabber.SetLimitOnHigh(false);
 }
 
 void Robot::OperatorControl() {
@@ -18,6 +20,24 @@ void Robot::OperatorControl() {
             robotDrive.Drive(driveStick1.GetY(), driveStick2.GetX(),
                              driveStick2.GetRawButton(2));
         }
+        if (grabberStick.GetRawButton(4)) {
+            robotGrabber.Set(0.5);
+        } else if (grabberStick.GetRawButton(6)) {
+            robotGrabber.Set(-0.5);
+        } else {
+            robotGrabber.Set(0);
+        }
+        if (driveStick2.GetTrigger()) {
+            robotDrive.ResetEncoders();
+        }
+        // Grabber opener/closer
+        solenoidSwitch->Set(grabberStick.GetTrigger());
+
+        std::cout << "DIO 0 Backward Limit: "
+                  << DigitalInputHandler::Get(0)->Get() << std::endl;
+        std::cout << "DIO 1 Forward Limit: "
+                  << DigitalInputHandler::Get(1)->Get() << std::endl;
+        robotDrive.Debug();
     }
 }
 
