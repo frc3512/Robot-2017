@@ -26,6 +26,8 @@ public:
 
     FuncNode(std::function<double(Inputs&)> func, NodeBase* input);
 
+    FuncNode(std::function<double(Inputs&)> func);  // NOLINT
+
     double Get() override;
 
 private:

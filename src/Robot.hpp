@@ -2,21 +2,22 @@
 
 #pragma once
 
-#include <ADXRS450_Gyro.h>
+#include <CANTalon.h>
+#include <Compressor.h>
 #include <Joystick.h>
 #include <SampleRobot.h>
+#include <Solenoid.h>
 #include <Timer.h>
 
 #include "Constants.hpp"
 #include "DSDisplay.hpp"
+#include "DigitalInputHandler.hpp"
 #include "LiveGrapher/GraphHost.hpp"
 #include "Subsystems/DriveTrain.hpp"
 
 class Robot : public SampleRobot {
 public:
     Robot();
-    virtual ~Robot() = default;
-
     void OperatorControl();
     void Autonomous();
     void Disabled();
@@ -29,10 +30,15 @@ public:
 
 private:
     DriveTrain robotDrive;
-    ADXRS450_Gyro robotGyro;
+    Compressor robotCompressor;
+    Solenoid* solenoidSwitch = new Solenoid{0};
+
+    GearBox robotGrabber{-1, 1, 0, 15};
+    GearBox robotWinch{-1, -1, -1, 3};
 
     frc::Joystick driveStick1{k_driveStick1Port};
     frc::Joystick driveStick2{k_driveStick2Port};
+    frc::Joystick grabberStick{k_grabberStickPort};
 
     frc::Timer autoTimer;
     frc::Timer displayTimer;
