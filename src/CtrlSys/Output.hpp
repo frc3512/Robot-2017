@@ -22,6 +22,7 @@ public:
     virtual ~Output() = default;
 
     double Get() override;
+    double Get() const;
 
     void Start();
     void Stop();
