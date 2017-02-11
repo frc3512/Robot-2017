@@ -7,7 +7,10 @@ RefInput::RefInput(double reference) { m_reference = reference; }
 /**
  * Return reference input
  */
-double RefInput::Get() { return m_reference; }
+double RefInput::Get() {
+    const auto& constWrapper = *this;
+    return constWrapper.Get();
+}
 
 /**
  * Return reference input

@@ -21,7 +21,12 @@ Output::Output(NodeBase* input, frc::PIDOutput* output, double period) {
     m_thread = std::make_unique<Notifier>(&Output::OutputFunc, this);
 }
 
-double Output::Get() { return m_input->Get(); }
+double Output::Get() {
+    const auto& constWrapper = *this;
+    return constWrapper.Get();
+}
+
+double Output::Get() const { return m_input->Get(); }
 
 /**
  * Starts closed loop control
