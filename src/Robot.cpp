@@ -7,10 +7,15 @@ using namespace std::chrono_literals;
 Robot::Robot() {
     dsDisplay.AddAutoMethod("No-op", &Robot::AutoNoop, this);
     dsDisplay.AddAutoMethod("LeftGear", &Robot::AutoLeftGear, this);
+    dsDisplay.AddAutoMethod("CenterGear", &Robot::AutoCenterGear, this);
+    dsDisplay.AddAutoMethod("RightGear", &Robot::AutoRightGear, this);
+
+    camera->StartAutomaticCapture();
 }
 
 void Robot::OperatorControl() {
     while (IsEnabled() && IsOperatorControl()) {
+        // Drive code
         if (driveStick1.GetTrigger()) {
             robotDrive.Drive(driveStick1.GetY() * 0.5, driveStick2.GetX() * 0.5,
                              driveStick2.GetRawButton(2));

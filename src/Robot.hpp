@@ -3,6 +3,7 @@
 #pragma once
 
 #include <ADXRS450_Gyro.h>
+#include <CameraServer.h>
 #include <Joystick.h>
 #include <SampleRobot.h>
 #include <Timer.h>
@@ -11,6 +12,8 @@
 #include "DSDisplay.hpp"
 #include "LiveGrapher/GraphHost.hpp"
 #include "Subsystems/DriveTrain.hpp"
+#include "Subsystems/Grabber.hpp"
+#include "Subsystems/Winch.hpp"
 
 class Robot : public SampleRobot {
 public:
@@ -24,6 +27,8 @@ public:
 
     void AutoNoop();
     void AutoLeftGear();
+    void AutoCenterGear();
+    void AutoRightGear();
 
     void DS_PrintOut();
 
@@ -33,6 +38,7 @@ private:
 
     frc::Joystick driveStick1{k_driveStick1Port};
     frc::Joystick driveStick2{k_driveStick2Port};
+    frc::Joystick grabberStick{k_grabber};
 
     frc::Timer autoTimer;
     frc::Timer displayTimer;
@@ -42,4 +48,6 @@ private:
 
     // The LiveGrapher host
     GraphHost pidGraph{3513};
+
+    frc::CameraServer* camera = frc::CameraServer::GetInstance();
 };

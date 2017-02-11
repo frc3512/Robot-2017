@@ -4,7 +4,8 @@
 
 using namespace std::chrono_literals;
 
-/* Moves forward, rotates, then moves forward again to hang gear on left side of
+/*
+ * Moves forward, rotates, then moves forward again to hang gear on left side of
  * airship as viewed from the Driver Station.
  */
 void Robot::AutoLeftGear() {
@@ -24,25 +25,31 @@ void Robot::AutoLeftGear() {
     // Init-Forward
     state = std::make_unique<State>("Initial-Forward");
     state->Entry = [this] {
-        // setpoint at x
+        // Set setpoint at x
     };
+    state->Run = [this] { robotDrive.Drive(0.5, 0, 0); };
     state->CheckTransition = [this](const std::string& event) {
         if (1 /*at setpoint */) {
             return "Rotate";
+        } else {
+            return "";
         }
     };
     leftGear.AddState(std::move(state));
 
-    // Rotate
+    // Rotate; TODO: Add PID function for rotation
     state = std::make_unique<State>("Rotate");
-    state->Entry = [this] {
+    state->Entry = [this] { robotGyro.Reset(); };
+    state->Run = [this] {
         while (robotGyro.GetAngle() < 45.0) {
-            // anything but cheesy drive ?
+            robotDrive.Drive(0, 0.5, true);
         }
     };
     state->CheckTransition = [this](const std::string& event) {
         if (1 /*at angle */) {
             return "Final-Forward";
+        } else {
+            return "";
         }
     };
     leftGear.AddState(std::move(state));
@@ -50,11 +57,15 @@ void Robot::AutoLeftGear() {
     // Final-Forward
     state = std::make_unique<State>("Final-Forward");
     state->Entry = [this] {
+        robotDrive.ResetEncoders();
         // setpoint at x
     };
+    state->Run = [this] { robotDrive.Drive(.5, 0, false); };
     state->CheckTransition = [this](const std::string& event) {
         if (1 /*at setpoint */) {
             return "Idle";
+        } else {
+            return "";
         }
     };
     leftGear.AddState(std::move(state));
