@@ -53,7 +53,7 @@ public:
     // Returns motor reversal state of gearbox
     bool GetInverted() const;
 
-    // Reverses gearbox drive direction
+    // Reverses gearbox encoder direction
     void SetSensorDirection(bool reverse);
 
     // Returns motor reversal state of gearbox
