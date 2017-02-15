@@ -58,6 +58,9 @@ public:
     void EnablePID();
     void DisablePID();
 
+    void StartClosedLoop();
+    void StopClosedLoop();
+
     // Returns encoder PID loop setpoints
     double GetVelSetpoint() const;
     double GetRotateSetpoint() const;

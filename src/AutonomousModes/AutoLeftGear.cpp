@@ -16,10 +16,12 @@ void Robot::AutoLeftGear() {
     state->Entry = [this] {
         robotDrive.ResetGyro();
         robotDrive.ResetEncoders();
+        robotDrive.StopClosedLoop();
     };
     state->CheckTransition = [this](const std::string& event) {
         return "Initial-Forward";
     };
+    state->Exit = [this] { robotDrive.StartClosedLoop(); };
     leftGear.AddState(std::move(state));
 
     // Init-Forward
