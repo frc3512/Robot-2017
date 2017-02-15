@@ -20,7 +20,7 @@ void Robot::AutoLeftGear() {
     state->CheckTransition = [this](const std::string& event) {
         return "Initial-Forward";
     };
-    leftGear.AddState(std::move(state));
+    state->Exit = [this] { robotDrive.StartClosedLoop(); };
 
     // Init-Forward
     state = std::make_unique<State>("Initial-Forward");
@@ -75,4 +75,5 @@ void Robot::AutoLeftGear() {
 
         std::this_thread::sleep_for(10ms);
     }
+    robotDrive.StopClosedLoop();
 }

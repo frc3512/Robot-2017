@@ -55,8 +55,8 @@ public:
     double GetLeftRate() const;
     double GetRightRate() const;
 
-    void EnablePID();
-    void DisablePID();
+    void StartClosedLoop();
+    void StopClosedLoop();
 
     // Returns encoder PID loop setpoints
     double GetVelSetpoint() const;

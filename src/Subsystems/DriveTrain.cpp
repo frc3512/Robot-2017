@@ -162,9 +162,15 @@ double DriveTrain::GetLeftRate() const { return m_leftGrbx.GetSpeed(); }
 
 double DriveTrain::GetRightRate() const { return m_rightGrbx.GetSpeed(); }
 
-void DriveTrain::EnablePID() { m_leftOutput.Start(); }
+void DriveTrain::StartClosedLoop() {
+    m_leftOutput.Start();
+    m_rightOutput.Start();
+}
 
-void DriveTrain::DisablePID() { m_leftOutput.Stop(); }
+void DriveTrain::StopClosedLoop() {
+    m_leftOutput.Stop();
+    m_rightOutput.Stop();
+}
 
 double DriveTrain::GetVelSetpoint() const { return m_velRef.Get(); }
 
