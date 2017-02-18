@@ -80,7 +80,7 @@ double GearBox::GetSpeed() const {
         return m_motors[0]->GetSpeed() * m_distancePerPulse / 60.0;
     } else {
         // std::cout << "Else: " << m_feedbackDevice << std::endl;
-        return m_motors[0]->GetSpeed() * m_distancePerPulse * 100.0;
+        return m_motors[0]->GetSpeed() * m_distancePerPulse * 10.0 / 4.0;
     }
 }
 
@@ -145,18 +145,6 @@ void GearBox::PIDWrite(double output) {
          */
         m_motors[0]->PIDWrite(0);
         std::cout << "reverseLimit" << std::endl;
-    } else if (GetPosition() >= m_max && output > 0) {
-        /* If the current position is past the soft limit and motor is rotating
-         * into limit switch
-         */
-        m_motors[0]->PIDWrite(0);
-        // std::cout << "max" << std::endl;
-    } else if (GetPosition() <= m_min && output < 0) {
-        /* If the current position is past the soft limit and motor is rotating
-         * into limit switch
-         */
-        m_motors[0]->PIDWrite(0);
-        // std::cout << "min" << std::endl;
     } else {
         m_motors[0]->PIDWrite(output);
     }

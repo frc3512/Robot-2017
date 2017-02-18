@@ -30,8 +30,9 @@
  * in looping situations.
  *
  * Example:
- *     GraphHost pidGraph(3513);
- *     pidGraph.SetSendInterval(5ms);
+ *     GraphHost pidGraph(3513); // In .hpp
+ *
+ *     pidGraph.SetSendInterval(5ms); // In .cpp
  *
  *     if (pidGraph.HasIntervalPassed()) {
  *         pidGraph.GraphData(frisbeeShooter.getRPM(), "PID0");

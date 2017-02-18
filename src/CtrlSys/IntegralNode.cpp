@@ -19,10 +19,10 @@ double IntegralNode::Get() {
     double potentialGain = m_K * (m_total + m_input->Get() * m_period);
 
     if (potentialGain < 1.0) {
-        if (potentialGain > 0.0) {
-            m_total += potentialGain;
+        if (potentialGain > -1.0) {
+            m_total = potentialGain;
         } else {
-            m_total = 0.0;
+            m_total = -1.0;
         }
     } else {
         m_total = 1.0;
