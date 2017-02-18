@@ -14,6 +14,7 @@
 #include "DigitalInputHandler.hpp"
 #include "LiveGrapher/GraphHost.hpp"
 #include "Subsystems/DriveTrain.hpp"
+#include "Subsystems/GearGrabber.hpp"
 
 class Robot : public SampleRobot {
 public:
@@ -42,6 +43,8 @@ private:
 
     frc::Timer autoTimer;
     frc::Timer displayTimer;
+
+    GearGrabber GPU;  // TODO: implement into Robot.cpp
 
     // Used for sending data to the Driver Station
     DSDisplay& dsDisplay{DSDisplay::GetInstance(k_dsPort)};
