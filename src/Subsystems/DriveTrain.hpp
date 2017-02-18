@@ -65,6 +65,10 @@ public:
     // Return gyro's angle
     double GetAngle() const;
 
+    double GetRate() const;
+
+    void SetReference(double reference);
+
     // Resets gyro
     void ResetGyro();
 
@@ -80,9 +84,9 @@ private:
     double m_negInertiaAccumulator = 0.0;
 
     ADXRS450_Gyro m_gyro;
-    Sensor m_rotateSensor{&m_gyro};
+    FuncNode m_rotateRate{[&](auto& inputs) { return m_gyro.GetRate(); }};
     RefInput m_rotateRef{0.0};
-    SumNode m_rotatePIDInput{&m_rotateRef, true, &m_rotateSensor, false};
+    SumNode m_rotatePIDInput{&m_rotateRef, true, &m_rotateRate, false};
     PIDNode m_rotatePID{k_rotateP, k_rotateI, k_rotateD, &m_rotatePIDInput};
 
     GearBox m_leftGrbx{-1, -1, -1, k_leftDriveMasterID, k_leftDriveSlaveID};
@@ -102,9 +106,9 @@ private:
     SumNode m_velPIDInput{&m_velRef, true, &m_velCalc, false};
     PIDNode m_velPID{k_speedP, k_speedI, k_speedD, &m_velPIDInput};
 
-    SumNode m_leftMotorInput{&m_velPID, true, &m_rotatePID, false};
-    Output m_leftOutput{&m_leftMotorInput, &m_leftGrbx};
+    SumNode m_leftMotorInput{&m_velPID, true, &m_rotatePID, true};
+    Output m_leftOutput{&m_leftMotorInput, &m_leftGrbx, 0.005};
 
-    SumNode m_rightMotorInput{&m_velPID, true, &m_rotatePID, true};
-    Output m_rightOutput{&m_rightMotorInput, &m_rightGrbx};
+    SumNode m_rightMotorInput{&m_velPID, true, &m_rotatePID, false};
+    Output m_rightOutput{&m_rightMotorInput, &m_rightGrbx, 0.005};
 };

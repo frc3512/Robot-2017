@@ -43,7 +43,17 @@ PIDNode::PIDNode(double Kp, double Ki, double Kd, NodeBase* feedforward,
                                       m_D.get(), true, feedforward, true);
 }
 
-double PIDNode::Get() { return m_sum->Get(); }
+double PIDNode::Get() {
+    double sum = m_sum->Get();
+
+    if (sum > 1.0) {
+        return 1.0;
+    } else if (sum < -1.0) {
+        return -1.0;
+    } else {
+        return sum;
+    }
+}
 
 void PIDNode::SetPID(double p, double i, double d) {
     m_P->SetGain(p);
