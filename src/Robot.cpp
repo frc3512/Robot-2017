@@ -73,6 +73,13 @@ void Robot::Test() {
     }
 }
 
-void Robot::DS_PrintOut() {}
+void Robot::DS_PrintOut() {
+    if (pidGraph.HasIntervalPassed()) {
+        pidGraph.GraphData(robotDrive.GetAngle(), "Gyro Angle");
+
+        pidGraph.ResetInterval();
+    }
+    pidGraph.SetSendInterval(5ms);
+}
 
 START_ROBOT_CLASS(Robot)
