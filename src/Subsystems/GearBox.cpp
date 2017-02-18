@@ -9,6 +9,7 @@
 
 GearBox::GearBox(int shifterChan, int forwardLimitPin, int reverseLimitPin,
                  int motor1, int motor2, int motor3) {
+
     if (shifterChan != -1) {
         m_shifter = std::make_unique<frc::Solenoid>(shifterChan);
     }
@@ -145,18 +146,6 @@ void GearBox::PIDWrite(double output) {
          */
         m_motors[0]->PIDWrite(0);
         std::cout << "reverseLimit" << std::endl;
-    } else if (GetPosition() >= m_max && output > 0) {
-        /* If the current position is past the soft limit and motor is rotating
-         * into limit switch
-         */
-        m_motors[0]->PIDWrite(0);
-        // std::cout << "max" << std::endl;
-    } else if (GetPosition() <= m_min && output < 0) {
-        /* If the current position is past the soft limit and motor is rotating
-         * into limit switch
-         */
-        m_motors[0]->PIDWrite(0);
-        // std::cout << "min" << std::endl;
     } else {
         m_motors[0]->PIDWrite(output);
     }
