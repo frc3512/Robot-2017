@@ -178,10 +178,16 @@ double DriveTrain::GetRotateSetpoint() const { return m_rotateRef.Get(); }
 
 double DriveTrain::GetAngle() const { return m_gyro.GetAngle(); }
 
+double DriveTrain::GetRate() const { return m_gyro.GetRate(); }
+
+void DriveTrain::SetReference(double reference) {
+  m_rotateRef.Set(reference);
+}
+
 void DriveTrain::ResetGyro() { return m_gyro.Reset(); }
 
 void DriveTrain::Debug() {
-    std::cout << "Left Encoder: " << m_leftEncoder.Get() << std::endl;
-    std::cout << "Right Encoder: " << m_rightEncoder.Get() << std::endl;
-    std::cout << "Gyro: " << m_gyro.GetAngle() << std::endl;
+    std::cout << "Left Encoder: " << m_leftGrbx.GetSpeed() << std::endl;
+    std::cout << "Right Encoder: " << m_rightGrbx.GetSpeed() << std::endl;
+    std::cout << "Gyro: " << m_gyro.GetRate() << std::endl;
 }
