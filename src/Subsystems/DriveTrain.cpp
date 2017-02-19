@@ -162,8 +162,8 @@ double DriveTrain::GetLeftRate() const { return m_leftGrbx.GetSpeed(); }
 
 double DriveTrain::GetRightRate() const { return m_rightGrbx.GetSpeed(); }
 
-void DriveTrain::SetVelocityReference(double velocity) {
-    m_velRef.Set(velocity);
+void DriveTrain::SetPositionReference(double position) {
+    m_positionRef.Set(position);
 }
 
 double DriveTrain::GetVelocity() {
@@ -180,9 +180,9 @@ void DriveTrain::StopClosedLoop() {
     m_rightOutput.Stop();
 }
 
-double DriveTrain::GetVelSetpoint() const { return m_velRef.Get(); }
+double DriveTrain::GetPositionSetpoint() const { return m_positionRef.Get(); }
 
-double DriveTrain::GetRotateSetpoint() const { return m_rotateRef.Get(); }
+double DriveTrain::GetAngleSetpoint() const { return m_angleRef.Get(); }
 
 double DriveTrain::GetAngle() const { return m_gyro.GetAngle(); }
 
@@ -190,8 +190,8 @@ double DriveTrain::GetRate() const { return m_gyro.GetRate(); }
 
 double DriveTrain::GetFilteredRate() { return m_rotateFilter.Get(); }
 
-void DriveTrain::SetRotationReference(double reference) {
-    m_rotateRef.Set(reference);
+void DriveTrain::SetAngleReference(double reference) {
+    m_angleRef.Set(reference);
 }
 
 void DriveTrain::ResetGyro() { m_gyro.Reset(); }

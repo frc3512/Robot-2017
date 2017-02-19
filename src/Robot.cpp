@@ -25,8 +25,8 @@ void Robot::OperatorControl() {
                               driveStick2.GetRawButton(2));
          }*/
 
-        robotDrive.SetRotationReference(0);
-        robotDrive.SetVelocityReference(k_driveMaxSpeed * -driveStick1.GetY());
+        robotDrive.SetAngleReference(0);
+        robotDrive.SetPositionReference(36 * -driveStick1.GetY());
 
         if (grabberStick.GetRawButton(4)) {
             robotGrabber.Set(1);
