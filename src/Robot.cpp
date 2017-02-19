@@ -26,8 +26,8 @@ void Robot::OperatorControl() {
          }*/
 
         robotDrive.SetRotationReference(0);
-        // robotDrive.SetVelocityReference(k_driveMaxSpeed *
-        // driveStick1.GetY());
+        robotDrive.SetVelocityReference(k_driveMaxSpeed *
+        -driveStick1.GetY());
 
         if (grabberStick.GetRawButton(4)) {
             robotGrabber.Set(1);
@@ -75,6 +75,7 @@ void Robot::Autonomous() {
 }
 
 void Robot::Disabled() {
+	robotDrive.CalibrateGyro();
     while (IsDisabled()) {
         DS_PrintOut();
         std::this_thread::sleep_for(10ms);
@@ -91,12 +92,15 @@ void Robot::Test() {
 void Robot::DS_PrintOut() {
     if (pidGraph.HasIntervalPassed()) {
         // pidGraph.GraphData(robotDrive.GetAngle(), "Gyro Angle");
-        pidGraph.GraphData(robotDrive.GetRate(), "Gyro Rate");
-        pidGraph.GraphData((300 * driveStick2.GetX()), "Gyro Rate Ref");
+        //pidGraph.GraphData(robotDrive.GetRate(), "Gyro Rate");
+        //pidGraph.GraphData((300 * driveStick2.GetX()), "Gyro Rate Ref");
         // pidGraph.GraphData(-robotDrive.GetRightRate(), "Encoder Right Rate");
         // pidGraph.GraphData(robotDrive.GetLeftRate(), "Encoder Left Rate");
 
-        pidGraph.GraphData(robotDrive.GetFilteredRate(), "Filtered Gyro");
+        //pidGraph.GraphData(robotDrive.GetFilteredRate(), "Filtered Gyro");
+
+        pidGraph.GraphData(robotDrive.GetVelocity(), "Velocity");
+        pidGraph.GraphData(k_driveMaxSpeed * -driveStick1.GetY(), "Velocity Ref");
 
         pidGraph.ResetInterval();
     }

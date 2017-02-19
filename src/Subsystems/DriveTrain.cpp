@@ -194,7 +194,9 @@ void DriveTrain::SetRotationReference(double reference) {
     m_rotateRef.Set(reference);
 }
 
-void DriveTrain::ResetGyro() { return m_gyro.Reset(); }
+void DriveTrain::ResetGyro() { m_gyro.Reset(); }
+
+void DriveTrain::CalibrateGyro() { m_gyro.Calibrate(); }
 
 void DriveTrain::Debug() {
     // std::cout << "Left MO: " << m_leftOutput.Get() << "  Left MI: " <<

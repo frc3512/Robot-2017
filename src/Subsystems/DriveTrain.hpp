@@ -79,6 +79,8 @@ public:
     // Resets gyro
     void ResetGyro();
 
+    void CalibrateGyro();
+
     void Debug();
 
 private:
