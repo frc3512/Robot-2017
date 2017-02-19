@@ -56,11 +56,21 @@ constexpr double k_posP = 0.07;            // 0.07
 constexpr double k_posI = 0.00;            // 0.00
 constexpr double k_posD = 0.08;            // 0.08
 
+// DriveTrain speed PID
+constexpr double k_speedP = 0.0;
+constexpr double k_speedI = 0.005;
+constexpr double k_speedD = 0.0;
+
 // DriveTrain angle PID
 constexpr double k_rotateMaxSpeed = 320;
 constexpr double k_angleP = 0.75;  // 0.75
 constexpr double k_angleI = 0.00;  // 0.00
 constexpr double k_angleD = 0.05;  // 0.05
+
+// DriveTrain angular rate PID
+constexpr double k_rotateP = 0.03;
+constexpr double k_rotateI = 0.0;
+constexpr double k_rotateD = 0.0;
 
 // CheesyDrive constants
 constexpr double k_lowGearSensitive = 0.75;
