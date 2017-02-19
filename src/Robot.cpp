@@ -8,39 +8,51 @@ Robot::Robot() {
     dsDisplay.AddAutoMethod("No-op", &Robot::AutoNoop, this);
     dsDisplay.AddAutoMethod("LeftGear", &Robot::AutoLeftGear, this);
 
+    server.SetSource(camera1);
+
     pidGraph.SetSendInterval(5ms);
 
     robotGrabber.SetLimitOnHigh(false);
 }
 
 void Robot::OperatorControl() {
-    robotDrive.StartClosedLoop();
     while (IsEnabled() && IsOperatorControl()) {
-        /*if (driveStick1.GetTrigger()) {
-             robotDrive.Drive(driveStick1.GetY() * 0.5, driveStick2.GetX() *
-         0.5,
-                              driveStick2.GetRawButton(2));
-         } else {
-             robotDrive.Drive(driveStick1.GetY(), driveStick2.GetX(),
-                              driveStick2.GetRawButton(2));
-         }*/
+        // Drive Stick Controls
+        if (driveStick1.GetTrigger()) {
+            robotDrive.Drive(driveStick1.GetY() * 0.5, driveStick2.GetX() * 0.5,
+                             driveStick2.GetRawButton(2));
+        } else {
+            robotDrive.Drive(driveStick1.GetY(), driveStick2.GetX(),
+                             driveStick2.GetRawButton(2));
+        }
 
-        robotDrive.SetRotationReference(0);
-        robotDrive.SetVelocityReference(k_driveMaxSpeed * -driveStick1.GetY());
+        if (driveStick2.GetTrigger()) {
+            shifter.Set(!shifter.Get());
+        }
+
+        // Appendage Stick Controls
+
+        if (grabberStick.GetTrigger()) {
+            claw.Set(!claw.Get());
+        }
 
         if (grabberStick.GetRawButton(4)) {
-            robotGrabber.Set(1);
-        } else if (grabberStick.GetRawButton(6)) {
-            robotGrabber.Set(-1);
-        } else {
-            robotGrabber.Set(0);
+            arm.Set(frc::DoubleSolenoid::kReverse);
         }
-        if (driveStick2.GetRawButton(8)) {
-            robotDrive.ResetEncoders();
+        if (grabberStick.GetRawButton(6)) {
+            arm.Set(frc::DoubleSolenoid::kForward);
         }
-        if (driveStick2.GetRawButton(7)) {
-            robotDrive.ResetGyro();
+
+        if (grabberStick.GetRawButton(3)) {
+            arm.Set(frc::DoubleSolenoid::kReverse);
         }
+        if (grabberStick.GetRawButton(5)) {
+            arm.Set(frc::DoubleSolenoid::kForward);
+        }
+        if (driveStick2.GetTrigger()) {
+            shifter.Set(!shifter.Get());
+        }
+
         if (grabberStick.GetPOV() == 0) {
             robotWinch.Set(1);
         } else if (grabberStick.GetPOV() == 180) {
@@ -49,19 +61,10 @@ void Robot::OperatorControl() {
             robotWinch.Set(0);
         }
 
-        // Grabber opener/closer
-        solenoidSwitch.Set(grabberStick.GetTrigger());
-
-        /*std::cout << "DIO 0 Backward Limit: "
-         *           << DigitalInputHandler::Get(0)->Get() << std::endl;
-         * std::cout << "DIO 1 Forward Limit: "
-         *           << DigitalInputHandler::Get(1)->Get() << std::endl;
-         */
         robotDrive.Debug();
 
         DS_PrintOut();
     }
-    robotDrive.StopClosedLoop();
 }
 
 void Robot::Autonomous() {
