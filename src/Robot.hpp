@@ -2,13 +2,17 @@
 
 #pragma once
 
+#include <cscore.h>
+
 #include <CANTalon.h>
 #include <Compressor.h>
+#include <DoubleSolenoid.h>
 #include <Joystick.h>
 #include <SampleRobot.h>
 #include <Solenoid.h>
 #include <Timer.h>
 
+#include "ButtonTracker.hpp"
 #include "Constants.hpp"
 #include "DSDisplay.hpp"
 #include "DigitalInputHandler.hpp"
@@ -24,6 +28,7 @@ public:
     void Test();
 
     void AutoNoop();
+    // TODO: void AutoCenterGear();
     void AutoLeftGear();
 
     void DS_PrintOut();
@@ -31,7 +36,10 @@ public:
 private:
     DriveTrain robotDrive;
     Compressor robotCompressor;
-    Solenoid solenoidSwitch{0};
+    Solenoid claw{0};
+    DoubleSolenoid arm{1, 2};
+    DoubleSolenoid gearPunch{3, 4};
+    Solenoid shifter{5};
 
     GearBox robotGrabber{-1, 1, 0, 15};
     GearBox robotWinch{-1, -1, -1, 3};
@@ -39,6 +47,9 @@ private:
     frc::Joystick driveStick1{k_driveStick1Port};
     frc::Joystick driveStick2{k_driveStick2Port};
     frc::Joystick grabberStick{k_grabberStickPort};
+
+    ButtonTracker armButtons{k_grabberStickPort};
+    ButtonTracker drive2Buttons{k_driveStick2Port};
 
     frc::Timer autoTimer;
     frc::Timer displayTimer;
@@ -48,4 +59,9 @@ private:
 
     // The LiveGrapher host
     GraphHost pidGraph{3513};
+
+    // Camera
+    cs::UsbCamera camera1{"Camera 1", 0};
+
+    cs::MjpegServer server{"Server", 1180};
 };
