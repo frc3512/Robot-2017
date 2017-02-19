@@ -43,7 +43,7 @@ constexpr double k_driveDpP = 240.0 / ((6552 + 6522) / 2.0);  // in/pulse
 // DriveTrain speed PID
 constexpr double k_driveMaxSpeed = 24000;  // in/sec
 constexpr double k_speedP = 0.0;
-constexpr double k_speedI = 0.0;
+constexpr double k_speedI = 0.005;
 constexpr double k_speedD = 0.0;
 
 // DriveTrain rotation PID
