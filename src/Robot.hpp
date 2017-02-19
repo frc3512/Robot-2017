@@ -2,8 +2,11 @@
 
 #pragma once
 
+#include <cscore.h>
+
 #include <CANTalon.h>
 #include <Compressor.h>
+#include <DoubleSolenoid.h>
 #include <Joystick.h>
 #include <SampleRobot.h>
 #include <Solenoid.h>
@@ -31,7 +34,10 @@ public:
 private:
     DriveTrain robotDrive;
     Compressor robotCompressor;
-    Solenoid solenoidSwitch{0};
+    Solenoid claw{0};
+    DoubleSolenoid arm{1, 2};
+    DoubleSolenoid gearPunch{3, 4};
+    Solenoid shifter{5};
 
     GearBox robotGrabber{-1, 1, 0, 15};
     GearBox robotWinch{-1, -1, -1, 3};
@@ -48,4 +54,9 @@ private:
 
     // The LiveGrapher host
     GraphHost pidGraph{3513};
+
+    // Camera
+    cs::UsbCamera camera1{"Camera 1", 0};
+
+    cs::MjpegServer server{"Server", 1180};
 };
