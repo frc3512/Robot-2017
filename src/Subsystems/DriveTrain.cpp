@@ -171,7 +171,7 @@ void DriveTrain::SetPositionReference(double position) {
 void DriveTrain::SetAngleReference(double angle) { m_angleRef.Set(angle); }
 
 double DriveTrain::GetPosition() {
-    return (m_leftGrbx.GetPosition() + m_rightGrbx.GetPosition()) / 2;
+    return (m_leftGrbx.GetPosition() + m_rightGrbx.GetPosition()) / 2.0;
 }
 
 void DriveTrain::StartClosedLoop() {

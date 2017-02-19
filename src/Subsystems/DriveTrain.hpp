@@ -9,6 +9,7 @@
 
 #include "../Constants.hpp"
 #include "../CtrlSys/FuncNode.hpp"
+#include "../CtrlSys/GainNode.hpp"
 #include "../CtrlSys/LinearDigitalFilter.h"
 #include "../CtrlSys/Output.hpp"
 #include "../CtrlSys/PIDNode.hpp"
@@ -61,6 +62,7 @@ public:
 
     double GetPosition();
 
+    // Enables feedback
     void StartClosedLoop();
     void StopClosedLoop();
 
@@ -98,11 +100,19 @@ private:
 
     // Angle PID
     ADXRS450_Gyro m_gyro;
-    FuncNode m_angleSensor{[this] { return GetAngle(); }};
-    SumNode m_angleError{&m_angleRef, true, &m_angleSensor, false};
+    FuncNode m_gyroAngle{[this] { return GetAngle(); }};
+    SumNode m_angleError{&m_angleRef, true, &m_gyroAngle, false};
     PIDNode m_anglePID{k_angleP, k_angleI, k_angleD, &m_angleError};
+    GainNode m_angleGain{k_rotateMaxSpeed, &m_anglePID};
 
-    // Gearboxes used in position PID
+    // Rotation rate PID
+    FuncNode m_rotateRate{[&] { return m_gyro.GetRate(); }};
+    LinearDigitalFilter m_rotateFilter =
+        LinearDigitalFilter::SinglePoleIIR(&m_rotateRate, 0.35, 0.005);
+    SumNode m_rotateError{&m_angleGain, true, &m_rotateFilter, false};
+    PIDNode m_rotatePID{k_rotateP, k_rotateI, k_rotateD, &m_rotateError};
+
+    // Gearboxes used in position/velocity PID
     GearBox m_leftGrbx{-1, -1, -1, k_leftDriveMasterID, k_leftDriveSlaveID};
     GearBox m_rightGrbx{-1, -1, -1, k_rightDriveMasterID, k_rightDriveSlaveID};
 
@@ -112,12 +122,23 @@ private:
     }};
     SumNode m_posError{&m_posRef, true, &m_posCalc, false};
     PIDNode m_posPID{k_posP, k_posI, k_posD, &m_posError};
+    GainNode m_posGain{k_driveMaxSpeed, &m_posPID};
+
+    // Velocity PID
+    FuncNode m_velCalc{
+        [&] { return (m_leftGrbx.GetSpeed() + m_rightGrbx.GetSpeed()) / 2.0; }};
+    SumNode m_velError{&m_posGain, true, &m_velCalc, false};
+    PIDNode m_velPID{k_speedP, k_speedI, k_speedD, &m_velError};
 
     // Combine outputs for left motor
-    SumNode m_leftMotorInput{&m_posPID, true, &m_anglePID, true};
+    GainNode m_leftFeedForward{1 / k_rotateMaxSpeed, &m_angleGain};
+    SumNode m_leftMotorInput{&m_velPID,          true, &m_rotatePID, true,
+                             &m_leftFeedForward, true};
     Output m_leftOutput{&m_leftMotorInput, &m_leftGrbx, 0.005};
 
     // Combine outputs for right motor
-    SumNode m_rightMotorInput{&m_posPID, true, &m_anglePID, false};
+    GainNode m_rightFeedForward{1 / k_rotateMaxSpeed, &m_angleGain};
+    SumNode m_rightMotorInput{&m_velPID,           true, &m_rotatePID, false,
+                              &m_rightFeedForward, false};
     Output m_rightOutput{&m_rightMotorInput, &m_rightGrbx, 0.005};
 };
