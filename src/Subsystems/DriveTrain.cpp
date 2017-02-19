@@ -166,7 +166,7 @@ double DriveTrain::GetLeftRate() const { return m_leftGrbx.GetSpeed(); }
 double DriveTrain::GetRightRate() const { return m_rightGrbx.GetSpeed(); }
 
 double DriveTrain::GetPosition() const {
-    return (m_leftGrbx.GetPosition() + m_rightGrbx.GetPosition()) / 2;
+    return (m_leftGrbx.GetPosition() + m_rightGrbx.GetPosition()) / 2.0;
 }
 
 double DriveTrain::GetAngle() const { return m_gyro.GetAngle(); }
