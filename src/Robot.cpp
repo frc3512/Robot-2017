@@ -111,7 +111,8 @@ void Robot::DS_PrintOut() {
         // liveGrapher.GraphData(robotDrive.GetAngle(), "Gyro Angle");
         // liveGrapher.GraphData(robotDrive.GetRate(), "Gyro Rate");
         // liveGrapher.GraphData((300 * driveStick2.GetX()), "Gyro Rate Ref");
-        // liveGrapher.GraphData(-robotDrive.GetRightRate(), "Encoder Right Rate");
+        // liveGrapher.GraphData(-robotDrive.GetRightRate(), "Encoder Right
+        // Rate");
         // liveGrapher.GraphData(robotDrive.GetLeftRate(), "Encoder Left Rate");
 
         // liveGrapher.GraphData(robotDrive.GetFilteredRate(), "Filtered Gyro");
