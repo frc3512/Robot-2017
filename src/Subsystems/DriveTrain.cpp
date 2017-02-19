@@ -204,7 +204,7 @@ void DriveTrain::Debug() {
     // std::cout << "Right MO: " << m_rightOutput.Get() << "  Right MI: " <<
     // m_rightMotorInput.Get() << std::endl;
     // std::cout << "Rotate: " << m_rotatePID.Get() << std::endl;
-    std::cout << "Gyro: " << m_gyro.GetRate() << std::endl;
+//    std::cout << "Gyro: " << m_gyro.GetRate() << std::endl;
     std::cout << "Left Rate: " << m_leftEncoder.Get() << std::endl;
     std::cout << "Right Rate: " << m_rightEncoder.Get() << std::endl;
     std::cout << "Left Pos: " << m_leftGrbx.GetPosition() << std::endl;
