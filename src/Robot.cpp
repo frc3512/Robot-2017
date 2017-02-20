@@ -7,6 +7,8 @@ using namespace std::chrono_literals;
 Robot::Robot() {
     dsDisplay.AddAutoMethod("No-op", &Robot::AutoNoop, this);
     dsDisplay.AddAutoMethod("LeftGear", &Robot::AutoLeftGear, this);
+    dsDisplay.AddAutoMethod("CenterGear", &Robot::AutoCenterGear, this);
+    dsDisplay.AddAutoMethod("RightGear", &Robot::AutoRightGear, this);
 
     pidGraph.SetSendInterval(5ms);
 

@@ -25,6 +25,8 @@ public:
 
     void AutoNoop();
     void AutoLeftGear();
+    void AutoCenterGear();
+    void AutoRightGear();
 
     void DS_PrintOut();
 
@@ -32,6 +34,8 @@ private:
     DriveTrain robotDrive;
     Compressor robotCompressor;
     Solenoid solenoidSwitch{0};
+
+    Solenoid shifter{5};
 
     GearBox robotGrabber{-1, 1, 0, 15};
     GearBox robotWinch{-1, -1, -1, 3};
