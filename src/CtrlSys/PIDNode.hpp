@@ -34,6 +34,8 @@ public:
 
     void Reset();
 
+    double Total();
+
 private:
     std::unique_ptr<GainNode> m_P;
     std::unique_ptr<IntegralNode> m_I;

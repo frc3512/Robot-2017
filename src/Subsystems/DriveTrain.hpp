@@ -56,25 +56,23 @@ public:
     double GetLeftRate() const;
     double GetRightRate() const;
 
-    void SetVelocityReference(double velocity);
+    void SetPositionReference(double position);
 
-    double GetVelocity();
+    void SetAngleReference(double angle);
+
+    double GetPosition();
 
     void StartClosedLoop();
     void StopClosedLoop();
 
     // Returns encoder PID loop setpoints
-    double GetVelSetpoint() const;
-    double GetRotateSetpoint() const;
+    double GetPosReference() const;
+    double GetAngleReference() const;
 
     // Return gyro's angle
     double GetAngle() const;
 
     double GetRate() const;
-
-    double GetFilteredRate();
-
-    void SetRotationReference(double reference);
 
     // Resets gyro
     void ResetGyro();
@@ -93,36 +91,33 @@ private:
     double m_negInertiaAccumulator = 0.0;
 
     ADXRS450_Gyro m_gyro;
-    FuncNode m_rotateRate{[&](auto& inputs) { return m_gyro.GetRate(); }};
-    LinearDigitalFilter m_rotateFilter =
-        LinearDigitalFilter::SinglePoleIIR(&m_rotateRate, 0.35, 0.005);
-    RefInput m_rotateRef{0.0};
-    SumNode m_rotatePIDInput{&m_rotateRef, true, &m_rotateFilter, false};
-    PIDNode m_rotatePID{k_rotateP, k_rotateI, k_rotateD, &m_rotatePIDInput};
+    FuncNode m_angleSensor{[&](auto& inputs) { return m_gyro.GetAngle(); }};
+    // LinearDigitalFilter m_rotateFilter =
+    //     LinearDigitalFilter::SinglePoleIIR(&m_rotateRate, 0.35, 0.005);
+    RefInput m_angleRef{0.0};
+    SumNode m_angleError{&m_angleRef, true, &m_angleSensor, false};
+    PIDNode m_anglePID{k_angleP, k_angleI, k_angleD, &m_angleError};
 
     GearBox m_leftGrbx{-1, -1, -1, k_leftDriveMasterID, k_leftDriveSlaveID};
     GearBox m_rightGrbx{-1, -1, -1, k_rightDriveMasterID, k_rightDriveSlaveID};
 
-    FuncNode m_leftEncoder{[&](auto& inputs) { return m_leftGrbx.GetSpeed(); }};
+    FuncNode m_leftEncoder{
+        [&](auto& inputs) { return m_leftGrbx.GetPosition(); }};
 
     FuncNode m_rightEncoder{
-        [&](auto& inputs) { return m_rightGrbx.GetSpeed(); }};
+        [&](auto& inputs) { return m_rightGrbx.GetPosition(); }};
 
-    RefInput m_velRef{0.0};
-    FuncNode m_velCalc{[](auto& inputs) {
+    RefInput m_posRef{0.0};
+    FuncNode m_posCalc{[](auto& inputs) {
                            return (inputs[0]->Get() + inputs[1]->Get()) / 2.0;
                        },
                        &m_leftEncoder, &m_rightEncoder};
-    SumNode m_velPIDInput{&m_velRef, true, &m_velCalc, false};
-    PIDNode m_velPID{k_speedP, k_speedI, k_speedD, &m_velPIDInput};
+    SumNode m_posError{&m_posRef, true, &m_posCalc, false};
+    PIDNode m_posPID{k_posP, k_posI, k_posD, &m_posError};
 
-    GainNode m_leftFeedForward{1 / k_rotateMaxSpeed, &m_rotateRef};
-    SumNode m_leftMotorInput{&m_velPID,          true, &m_rotatePID, true,
-                             &m_leftFeedForward, true};
+    SumNode m_leftMotorInput{&m_posPID, true, &m_anglePID, true};
     Output m_leftOutput{&m_leftMotorInput, &m_leftGrbx, 0.005};
 
-    GainNode m_rightFeedForward{1 / k_rotateMaxSpeed, &m_rotateRef};
-    SumNode m_rightMotorInput{&m_velPID,           true, &m_rotatePID, false,
-                              &m_rightFeedForward, false};
+    SumNode m_rightMotorInput{&m_posPID, true, &m_anglePID, false};
     Output m_rightOutput{&m_rightMotorInput, &m_rightGrbx, 0.005};
 };

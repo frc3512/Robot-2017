@@ -2,6 +2,13 @@
 
 #include "IntegralNode.hpp"
 
+#include <algorithm>
+
+template <class T>
+constexpr const T& clamp(const T& v, const T& lo, const T& hi) {
+    return std::max(lo, std::min(v, hi));
+}
+
 /**
  * Construct an integrator.
  *
@@ -16,19 +23,11 @@ IntegralNode::IntegralNode(double K, NodeBase* input, double period) {
 }
 
 double IntegralNode::Get() {
-    double potentialGain = m_K * (m_total + m_input->Get() * m_period);
+    double input = m_input->Get();
 
-    if (potentialGain < 1.0) {
-        if (potentialGain > -1.0) {
-            m_total = potentialGain;
-        } else {
-            m_total = -1.0;
-        }
-    } else {
-        m_total = 1.0;
-    }
+    m_total = clamp(m_total + input * m_period, -1.0 / m_K, 1.0 / m_K);
 
-    return m_total;
+    return m_K * m_total;
 }
 
 /**
