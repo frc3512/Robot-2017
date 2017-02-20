@@ -25,8 +25,8 @@ void Robot::OperatorControl() {
                               driveStick2.GetRawButton(2));
          }*/
 
-        robotDrive.SetRotationReference(0);
-        robotDrive.SetVelocityReference(k_driveMaxSpeed * -driveStick1.GetY());
+        robotDrive.SetAngleReference(0);
+        robotDrive.SetPositionReference(36 * -driveStick1.GetY());
 
         if (grabberStick.GetRawButton(4)) {
             robotGrabber.Set(1);
@@ -98,9 +98,10 @@ void Robot::DS_PrintOut() {
 
         // pidGraph.GraphData(robotDrive.GetFilteredRate(), "Filtered Gyro");
 
-        pidGraph.GraphData(robotDrive.GetVelocity(), "Velocity");
-        pidGraph.GraphData(k_driveMaxSpeed * -driveStick1.GetY(),
-                           "Velocity Ref");
+        pidGraph.GraphData(robotDrive.GetPosition(), "Position");
+        pidGraph.GraphData(36 * -driveStick1.GetY(), "Position Ref");
+        pidGraph.GraphData(robotDrive.GetAngle(), "Angle");
+        pidGraph.GraphData(0, "Angle Ref");
 
         pidGraph.ResetInterval();
     }
