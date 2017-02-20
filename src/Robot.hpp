@@ -25,6 +25,8 @@ public:
 
     void AutoNoop();
     void AutoLeftGear();
+    void AutoCenterGear();
+    void AutoRightGear();
 
     void DS_PrintOut();
 
