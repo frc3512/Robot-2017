@@ -8,13 +8,15 @@ Robot::Robot() {
     dsDisplay.AddAutoMethod("No-op", &Robot::AutoNoop, this);
     dsDisplay.AddAutoMethod("LeftGear", &Robot::AutoLeftGear, this);
 
-    pidGraph.SetSendInterval(5ms);
+    pidGraph.SetSendInterval(50ms);
 
     robotGrabber.SetLimitOnHigh(false);
 }
 
 void Robot::OperatorControl() {
     robotDrive.StartClosedLoop();
+    robotDrive.ResetEncoders();
+    robotDrive.ResetGyro();
     while (IsEnabled() && IsOperatorControl()) {
         /*if (driveStick1.GetTrigger()) {
              robotDrive.Drive(driveStick1.GetY() * 0.5, driveStick2.GetX() *
@@ -25,8 +27,8 @@ void Robot::OperatorControl() {
                               driveStick2.GetRawButton(2));
          }*/
 
-        robotDrive.SetRotationReference(0);
-        robotDrive.SetVelocityReference(k_driveMaxSpeed * -driveStick1.GetY());
+        robotDrive.SetAngleReference(30 * driveStick2.GetX());
+        robotDrive.SetPositionReference(/*36 * -driveStick1.GetY()*/ 0);
 
         if (grabberStick.GetRawButton(4)) {
             robotGrabber.Set(1);
@@ -98,9 +100,10 @@ void Robot::DS_PrintOut() {
 
         // pidGraph.GraphData(robotDrive.GetFilteredRate(), "Filtered Gyro");
 
-        pidGraph.GraphData(robotDrive.GetVelocity(), "Velocity");
-        pidGraph.GraphData(k_driveMaxSpeed * -driveStick1.GetY(),
-                           "Velocity Ref");
+        pidGraph.GraphData(robotDrive.GetPosition(), "Position");
+        pidGraph.GraphData(/*36 * -driveStick1.GetY()*/ 0, "Position Ref");
+        pidGraph.GraphData(robotDrive.GetAngle(), "Angle");
+        pidGraph.GraphData(30 * driveStick2.GetX(), "Angle Ref");
 
         pidGraph.ResetInterval();
     }

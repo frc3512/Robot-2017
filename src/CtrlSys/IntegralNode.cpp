@@ -16,7 +16,7 @@ IntegralNode::IntegralNode(double K, NodeBase* input, double period) {
 }
 
 double IntegralNode::Get() {
-    double potentialGain = m_K * (m_total + m_input->Get() * m_period);
+    double potentialGain = m_total + m_K * m_input->Get() * m_period;
 
     if (potentialGain < 1.0) {
         if (potentialGain > -1.0) {
