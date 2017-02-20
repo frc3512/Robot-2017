@@ -43,6 +43,6 @@ private:
     double m_period;
 
     std::unique_ptr<Notifier> m_thread;
-    double m_minU = -1.0;
-    double m_maxU = 1.0;
+    double m_minU = -.25;
+    double m_maxU = .25;
 };
