@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <limits>
+
 #include "NodeBase.hpp"
 
 /**
@@ -17,6 +19,8 @@ public:
     void SetGain(double K);
     double GetGain() const;
 
+    void SetIZone(double maxInputMagnitude);
+
     void Reset();
 
 private:
@@ -25,4 +29,5 @@ private:
     double m_period;
 
     double m_total = 0.0;
+    double m_maxInputMagnitude = std::numeric_limits<double>::infinity();
 };
