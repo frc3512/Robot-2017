@@ -20,6 +20,8 @@ DriveTrain::DriveTrain() {
 
     m_leftGrbx.Set(0.0);
     m_rightGrbx.Set(0.0);
+
+    m_posPID.SetOutputRange(-0.25, 0.25);
 }
 
 int32_t DriveTrain::GetLeftRaw() const { return m_leftGrbx.Get(); }
@@ -162,12 +164,14 @@ double DriveTrain::GetLeftRate() const { return m_leftGrbx.GetSpeed(); }
 
 double DriveTrain::GetRightRate() const { return m_rightGrbx.GetSpeed(); }
 
-void DriveTrain::SetVelocityReference(double velocity) {
-    m_velRef.Set(velocity);
+void DriveTrain::SetPositionReference(double position) {
+    m_posRef.Set(position);
 }
 
-double DriveTrain::GetVelocity() {
-    return (m_leftGrbx.GetSpeed() + m_rightGrbx.GetSpeed()) / 2;
+void DriveTrain::SetAngleReference(double angle) { m_angleRef.Set(angle); }
+
+double DriveTrain::GetPosition() {
+    return (m_leftGrbx.GetPosition() + m_rightGrbx.GetPosition()) / 2;
 }
 
 void DriveTrain::StartClosedLoop() {
@@ -180,34 +184,33 @@ void DriveTrain::StopClosedLoop() {
     m_rightOutput.Stop();
 }
 
-double DriveTrain::GetVelSetpoint() const { return m_velRef.Get(); }
+double DriveTrain::GetPosReference() const { return m_posRef.Get(); }
 
-double DriveTrain::GetRotateSetpoint() const { return m_rotateRef.Get(); }
+double DriveTrain::GetAngleReference() const { return m_angleRef.Get(); }
 
 double DriveTrain::GetAngle() const { return m_gyro.GetAngle(); }
 
 double DriveTrain::GetRate() const { return m_gyro.GetRate(); }
-
-double DriveTrain::GetFilteredRate() { return m_rotateFilter.Get(); }
-
-void DriveTrain::SetRotationReference(double reference) {
-    m_rotateRef.Set(reference);
-}
 
 void DriveTrain::ResetGyro() { m_gyro.Reset(); }
 
 void DriveTrain::CalibrateGyro() { m_gyro.Calibrate(); }
 
 void DriveTrain::Debug() {
-    // std::cout << "Left MO: " << m_leftOutput.Get() << "  Left MI: " <<
-    // m_leftMotorInput.Get() << std::endl;
-    // std::cout << "Right MO: " << m_rightOutput.Get() << "  Right MI: " <<
-    // m_rightMotorInput.Get() << std::endl;
+    // std::cout << "Left MO: " << m_leftOutput.Get() << std::endl;
+    // std::cout << "Left MI: " << m_leftMotorInput.Get() << std::endl;
+    // std::cout << "Right MO: " << m_rightOutput.Get() << std::endl;
+    // std::cout << "Right MI: " << m_rightMotorInput.Get() << std::endl;
     // std::cout << "Rotate: " << m_rotatePID.Get() << std::endl;
-    //    std::cout << "Gyro: " << m_gyro.GetRate() << std::endl;
-    std::cout << "Left Rate: " << m_leftGrbx.GetSpeed() << std::endl;
-    std::cout << "Right Rate: " << m_rightGrbx.GetSpeed() << std::endl;
-    std::cout << "Left Pos: " << m_leftGrbx.GetPosition() << std::endl;
-    std::cout << "Right Pos: " << m_rightGrbx.GetPosition() << std::endl;
+    // std::cout << "Gyro: " << m_gyro.GetRate() << std::endl;
+    // std::cout << "Left Rate: " << m_leftGrbx.GetSpeed() << std::endl;
+    // std::cout << "Right Rate: " << m_rightGrbx.GetSpeed() << std::endl;
+    // std::cout << "Left Pos: " << m_leftGrbx.GetPosition() << std::endl;
+    // std::cout << "Right Pos: " << m_rightGrbx.GetPosition() << std::endl;
+    // std::cout << "Pos PID: " << m_posPID.Get() << std::endl;
     // std::cout << "Velocity PID: " << m_velPID.Get() << std::endl;
+    // std::cout << "Angle PID: " << m_anglePID.Get() << std::endl;
+    // std::cout << "Angle Error: " << m_angleError.Get() << std::endl;
+    // std::cout << "I total:" << m_anglePID.Total() << std::endl;
+    std::cout << "Pos Error: " << m_posError.Get() << std::endl;
 }

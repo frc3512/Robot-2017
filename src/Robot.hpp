@@ -59,6 +59,7 @@ private:
 
     // Used for sending data to the Driver Station
     DSDisplay& dsDisplay{DSDisplay::GetInstance(k_dsPort)};
+    Timer dsTimer;
 
     // The LiveGrapher host
     GraphHost pidGraph{3513};

@@ -46,10 +46,10 @@ PIDNode::PIDNode(double Kp, double Ki, double Kd, NodeBase* feedforward,
 double PIDNode::Get() {
     double sum = m_sum->Get();
 
-    if (sum > 1.0) {
-        return 1.0;
-    } else if (sum < -1.0) {
-        return -1.0;
+    if (sum > m_maxU) {
+        return m_maxU;
+    } else if (sum < m_minU) {
+        return m_minU;
     } else {
         return sum;
     }
@@ -70,4 +70,17 @@ double PIDNode::GetD() const { return m_D->GetGain(); }
 void PIDNode::Reset() {
     m_I->Reset();
     m_D->Reset();
+}
+
+double PIDNode::Total() { return m_I->Get(); }
+
+/**
+ * Sets the minimum and maximum values to write.
+ *
+ * @param minimumOutput the minimum value to write to the output
+ * @param maximumOutput the maximum value to write to the output
+ */
+void PIDNode::SetOutputRange(double minU, double maxU) {
+    m_minU = minU;
+    m_maxU = maxU;
 }
