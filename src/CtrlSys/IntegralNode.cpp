@@ -49,7 +49,8 @@ double IntegralNode::GetGain() const { return m_K; }
  * Set maximum magnitude of input for which integration should occur. Values
  * above this will reset the current total.
  *
- * @param maxInput max value of input for which integration should occur
+ * @param maxInputMagnitude max value of input for which integration should
+ *                          occur
  */
 void IntegralNode::SetIZone(double maxInputMagnitude) {
     m_maxInputMagnitude = maxInputMagnitude;
