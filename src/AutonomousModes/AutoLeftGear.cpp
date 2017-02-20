@@ -9,6 +9,7 @@ using namespace std::chrono_literals;
  * airship as viewed from the Driver Station.
  */
 void Robot::AutoLeftGear() {
+	shifter.Set(true);  // low gear
     StateMachine leftGear("LeftGear");
 
     // Idle
