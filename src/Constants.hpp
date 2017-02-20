@@ -40,17 +40,17 @@ constexpr int k_rightDriveSlaveID = 14;
 // DriveTrain distance per pulse
 constexpr double k_driveDpP = 240.0 / ((6552 + 6522) / 2.0);  // in/pulse
 
-// DriveTrain speed PID
+// DriveTrain position PID
 constexpr double k_driveMaxSpeed = 24000;  // in/sec
-constexpr double k_speedP = 0.0;
-constexpr double k_speedI = 0.005;
-constexpr double k_speedD = 0.0;
+constexpr double k_posP = 0.0;
+constexpr double k_posI = 0.0;
+constexpr double k_posD = 0.0;
 
-// DriveTrain rotation PID
+// DriveTrain angle PID
 constexpr double k_rotateMaxSpeed = 320;
-constexpr double k_rotateP = 0.0000;
-constexpr double k_rotateI = 0.03;
-constexpr double k_rotateD = 0.00;
+constexpr double k_angleP = 0.045;
+constexpr double k_angleI = 0.001;
+constexpr double k_angleD = 0.001;
 
 // CheesyDrive constants
 constexpr double k_lowGearSensitive = 0.75;
