@@ -34,9 +34,15 @@ public:
 
     void Reset();
 
+    double Total();
+    void SetOutputRange(double minU, double maxU);
+
 private:
     std::unique_ptr<GainNode> m_P;
     std::unique_ptr<IntegralNode> m_I;
     std::unique_ptr<DerivativeNode> m_D;
     std::unique_ptr<SumNode> m_sum;
+
+    double m_minU = -1.0;
+    double m_maxU = 1.0;
 };
