@@ -71,3 +71,5 @@ void PIDNode::Reset() {
     m_I->Reset();
     m_D->Reset();
 }
+
+double PIDNode::Total() { return m_I->Get(); }
