@@ -6,6 +6,8 @@
 
 #include "NodeBase.hpp"
 
+#include <limits>
+
 /**
  * Represents an integrator in a control system diagram.
  */
