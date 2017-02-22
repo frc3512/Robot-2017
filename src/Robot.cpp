@@ -65,6 +65,8 @@ void Robot::OperatorControl() {
         robotDrive.Debug();
 
         DS_PrintOut();
+
+        std::this_thread::sleep_for(10ms);
     }
 }
 
@@ -108,6 +110,8 @@ void Robot::DS_PrintOut() {
 
         pidGraph.ResetInterval();
     }
+
+    dsDisplay.ReceiveFromDS();
 }
 
 START_ROBOT_CLASS(Robot)

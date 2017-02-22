@@ -55,7 +55,6 @@ private:
     ButtonTracker drive2Buttons{k_driveStick2Port};
 
     frc::Timer autoTimer;
-    frc::Timer displayTimer;
 
     // Used for sending data to the Driver Station
     DSDisplay& dsDisplay{DSDisplay::GetInstance(k_dsPort)};
