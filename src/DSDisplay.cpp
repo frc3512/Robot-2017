@@ -24,6 +24,11 @@ void DSDisplay::SendToDS() {
 }
 
 const std::string DSDisplay::ReceiveFromDS() {
+    // Send keepalive
+    Clear();
+    m_packet << static_cast<std::string>("\r\n");
+    SendToDS();
+
     if (m_socket.receive(m_recvBuffer, 256, m_recvAmount, m_recvIP,
                          m_recvPort) == sf::Socket::Done) {
         if (std::strncmp(m_recvBuffer, "connect\r\n", 9) == 0) {
