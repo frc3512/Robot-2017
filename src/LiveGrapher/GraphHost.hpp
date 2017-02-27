@@ -30,15 +30,16 @@
  * in looping situations.
  *
  * Example:
- *     GraphHost pidGraph(3513); // In .hpp
+ *     GraphHost pidGraph(3513);
+ *     pidGraph.SetSendInterval(5ms);
  *
- *     pidGraph.SetSendInterval(5ms); // In .cpp
+ *     while (IsOperatorControl() && IsEnabled()) {
+ *         if (pidGraph.HasIntervalPassed()) {
+ *             pidGraph.GraphData(frisbeeShooter.getRPM(), "PID0");
+ *             pidGraph.GraphData(frisbeeShooter.getTargetRPM(), "PID1");
  *
- *     if (pidGraph.HasIntervalPassed()) {
- *         pidGraph.GraphData(frisbeeShooter.getRPM(), "PID0");
- *         pidGraph.GraphData(frisbeeShooter.getTargetRPM(), "PID1");
- *
- *         pidGraph.ResetInterval();
+ *             pidGraph.ResetInterval();
+ *         }
  *     }
  */
 
@@ -90,7 +91,12 @@ private:
     int m_ipcfd_r;
     int m_ipcfd_w;
     int m_port;
+
+    /* Sorted by graph name instead of ID because the user passes in a string.
+     * (They don't know the ID.) This makes graph ID lookups take O(log n).
+     */
     std::map<std::string, uint8_t> m_graphList;
+
     std::vector<std::unique_ptr<SocketConnection>> m_connList;
 
     // Temporary buffer used in ReadPackets()
