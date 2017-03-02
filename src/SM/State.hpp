@@ -46,7 +46,7 @@ private:
      * StateMachine overrides this to do extra handling and recursion (see
      * StateMachine.hpp for details).
      */
-    std::string HandleEvent(std::string& event) override;
+    std::string HandleEvent(std::string event) override;
 
     friend class StateMachine;
 };

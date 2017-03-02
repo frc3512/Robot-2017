@@ -12,7 +12,7 @@ Robot::Robot() {
 
     server.SetSource(camera1);
 
-    liveGrapher.SetSendInterval(50ms);
+    // liveGrapher.SetSendInterval(50ms);
 
     robotGrabber.SetLimitOnHigh(false);
 }
@@ -83,12 +83,12 @@ void Robot::OperatorControl() {
 void Robot::Autonomous() {
     autoTimer.Reset();
     autoTimer.Start();
+    std::cout << "Autonomous Called" << std::endl;
 
-    AutoCenterGear();
+    // AutoLeftGear();
+    dsDisplay.ExecAutonomous();
 
-    // dsDisplay.ExecAutonomous();
-
-    DS_PrintOut();
+    // DS_PrintOut();
 }
 
 void Robot::Disabled() {
@@ -101,29 +101,30 @@ void Robot::Disabled() {
 
 void Robot::Test() {
     while (IsEnabled() && IsTest()) {
-        DS_PrintOut();
+        // DS_PrintOut();
         std::this_thread::sleep_for(10ms);
     }
 }
 
 void Robot::DS_PrintOut() {
-    if (liveGrapher.HasIntervalPassed()) {
-        // liveGrapher.GraphData(robotDrive.GetAngle(), "Gyro Angle");
-        // liveGrapher.GraphData(robotDrive.GetRate(), "Gyro Rate");
-        // liveGrapher.GraphData((300 * driveStick2.GetX()), "Gyro Rate Ref");
-        // liveGrapher.GraphData(-robotDrive.GetRightRate(), "Encoder Right Rate");
-        // liveGrapher.GraphData(robotDrive.GetLeftRate(), "Encoder Left Rate");
+    // if (liveGrapher.HasIntervalPassed()) {
+    // liveGrapher.GraphData(robotDrive.GetAngle(), "Gyro Angle");
+    // liveGrapher.GraphData(robotDrive.GetRate(), "Gyro Rate");
+    // liveGrapher.GraphData((300 * driveStick2.GetX()), "Gyro Rate Ref");
+    // liveGrapher.GraphData(-robotDrive.GetRightRate(), "Encoder Right
+    // Rate");
+    // liveGrapher.GraphData(robotDrive.GetLeftRate(), "Encoder Left Rate");
 
-        // liveGrapher.GraphData(robotDrive.GetFilteredRate(), "Filtered Gyro");
+    // liveGrapher.GraphData(robotDrive.GetFilteredRate(), "Filtered Gyro");
 
-        liveGrapher.GraphData(robotDrive.GetPosition(), "Position");
-        liveGrapher.GraphData(93.3 * -driveStick1.GetY(), "Position Ref");
-        liveGrapher.GraphData(robotDrive.GetAngle(), "Angle");
-        liveGrapher.GraphData(/*30 * driveStick2.GetX()*/ 0, "Angle Ref");
+    // liveGrapher.GraphData(robotDrive.GetPosition(), "Position");
+    // liveGrapher.GraphData(93.3 * -driveStick1.GetY(), "Position Ref");
+    // liveGrapher.GraphData(robotDrive.GetAngle(), "Angle");
+    // liveGrapher.GraphData(/*30 * driveStick2.GetX()*/ 0, "Angle Ref");
 
-        liveGrapher.ResetInterval();
-    }
-
+    // liveGrapher.ResetInterval();
+    //}
+    // robotDrive.Debug();
     dsDisplay.ReceiveFromDS();
 }
 

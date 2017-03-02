@@ -15,7 +15,6 @@
 #include "../CtrlSys/RefInput.hpp"
 #include "../CtrlSys/Sensor.hpp"
 #include "../CtrlSys/SumNode.hpp"
-#include "../SM/StateMachine.hpp"
 #include "../Utility.hpp"
 #include "GearBox.hpp"
 #include "SubsystemBase.hpp"
@@ -69,6 +68,9 @@ public:
     double GetPosReference() const;
     double GetAngleReference() const;
 
+    bool PosAtReference();
+    bool AngleAtReference();
+
     // Return gyro's angle
     double GetAngle() const;
 
@@ -96,7 +98,7 @@ private:
 
     // Angle PID
     ADXRS450_Gyro m_gyro;
-    FuncNode m_angleSensor{[&] { return m_gyro.GetAngle(); }};
+    FuncNode m_angleSensor{[this] { return GetAngle(); }};
     SumNode m_angleError{&m_angleRef, true, &m_angleSensor, false};
     PIDNode m_anglePID{k_angleP, k_angleI, k_angleD, &m_angleError};
 

@@ -2,6 +2,10 @@
 
 #include "Output.hpp"
 
+#include <iostream>
+
+#include <DriverStation.h>
+
 /**
  * Calls PIDWrite() on the output at a regular interval.
  *
@@ -51,4 +55,8 @@ void Output::OutputFunc() {
     } else {
         m_output->PIDWrite(U);
     }
+
+    /*    if (DriverStation::GetInstance().IsAutonomous()){
+    *    	std::cout << "Running Auton" << std::endl;
+        }*/
 }
