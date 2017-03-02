@@ -98,7 +98,7 @@ private:
 
     // Angle PID
     ADXRS450_Gyro m_gyro;
-    FuncNode m_angleSensor{[this] { return GetAngle(); }};
+    FuncNode m_angleSensor{[&] { return m_gyro.GetAngle(); }};
     SumNode m_angleError{&m_angleRef, true, &m_angleSensor, false};
     PIDNode m_anglePID{k_angleP, k_angleI, k_angleD, &m_angleError};
 
