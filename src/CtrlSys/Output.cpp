@@ -1,4 +1,6 @@
 // Copyright (c) FRC Team 3512, Spartatroniks 2017. All Rights Reserved.
+#include <DriverStation.h>
+#include <iostream>
 
 #include "Output.hpp"
 
@@ -50,5 +52,9 @@ void Output::OutputFunc() {
         m_output->PIDWrite(m_minU);
     } else {
         m_output->PIDWrite(U);
+    }
+
+    if (DriverStation::GetInstance().IsAutonomous()){
+    	std::cout << "Running Auton" << std::endl;
     }
 }

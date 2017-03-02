@@ -10,7 +10,7 @@ std::string State::Name() const { return m_name; }
 
 std::string State::StackTrace() const { return Name(); }
 
-std::string State::HandleEvent(std::string& event) {
+std::string State::HandleEvent(std::string event) {
     auto ret = CheckTransition(event);
 
     // If state requested a transition, consume the event

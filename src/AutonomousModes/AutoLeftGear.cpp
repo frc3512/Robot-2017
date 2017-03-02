@@ -9,6 +9,7 @@ using namespace std::chrono_literals;
  * airship as viewed from the Driver Station.
  */
 void Robot::AutoLeftGear() {
+
     shifter.Set(true);  // low gear
     StateMachine leftGear("LeftGear");
 
@@ -21,15 +22,23 @@ void Robot::AutoLeftGear() {
     state->CheckTransition = [this](const std::string& event) {
         return "Initial-Forward";
     };
-    state->Exit = [this] { robotDrive.StartClosedLoop(); };
+    state->Exit = [this] {
+    	std::cout << "Exit Idle" << std::endl;
+    	robotDrive.StartClosedLoop(); };
 
     // Init-Forward
     state = std::make_unique<State>("Initial-Forward");
     state->Entry = [this] {
-        // setpoint at x
+    	std::cout << "Entry" << std::endl;
+    	std::cout << "Reference Before: " << robotDrive.GetPosReference() << std::endl;
+        robotDrive.SetPositionReference(114.3 - 39 /*robot length*/);
+    	std::cout << "Reference After: " << robotDrive.GetPosReference() << std::endl;
     };
     state->CheckTransition = [this](const std::string& event) {
-        if (1 /*at setpoint */) {
+    	std::cout << "Check transition" << std::endl;
+    	std::cout << "Position: " << robotDrive.GetPosition() << std::endl;
+    	std::cout << "Reference: " << robotDrive.GetPosReference() << std::endl;
+        if (robotDrive.PosAtReference()) {
             return "Rotate";
         } else {
             return "";
@@ -40,12 +49,11 @@ void Robot::AutoLeftGear() {
     // Rotate TODO: Add PID function for rotation
     state = std::make_unique<State>("Rotate");
     state->Entry = [this] {
-        while (robotDrive.GetAngle() < 45.0) {
-            robotDrive.Drive(0, 0.5, true);
-        }
+        robotDrive.SetAngleReference(45.0);
+
     };
     state->CheckTransition = [this](const std::string& event) {
-        if (robotDrive.GetAngle() >= 45.0) {
+        if (robotDrive.AngleAtReference()) {
             return "Final-Forward";
         } else {
             return "";
@@ -57,10 +65,10 @@ void Robot::AutoLeftGear() {
     state = std::make_unique<State>("Final-Forward");
     state->Entry = [this] {
         robotDrive.ResetEncoders();
-        // setpoint at x
+        robotDrive.SetPositionReference(114.3 - 39 /*robot length*/);
     };
     state->CheckTransition = [this](const std::string& event) {
-        if (1 /*at setpoint */) {
+        if (robotDrive.PosAtReference()) {
             return "Idle";
         } else {
             return "";
@@ -72,6 +80,7 @@ void Robot::AutoLeftGear() {
     while (IsAutonomous() && IsEnabled() &&
            leftGear.StackTrace() != "leftGear > Idle") {
         leftGear.Run();
+        leftGear.HandleEvent("");
         DS_PrintOut();
 
         std::this_thread::sleep_for(10ms);

@@ -52,7 +52,7 @@ public:
      * state transitions in any parent state machines beyond the immediate
      * parent as the stack is unwound.
      */
-    std::string HandleEvent(std::string& event) override;
+    std::string HandleEvent(std::string event) override;
 
     /* If set to 'true', enables print statements for current state, event
      * occurrences, and transitons.
