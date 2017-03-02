@@ -17,9 +17,7 @@ void Robot::AutoCenterGear() {
     robotDrive.SetPositionReference(114.3 - 39 /*robot length*/);
     robotDrive.SetAngleReference(0);
 
-    while (IsAutonomous() && IsEnabled() &&
-           std::abs(robotDrive.GetPosReference() - robotDrive.GetPosition()) >
-               0.001) {
+    while (IsAutonomous() && IsEnabled() && !robotDrive.PosAtReference()) {
         DS_PrintOut();
 
         std::this_thread::sleep_for(10ms);
