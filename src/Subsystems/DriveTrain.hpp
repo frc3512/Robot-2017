@@ -69,6 +69,9 @@ public:
     double GetPosReference() const;
     double GetAngleReference() const;
 
+    bool PosAtReference();
+    bool AngleAtReference();
+
     // Return gyro's angle
     double GetAngle() const;
 
