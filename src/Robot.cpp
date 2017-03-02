@@ -83,10 +83,10 @@ void Robot::OperatorControl() {
 void Robot::Autonomous() {
     autoTimer.Reset();
     autoTimer.Start();
+    std::cout << "Autonomous Called" << std::endl;
 
-    AutoCenterGear();
-
-    // dsDisplay.ExecAutonomous();
+    // AutoLeftGear();
+    dsDisplay.ExecAutonomous();
 
     DS_PrintOut();
 }
@@ -94,7 +94,7 @@ void Robot::Autonomous() {
 void Robot::Disabled() {
     robotDrive.CalibrateGyro();
     while (IsDisabled()) {
-        DS_PrintOut();
+        //DS_PrintOut();
         std::this_thread::sleep_for(10ms);
     }
 }
@@ -111,7 +111,8 @@ void Robot::DS_PrintOut() {
         // liveGrapher.GraphData(robotDrive.GetAngle(), "Gyro Angle");
         // liveGrapher.GraphData(robotDrive.GetRate(), "Gyro Rate");
         // liveGrapher.GraphData((300 * driveStick2.GetX()), "Gyro Rate Ref");
-        // liveGrapher.GraphData(-robotDrive.GetRightRate(), "Encoder Right Rate");
+        // liveGrapher.GraphData(-robotDrive.GetRightRate(), "Encoder Right
+        // Rate");
         // liveGrapher.GraphData(robotDrive.GetLeftRate(), "Encoder Left Rate");
 
         // liveGrapher.GraphData(robotDrive.GetFilteredRate(), "Filtered Gyro");
@@ -123,7 +124,7 @@ void Robot::DS_PrintOut() {
 
         liveGrapher.ResetInterval();
     }
-
+    // robotDrive.Debug();
     dsDisplay.ReceiveFromDS();
 }
 

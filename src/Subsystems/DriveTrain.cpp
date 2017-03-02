@@ -188,6 +188,14 @@ double DriveTrain::GetPosReference() const { return m_posRef.Get(); }
 
 double DriveTrain::GetAngleReference() const { return m_angleRef.Get(); }
 
+bool DriveTrain::PosAtReference() {
+    return std::abs(GetPosReference() - GetPosition()) < 1.5;
+}
+
+bool DriveTrain::AngleAtReference() {
+    return std::abs(GetAngleReference() - GetAngle()) < 1.5;
+}
+
 double DriveTrain::GetAngle() const { return m_gyro.GetAngle(); }
 
 double DriveTrain::GetRate() const { return m_gyro.GetRate(); }
@@ -197,20 +205,30 @@ void DriveTrain::ResetGyro() { m_gyro.Reset(); }
 void DriveTrain::CalibrateGyro() { m_gyro.Calibrate(); }
 
 void DriveTrain::Debug() {
+
+	// Motor Out/Input
     // std::cout << "Left MO: " << m_leftOutput.Get() << std::endl;
     // std::cout << "Left MI: " << m_leftMotorInput.Get() << std::endl;
     // std::cout << "Right MO: " << m_rightOutput.Get() << std::endl;
     // std::cout << "Right MI: " << m_rightMotorInput.Get() << std::endl;
-    // std::cout << "Rotate: " << m_rotatePID.Get() << std::endl;
-    // std::cout << "Gyro: " << m_gyro.GetRate() << std::endl;
-    // std::cout << "Left Rate: " << m_leftGrbx.GetSpeed() << std::endl;
-    // std::cout << "Right Rate: " << m_rightGrbx.GetSpeed() << std::endl;
-    // std::cout << "Left Pos: " << m_leftGrbx.GetPosition() << std::endl;
-    // std::cout << "Right Pos: " << m_rightGrbx.GetPosition() << std::endl;
+
+	// Gyro Values
+	std::cout << "Gyro Rate: " << m_gyro.GetRate();
+    std::cout << " Angle: " << m_gyro.GetAngle() << std::endl;
+
+	// Velocity and Position
+    // std::cout << "Left Velocity: " << m_leftGrbx.GetSpeed() << std::endl;
+    // std::cout << "Right Velocity: " << m_rightGrbx.GetSpeed() << std::endl;
+    std::cout << "Left Position: " << m_leftGrbx.GetPosition() << "Right: " << m_rightGrbx.GetPosition() << std::endl;
+
+	// PID
     // std::cout << "Pos PID: " << m_posPID.Get() << std::endl;
     // std::cout << "Velocity PID: " << m_velPID.Get() << std::endl;
     // std::cout << "Angle PID: " << m_anglePID.Get() << std::endl;
     // std::cout << "Angle Error: " << m_angleError.Get() << std::endl;
-    // std::cout << "I total:" << m_anglePID.Total() << std::endl;
-    std::cout << "Pos Error: " << m_posError.Get() << std::endl;
+    // std::cout << "Pos Error: " << m_posError.Get() << std::endl;
+    // std::cout << "Rotate: " << m_rotatePID.Get() << std::endl;
+
+    // References
+    std::cout << "References: Position: " << m_posRef.Get() << "Angle: " << m_angleRef.Get() << std::endl;
 }

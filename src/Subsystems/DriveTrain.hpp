@@ -15,7 +15,6 @@
 #include "../CtrlSys/RefInput.hpp"
 #include "../CtrlSys/Sensor.hpp"
 #include "../CtrlSys/SumNode.hpp"
-#include "../SM/StateMachine.hpp"
 #include "../Utility.hpp"
 #include "GearBox.hpp"
 #include "SubsystemBase.hpp"
@@ -68,6 +67,9 @@ public:
     // Returns encoder PID loop setpoints
     double GetPosReference() const;
     double GetAngleReference() const;
+
+    bool PosAtReference();
+    bool AngleAtReference();
 
     // Return gyro's angle
     double GetAngle() const;

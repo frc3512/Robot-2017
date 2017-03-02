@@ -11,5 +11,5 @@ class EventAcceptor {
 public:
     virtual ~EventAcceptor() = default;
 
-    virtual std::string HandleEvent(std::string& event) = 0;
+    virtual std::string HandleEvent(std::string event) = 0;
 };
