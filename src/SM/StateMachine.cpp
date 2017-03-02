@@ -24,7 +24,7 @@ std::string StateMachine::StackTrace() const {
     return Name() + " > " + m_currentState->StackTrace();
 }
 
-std::string StateMachine::HandleEvent(std::string& event) {
+std::string StateMachine::HandleEvent(std::string event) {
     if (m_debugEnabled) {
         using namespace std::chrono;
         auto now = steady_clock::now();
@@ -68,7 +68,9 @@ std::string StateMachine::HandleEvent(std::string& event) {
 bool StateMachine::SetState(const std::string& newState) {
     for (auto& state : m_states) {
         if (state->Name() == newState) {
+        	std::cout << "Outer If: " << m_currentState << std::endl;
             if (m_currentState != nullptr) {
+            	std::cout << "Inner If: " << m_currentState << std::endl;
                 m_currentState->Exit();
             }
             m_currentState = state.get();

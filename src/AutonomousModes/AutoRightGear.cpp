@@ -2,10 +2,11 @@
 
 #include "../Robot.hpp"
 #include "../Subsystems/DriveTrain.hpp"
+#include "../SM/StateMachine.hpp"
 
 using namespace std::chrono_literals;
 
-/* Moves forward, rotates, then moves forward again to hang gear on left side of
+/* Moves forward, rotates, then moves forward again to hang gear on right side of
  * airship as viewed from the Driver Station.
  */
 void Robot::AutoRightGear() {
@@ -26,10 +27,10 @@ void Robot::AutoRightGear() {
     // Init-Forward
     state = std::make_unique<State>("Initial-Forward");
     state->Entry = [this] {
-        // setpoint at x
+        robotDrive.SetPositionReference(114.3 - 39 /*robot length*/);
     };
     state->CheckTransition = [this](const std::string& event) {
-        if (1 /*at setpoint */) {
+        if (robotDrive.PosAtReference()) {
             return "Rotate";
         } else {
             return "";
@@ -40,12 +41,11 @@ void Robot::AutoRightGear() {
     // Rotate TODO: Add PID function for rotation
     state = std::make_unique<State>("Rotate");
     state->Entry = [this] {
-        while (robotDrive.GetAngle() > -45.0) {
-            robotDrive.Drive(0, -0.5, true);
-        }
+        robotDrive.SetAngleReference(-45.0);
+
     };
     state->CheckTransition = [this](const std::string& event) {
-        if (robotDrive.GetAngle() <= -45.0) {
+        if (robotDrive.AngleAtReference()) {
             return "Final-Forward";
         } else {
             return "";
@@ -57,10 +57,10 @@ void Robot::AutoRightGear() {
     state = std::make_unique<State>("Final-Forward");
     state->Entry = [this] {
         robotDrive.ResetEncoders();
-        // setpoint at x
+        robotDrive.SetPositionReference(114.3 - 39 /*robot length*/);
     };
     state->CheckTransition = [this](const std::string& event) {
-        if (1 /*at setpoint */) {
+        if (robotDrive.PosAtReference()) {
             return "Idle";
         } else {
             return "";
@@ -70,7 +70,7 @@ void Robot::AutoRightGear() {
     rightGear.Run();
 
     while (IsAutonomous() && IsEnabled() &&
-           rightGear.StackTrace() != "rightGear > Idle") {
+           rightGear.StackTrace() != "RightGear > Idle") {
         rightGear.Run();
         DS_PrintOut();
 

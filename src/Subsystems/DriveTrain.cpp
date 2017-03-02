@@ -188,6 +188,12 @@ double DriveTrain::GetPosReference() const { return m_posRef.Get(); }
 
 double DriveTrain::GetAngleReference() const { return m_angleRef.Get(); }
 
+bool DriveTrain::PosAtReference() { return std::abs(GetPosReference() - GetPosition()) <
+0.001;}
+
+bool DriveTrain::AngleAtReference() { return std::abs(GetAngleReference() - GetAngle()) <
+0.001;}
+
 double DriveTrain::GetAngle() const { return m_gyro.GetAngle(); }
 
 double DriveTrain::GetRate() const { return m_gyro.GetRate(); }
@@ -212,5 +218,5 @@ void DriveTrain::Debug() {
     // std::cout << "Angle PID: " << m_anglePID.Get() << std::endl;
     // std::cout << "Angle Error: " << m_angleError.Get() << std::endl;
     // std::cout << "I total:" << m_anglePID.Total() << std::endl;
-    std::cout << "Pos Error: " << m_posError.Get() << std::endl;
+    // std::cout << "Pos Error: " << m_posError.Get() << std::endl;
 }

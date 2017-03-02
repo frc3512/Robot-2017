@@ -84,9 +84,8 @@ void Robot::Autonomous() {
     autoTimer.Reset();
     autoTimer.Start();
 
-    AutoCenterGear();
-
-    // dsDisplay.ExecAutonomous();
+    // AutoLeftGear();
+    dsDisplay.ExecAutonomous();
 
     DS_PrintOut();
 }
