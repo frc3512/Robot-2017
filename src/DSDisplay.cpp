@@ -18,9 +18,6 @@ void DSDisplay::SendToDS() {
     if (m_dsIP != sf::IpAddress::None) {
         m_socket.send(m_packet, m_dsIP, m_dsPort);
     }
-
-    // Used for testing purposes
-    m_socket.send(m_packet, sf::IpAddress(10, 35, 12, 42), m_dsPort);
 }
 
 const std::string DSDisplay::ReceiveFromDS() {
