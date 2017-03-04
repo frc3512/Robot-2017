@@ -13,7 +13,13 @@
  */
 
 // DS port
-constexpr double k_dsPort = 5800;
+constexpr int k_dsPort = 5800;
+
+// LiveGrapher host port
+constexpr int k_liveGrapherPort = 3513;
+
+// MJPEG server port
+constexpr int k_mjpegServerPort = 1180;
 
 /*
  * Joystick and buttons

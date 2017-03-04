@@ -59,11 +59,11 @@ private:
     // Used for sending data to the Driver Station
     DSDisplay& dsDisplay{DSDisplay::GetInstance(k_dsPort)};
 
-    // The LiveGrapher host
-    GraphHost pidGraph{3513};
+    // LiveGrapher host
+    GraphHost liveGrapher{k_liveGrapherPort};
 
     // Camera
     cs::UsbCamera camera1{"Camera 1", 0};
 
-    cs::MjpegServer server{"Server", 1180};
+    cs::MjpegServer server{"Server", k_mjpegServerPort};
 };

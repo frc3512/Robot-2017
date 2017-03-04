@@ -30,15 +30,15 @@
  * in looping situations.
  *
  * Example:
- *     GraphHost pidGraph(3513);
- *     pidGraph.SetSendInterval(5ms);
+ *     GraphHost liveGrapher(3513);
+ *     liveGrapher.SetSendInterval(5ms);
  *
  *     while (IsOperatorControl() && IsEnabled()) {
- *         if (pidGraph.HasIntervalPassed()) {
- *             pidGraph.GraphData(frisbeeShooter.getRPM(), "PID0");
- *             pidGraph.GraphData(frisbeeShooter.getTargetRPM(), "PID1");
+ *         if (liveGrapher.HasIntervalPassed()) {
+ *             liveGrapher.GraphData(frisbeeShooter.getRPM(), "PID0");
+ *             liveGrapher.GraphData(frisbeeShooter.getTargetRPM(), "PID1");
  *
- *             pidGraph.ResetInterval();
+ *             liveGrapher.ResetInterval();
  *         }
  *     }
  */

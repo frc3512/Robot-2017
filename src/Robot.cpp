@@ -12,7 +12,7 @@ Robot::Robot() {
 
     server.SetSource(camera1);
 
-    pidGraph.SetSendInterval(50ms);
+    liveGrapher.SetSendInterval(50ms);
 
     robotGrabber.SetLimitOnHigh(false);
 }
@@ -107,21 +107,21 @@ void Robot::Test() {
 }
 
 void Robot::DS_PrintOut() {
-    if (pidGraph.HasIntervalPassed()) {
-        // pidGraph.GraphData(robotDrive.GetAngle(), "Gyro Angle");
-        // pidGraph.GraphData(robotDrive.GetRate(), "Gyro Rate");
-        // pidGraph.GraphData((300 * driveStick2.GetX()), "Gyro Rate Ref");
-        // pidGraph.GraphData(-robotDrive.GetRightRate(), "Encoder Right Rate");
-        // pidGraph.GraphData(robotDrive.GetLeftRate(), "Encoder Left Rate");
+    if (liveGrapher.HasIntervalPassed()) {
+        // liveGrapher.GraphData(robotDrive.GetAngle(), "Gyro Angle");
+        // liveGrapher.GraphData(robotDrive.GetRate(), "Gyro Rate");
+        // liveGrapher.GraphData((300 * driveStick2.GetX()), "Gyro Rate Ref");
+        // liveGrapher.GraphData(-robotDrive.GetRightRate(), "Encoder Right Rate");
+        // liveGrapher.GraphData(robotDrive.GetLeftRate(), "Encoder Left Rate");
 
-        // pidGraph.GraphData(robotDrive.GetFilteredRate(), "Filtered Gyro");
+        // liveGrapher.GraphData(robotDrive.GetFilteredRate(), "Filtered Gyro");
 
-        pidGraph.GraphData(robotDrive.GetPosition(), "Position");
-        pidGraph.GraphData(93.3 * -driveStick1.GetY(), "Position Ref");
-        pidGraph.GraphData(robotDrive.GetAngle(), "Angle");
-        pidGraph.GraphData(/*30 * driveStick2.GetX()*/ 0, "Angle Ref");
+        liveGrapher.GraphData(robotDrive.GetPosition(), "Position");
+        liveGrapher.GraphData(93.3 * -driveStick1.GetY(), "Position Ref");
+        liveGrapher.GraphData(robotDrive.GetAngle(), "Angle");
+        liveGrapher.GraphData(/*30 * driveStick2.GetX()*/ 0, "Angle Ref");
 
-        pidGraph.ResetInterval();
+        liveGrapher.ResetInterval();
     }
 
     dsDisplay.ReceiveFromDS();
