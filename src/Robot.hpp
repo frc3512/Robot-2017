@@ -5,6 +5,7 @@
 #include <cscore.h>
 
 #include <CANTalon.h>
+#include <CameraServer.h>
 #include <Compressor.h>
 #include <DoubleSolenoid.h>
 #include <Joystick.h>
@@ -64,6 +65,7 @@ private:
 
     // Camera
     cs::UsbCamera camera1{"Camera 1", 0};
+    cs::UsbCamera camera2{"Camera 2", 1};
 
-    cs::MjpegServer server{"Server", k_mjpegServerPort};
+    cs::MjpegServer server{"Server", 5800};
 };
