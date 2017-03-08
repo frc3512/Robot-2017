@@ -32,6 +32,7 @@ public:
     void AutoLeftGear();
     void AutoCenterGear();
     void AutoRightGear();
+    void AutoBaseLine();
 
     void DS_PrintOut();
 

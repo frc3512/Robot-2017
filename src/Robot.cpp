@@ -9,6 +9,7 @@ Robot::Robot() {
     dsDisplay.AddAutoMethod("LeftGear", &Robot::AutoLeftGear, this);
     dsDisplay.AddAutoMethod("CenterGear", &Robot::AutoCenterGear, this);
     dsDisplay.AddAutoMethod("RightGear", &Robot::AutoRightGear, this);
+    dsDisplay.AddAutoMethod("BaseLine", &Robot::AutoBaseLine, this);
 
     server.SetSource(camera1);
 
