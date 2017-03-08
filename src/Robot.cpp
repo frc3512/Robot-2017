@@ -70,6 +70,17 @@ void Robot::OperatorControl() {
             robotWinch.Set(0);
         }
 
+        // Camera
+
+        if (armButtons.PressedButton(11)) {
+            if (server.GetSource() == camera1) {
+                server.SetSource(camera2);
+                std::cout << "Swap" << std::endl;
+            } else {
+                server.SetSource(camera1);
+            }
+        }
+
         drive2Buttons.Update();
         armButtons.Update();
         robotDrive.Debug();
