@@ -17,6 +17,7 @@ void Robot::AutoLeftGear() {
     State state = State::Idle;
 
     shifter.Set(true);  // low gear
+    gearPunch.Set(frc::DoubleSolenoid::kForward);
 
     bool SMHasRun = false;
 
@@ -70,7 +71,6 @@ void Robot::AutoLeftGear() {
                 break;
         }
         DS_PrintOut();
-        std::cout << "State = " << static_cast<int>(state) << std::endl;
         std::this_thread::sleep_for(10ms);
     }
 
