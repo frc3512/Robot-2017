@@ -16,6 +16,7 @@ void Robot::AutoCenterGear() {
     shifter.Set(true);  // low gear
     robotDrive.SetPositionReference(114.3 - 39 /*robot length*/);
     robotDrive.SetAngleReference(0);
+    gearPunch.Set(frc::DoubleSolenoid::kForward); // TODO: Add this to left and right gear
 
     while (IsAutonomous() && IsEnabled() &&
            std::abs(robotDrive.GetPosReference() - robotDrive.GetPosition()) >
