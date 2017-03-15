@@ -9,13 +9,17 @@ using namespace std::chrono_literals;
 /* Moves forwards a set distance and then stops with gear penetrated by
  * airship's divot*/
 void Robot::AutoCenterGear() {
-    robotDrive.StartClosedLoop();
+    robotDrive.StopClosedLoop();
+
+    shifter.Set(true);  // low gear
+    gearPunch.Set(frc::DoubleSolenoid::kForward);
 
     robotDrive.ResetEncoders();
     robotDrive.ResetGyro();
-    shifter.Set(true);  // low gear
     robotDrive.SetPositionReference(114.3 - 39 /*robot length*/);
     robotDrive.SetAngleReference(0);
+
+    robotDrive.StartClosedLoop();
 
     while (IsAutonomous() && IsEnabled() && !robotDrive.PosAtReference()) {
         DS_PrintOut();
