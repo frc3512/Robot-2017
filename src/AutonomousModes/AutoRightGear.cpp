@@ -57,6 +57,10 @@ void Robot::AutoRightGear() {
                     // Angle set to prevent overshoot
                     robotDrive.SetAngleReference(robotDrive.GetAngle());
 
+                    // There is a race condition between resetting the encoders
+                    // and setting the new position reference, but it's OK
+                    // because the controller will drive in the correct
+                    // direction during that time anyway.
                     robotDrive.ResetEncoders();
                     robotDrive.SetPositionReference((114.3 - 39) /
                                                     2 /*robot length*/);
@@ -65,7 +69,12 @@ void Robot::AutoRightGear() {
 
             // FinalForward
             case State::FinalForward:
-                if (robotDrive.PosAtReference()) {
+                // If robot is at position reference or is driving backward
+                // (could break robot by running into field wall), disable
+                // closed loop control
+                if (robotDrive.PosAtReference() ||
+                    robotDrive.GetLeftDisplacement() < -5.0 ||
+                    robotDrive.GetRightDisplacement() < -5.0) {
                     robotDrive.StopClosedLoop();
                     SMHasRun = true;
                 }
