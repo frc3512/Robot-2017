@@ -12,6 +12,8 @@ Robot::Robot() {
     dsDisplay.AddAutoMethod("BaseLine", &Robot::AutoBaseLine, this);
 
     server.SetSource(camera1);
+    camera1.SetResolution(320, 240);
+    camera2.SetResolution(320, 240);
 
     // liveGrapher.SetSendInterval(50ms);
 
@@ -84,7 +86,7 @@ void Robot::OperatorControl() {
 
         drive2Buttons.Update();
         armButtons.Update();
-        robotDrive.Debug();
+        // robotDrive.Debug();
 
         DS_PrintOut();
 
@@ -136,7 +138,7 @@ void Robot::DS_PrintOut() {
 
     // liveGrapher.ResetInterval();
     //}
-    // robotDrive.Debug();
+    robotDrive.Debug();
     dsDisplay.ReceiveFromDS();
 }
 

@@ -16,7 +16,8 @@ void Robot::AutoCenterGear() {
 
     robotDrive.ResetEncoders();
     robotDrive.ResetGyro();
-    robotDrive.SetPositionReference(114.3 - 39 /*robot length*/);
+    robotDrive.SetPositionReference(110 - 39 /*robot length*/ -
+                                    32 /*Comp Tuning*/);
     robotDrive.SetAngleReference(0);
 
     robotDrive.StartClosedLoop();
@@ -28,5 +29,6 @@ void Robot::AutoCenterGear() {
     }
     robotDrive.StopClosedLoop();
 
+    gearPunch.Set(frc::DoubleSolenoid::kReverse);
     robotDrive.Drive(0.0, 0.0, false);
 }
