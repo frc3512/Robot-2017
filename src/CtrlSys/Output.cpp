@@ -31,7 +31,11 @@ void Output::Start() { m_thread->StartPeriodic(m_period); }
 /**
  * Stops closed loop control
  */
-void Output::Stop() { m_thread->Stop(); }
+void Output::Stop() {
+    m_thread->Stop();
+
+    m_output->PIDWrite(0.0);
+}
 
 /**
  * Sets the minimum and maximum values to write.

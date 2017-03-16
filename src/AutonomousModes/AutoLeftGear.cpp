@@ -51,9 +51,14 @@ void Robot::AutoLeftGear() {
                     // Angle set to prevent overshoot
                     robotDrive.SetAngleReference(robotDrive.GetAngle());
 
+                    // Stop closed loop to prevent controller from driving away
+                    // between resetting encoder and setting new position
+                    // reference.
+                    robotDrive.StopClosedLoop();
                     robotDrive.ResetEncoders();
                     robotDrive.SetPositionReference(47.0 - k_robotLength / 2.0 +
                                                     18.0);
+                    robotDrive.StartClosedLoop();
                 }
                 break;
 
@@ -63,7 +68,6 @@ void Robot::AutoLeftGear() {
                     autoTimer.HasPeriodPassed(7)) {
                     robotDrive.StopClosedLoop();
                     gearPunch.Set(frc::DoubleSolenoid::kReverse);
-                    robotDrive.Drive(0.0, 0.0, false);
 
                     SMHasRun = true;
                 }
