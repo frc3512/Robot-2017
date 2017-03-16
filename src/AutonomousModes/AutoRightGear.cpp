@@ -17,7 +17,7 @@ void Robot::AutoRightGear() {
 
     State state = State::Idle;
 
-    shifter.Set(true);  // low gear
+    shifter.Set(false);  // false = high gear
     gearPunch.Set(frc::DoubleSolenoid::kForward);
 
     bool SMHasRun = false;
@@ -29,7 +29,8 @@ void Robot::AutoRightGear() {
                 robotDrive.ResetEncoders();
                 robotDrive.ResetGyro();
                 robotDrive.StartClosedLoop();
-                robotDrive.SetPositionReference(114.3 - 39 /*robot length*/);
+                robotDrive.SetPositionReference(
+                    104 - (39 / 2) /*robot length*/ - 4.5);
                 robotDrive.SetAngleReference(0);
                 state = State::InitForward;
                 break;
@@ -41,7 +42,7 @@ void Robot::AutoRightGear() {
                           << " Pos: " << robotDrive.GetPosition() << std::endl;
                 if (robotDrive.PosAtReference()) {
                     // Angle references are all scaled by 7 (don't ask why)
-                    robotDrive.SetAngleReference(-45 / 7);
+                    robotDrive.SetAngleReference(-60 / 7);
 
                     state = State::Rotate;
                 }
@@ -58,8 +59,8 @@ void Robot::AutoRightGear() {
                     robotDrive.SetAngleReference(robotDrive.GetAngle());
 
                     robotDrive.ResetEncoders();
-                    robotDrive.SetPositionReference((114.3 - 39) /
-                                                    2 /*robot length*/);
+                    robotDrive.SetPositionReference(
+                        47 - (39 / 2) /*robot length*/ + 17.5);
                 }
                 break;
 
@@ -67,6 +68,9 @@ void Robot::AutoRightGear() {
             case State::FinalForward:
                 if (robotDrive.PosAtReference()) {
                     robotDrive.StopClosedLoop();
+                    gearPunch.Set(frc::DoubleSolenoid::kReverse);
+                    robotDrive.Drive(0.0, 0.0, false);
+
                     SMHasRun = true;
                 }
                 break;
