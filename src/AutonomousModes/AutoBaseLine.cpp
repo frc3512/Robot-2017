@@ -10,6 +10,9 @@ using namespace std::chrono_literals;
 void Robot::AutoBaseLine() {
     robotDrive.StartClosedLoop();
 
+    shifter.Set(false);  // low gear
+    gearPunch.Set(frc::DoubleSolenoid::kForward);
+
     robotDrive.ResetEncoders();
     robotDrive.ResetGyro();
     shifter.Set(true);  // low gear
