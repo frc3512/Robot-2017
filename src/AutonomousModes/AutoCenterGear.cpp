@@ -26,7 +26,6 @@ void Robot::AutoCenterGear() {
 
         std::this_thread::sleep_for(10ms);
     }
-    robotDrive.StopClosedLoop();
 
-    robotDrive.Drive(0.0, 0.0, false);
+    robotDrive.StopClosedLoop();
 }
