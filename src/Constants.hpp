@@ -46,8 +46,9 @@ constexpr int k_rightDriveSlaveID = 14;
 // DriveTrain distance per pulse
 constexpr double k_driveDpP = 240.0 / ((6552 + 6522) / 2.0);  // in/pulse
 
-// Robot width
-constexpr double k_robotWidth = 30.0;  // inches
+// Robot dimensions
+constexpr double k_robotWidth = 30.0;   // inches
+constexpr double k_robotLength = 39.0;  // inches
 
 // DriveTrain position PID, Extra //'s mean practice PID values
 constexpr double k_driveMaxSpeed = 24000;  // in/sec
