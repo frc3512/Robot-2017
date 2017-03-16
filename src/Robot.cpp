@@ -12,6 +12,8 @@ Robot::Robot() {
     dsDisplay.AddAutoMethod("BaseLine", &Robot::AutoBaseLine, this);
 
     server.SetSource(camera1);
+    camera1.SetResolution(320, 240);
+    camera2.SetResolution(320, 240);
 
     // liveGrapher.SetSendInterval(50ms);
 
@@ -105,7 +107,11 @@ void Robot::Autonomous() {
 
 void Robot::Disabled() {
     robotDrive.CalibrateGyro();
+
     while (IsDisabled()) {
+        if (driveStick1.GetRawButton(5)) {
+        	robotDrive.CalibrateGyro();
+        }
         DS_PrintOut();
         std::this_thread::sleep_for(10ms);
     }
