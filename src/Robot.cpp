@@ -12,6 +12,10 @@ Robot::Robot() {
     dsDisplay.AddAutoMethod("BaseLine", &Robot::AutoBaseLine, this);
 
     server.SetSource(camera1);
+    camera1.SetResolution(320, 240);
+    camera1.SetFPS(15);
+    camera2.SetResolution(320, 240);
+    camera2.SetFPS(15);
 
     // liveGrapher.SetSendInterval(50ms);
 
@@ -50,10 +54,10 @@ void Robot::OperatorControl() {
         }
 
         if (grabberStick.GetRawButton(3)) {
-            arm.Set(frc::DoubleSolenoid::kReverse);
+            arm.Set(frc::DoubleSolenoid::kForward);
         }
         if (grabberStick.GetRawButton(5)) {
-            arm.Set(frc::DoubleSolenoid::kForward);
+            arm.Set(frc::DoubleSolenoid::kReverse);
         }
 
         if (grabberStick.GetRawButton(4)) {
@@ -80,11 +84,11 @@ void Robot::OperatorControl() {
             } else {
                 server.SetSource(camera1);
             }
-        }
+        };
 
         drive2Buttons.Update();
         armButtons.Update();
-        robotDrive.Debug();
+        // robotDrive.Debug();
 
         DS_PrintOut();
 
@@ -97,14 +101,13 @@ void Robot::Autonomous() {
     autoTimer.Start();
     std::cout << "Autonomous Called" << std::endl;
 
-    // AutoLeftGear();
+    // AutoCenterGear();
     dsDisplay.ExecAutonomous();
 
     // DS_PrintOut();
 }
 
 void Robot::Disabled() {
-    robotDrive.CalibrateGyro();
     while (IsDisabled()) {
         DS_PrintOut();
         std::this_thread::sleep_for(10ms);
@@ -136,7 +139,7 @@ void Robot::DS_PrintOut() {
 
     // liveGrapher.ResetInterval();
     //}
-    // robotDrive.Debug();
+    robotDrive.Debug();
     dsDisplay.ReceiveFromDS();
 }
 

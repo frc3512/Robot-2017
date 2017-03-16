@@ -16,7 +16,7 @@ void Robot::AutoLeftGear() {
 
     State state = State::Idle;
 
-    shifter.Set(true);  // low gear
+    shifter.Set(false);  // false = high gear
     gearPunch.Set(frc::DoubleSolenoid::kForward);
 
     bool SMHasRun = false;
@@ -28,7 +28,8 @@ void Robot::AutoLeftGear() {
                 robotDrive.ResetEncoders();
                 robotDrive.ResetGyro();
                 robotDrive.StartClosedLoop();
-                robotDrive.SetPositionReference(114.3 - 39 /*robot length*/);
+                robotDrive.SetPositionReference(104 -
+                                                (39 / 2) /*robot length*/ - 30);
                 robotDrive.SetAngleReference(0);
                 state = State::InitForward;
                 break;
@@ -57,8 +58,8 @@ void Robot::AutoLeftGear() {
                     robotDrive.SetAngleReference(robotDrive.GetAngle());
 
                     robotDrive.ResetEncoders();
-                    robotDrive.SetPositionReference((114.3 - 39) /
-                                                    2 /*robot length*/);
+                    robotDrive.SetPositionReference(47 -
+                                                    (39 / 2) /*robot length*/ - 13.5);
                 }
                 break;
 
@@ -66,6 +67,9 @@ void Robot::AutoLeftGear() {
             case State::FinalForward:
                 if (robotDrive.PosAtReference()) {
                     robotDrive.StopClosedLoop();
+                    gearPunch.Set(frc::DoubleSolenoid::kReverse);
+                    robotDrive.Drive(0.0, 0.0, false);
+
                     SMHasRun = true;
                 }
                 break;
@@ -73,6 +77,4 @@ void Robot::AutoLeftGear() {
         DS_PrintOut();
         std::this_thread::sleep_for(10ms);
     }
-
-    robotDrive.StopClosedLoop();
 }

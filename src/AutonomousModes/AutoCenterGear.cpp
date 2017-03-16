@@ -11,12 +11,13 @@ using namespace std::chrono_literals;
 void Robot::AutoCenterGear() {
     robotDrive.StopClosedLoop();
 
-    shifter.Set(true);  // low gear
+    shifter.Set(false);  // false = high gear
     gearPunch.Set(frc::DoubleSolenoid::kForward);
 
     robotDrive.ResetEncoders();
     robotDrive.ResetGyro();
-    robotDrive.SetPositionReference(114.3 - 39 /*robot length*/);
+    robotDrive.SetPositionReference(110 - 39 /*robot length*/
+                                     /*Comp Tuning*/);
     robotDrive.SetAngleReference(0);
 
     robotDrive.StartClosedLoop();
@@ -28,5 +29,6 @@ void Robot::AutoCenterGear() {
     }
     robotDrive.StopClosedLoop();
 
+    gearPunch.Set(frc::DoubleSolenoid::kReverse);
     robotDrive.Drive(0.0, 0.0, false);
 }
