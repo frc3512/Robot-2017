@@ -29,8 +29,7 @@ void Robot::AutoRightGear() {
                 robotDrive.ResetEncoders();
                 robotDrive.ResetGyro();
                 robotDrive.StartClosedLoop();
-                robotDrive.SetPositionReference(
-                    104 - (39 / 2) /*robot length*/ - 4.5);
+                robotDrive.SetPositionReference(99.5 - k_robotLength);
                 robotDrive.SetAngleReference(0);
                 state = State::InitForward;
                 break;
@@ -59,8 +58,7 @@ void Robot::AutoRightGear() {
                     robotDrive.SetAngleReference(robotDrive.GetAngle());
 
                     robotDrive.ResetEncoders();
-                    robotDrive.SetPositionReference(
-                        47 - (39 / 2) /*robot length*/ + 17.5);
+                    robotDrive.SetPositionReference(64.5 - k_robotLength / 2);
                 }
                 break;
 

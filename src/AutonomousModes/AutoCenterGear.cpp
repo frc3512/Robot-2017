@@ -1,7 +1,5 @@
 // Copyright (c) FRC Team 3512, Spartatroniks 2016-2017. All Rights Reserved.
 
-#include <cmath>
-
 #include "../Robot.hpp"
 
 using namespace std::chrono_literals;
@@ -16,8 +14,7 @@ void Robot::AutoCenterGear() {
 
     robotDrive.ResetEncoders();
     robotDrive.ResetGyro();
-    robotDrive.SetPositionReference(110 - 39 /*robot length*/
-                                    /*Comp Tuning*/);
+    robotDrive.SetPositionReference(110 - k_robotLength);
     robotDrive.SetAngleReference(0);
 
     robotDrive.StartClosedLoop();
