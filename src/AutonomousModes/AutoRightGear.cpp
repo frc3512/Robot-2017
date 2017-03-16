@@ -57,9 +57,14 @@ void Robot::AutoRightGear() {
                     // Angle set to prevent overshoot
                     robotDrive.SetAngleReference(robotDrive.GetAngle());
 
+                    // Stop closed loop to prevent controller from driving away
+                    // between resetting encoder and setting new position
+                    // reference.
+                    robotDrive.StopClosedLoop();
                     robotDrive.ResetEncoders();
                     robotDrive.SetPositionReference(47.0 - k_robotLength / 2.0 +
                                                     18.0);
+                    robotDrive.StartClosedLoop();
                 }
                 break;
 
