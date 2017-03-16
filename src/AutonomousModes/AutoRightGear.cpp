@@ -6,8 +6,7 @@
 using namespace std::chrono_literals;
 
 /* Moves forward, rotates, then moves forward again to hang gear on right side
- * of
- * airship as viewed from the Driver Station.
+ * of airship as viewed from the Driver Station.
  */
 
 enum class State { Idle, InitForward, Rotate, FinalForward };
@@ -58,6 +57,10 @@ void Robot::AutoRightGear() {
                     // Angle set to prevent overshoot
                     robotDrive.SetAngleReference(robotDrive.GetAngle());
 
+                    // There is a race condition between resetting the encoders
+                    // and setting the new position reference, but it's OK
+                    // because the controller will drive in the correct
+                    // direction during that time anyway.
                     robotDrive.ResetEncoders();
                     robotDrive.SetPositionReference(
                         47 - (39 / 2) /*robot length*/ + 18);
@@ -66,8 +69,13 @@ void Robot::AutoRightGear() {
 
             // FinalForward
             case State::FinalForward:
+                // If robot is at position reference or is driving backward
+                // (could break robot by running into field wall), disable
+                // closed loop control
                 if (robotDrive.PosAtReference() ||
-                    autoTimer.HasPeriodPassed(8)) {
+                    autoTimer.HasPeriodPassed(8) ||
+                    robotDrive.GetLeftDisplacement() < -5.0 ||
+                    robotDrive.GetRightDisplacement() < -5.0) {
                     robotDrive.StopClosedLoop();
                     gearPunch.Set(frc::DoubleSolenoid::kReverse);
                     robotDrive.Drive(0.0, 0.0, false);
