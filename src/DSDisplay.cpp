@@ -93,18 +93,23 @@ const std::string DSDisplay::ReceiveFromDS() {
             m_packet << m_autonModes.Name(m_curAutonMode);
 
             // Store newest autonomous choice to file for persistent storage
-            std::FILE* autonModeFile =
-                std::fopen("/home/lvuser/autonMode.txt", "w");
-            if (autonModeFile) {
-                char temp[] = "auto";
-                std::fwrite(temp, 1, 4, autonModeFile);
-                std::fwrite(&m_curAutonMode, 1, sizeof(m_curAutonMode),
-                            autonModeFile);
+            std::ofstream autonModeFile("/home/lvuser/autonMode.txt",
+                                        std::fstream::trunc);
+            if (autonModeFile.is_open()) {
+                // Selection is stored as ASCII number in file
+                char autonNum = '0' + m_curAutonMode;
 
-                std::fclose(autonModeFile);
+                if (autonModeFile << autonNum) {
+                    std::cout << "DSDisplay: autonSelect: wrote auton "
+                              << autonNum << " to file" << std::endl;
+                } else {
+                    std::cout << "DSDisplay: autonSelect: failed writing auton "
+                              << autonNum << " into open file" << std::endl;
+                }
             } else {
                 std::cout
-                    << "DSDisplay: autonSelect: failed to open autonMode.txt\n";
+                    << "DSDisplay: autonSelect: failed to open autonMode.txt"
+                    << std::endl;
             }
 
             SendToDS();
@@ -120,34 +125,20 @@ DSDisplay::DSDisplay(uint16_t portNumber) : m_dsPort(portNumber) {
     m_socket.bind(portNumber);
     m_socket.setBlocking(false);
 
-// Retrieve stored autonomous index
-#if 0
-    std::ifstream autonModeFile("/home/lvuser/autonMode.txt",
-                                std::fstream::trunc);
-    if (autonModeFile.good()) {
-        char temp[4];
-        autonModeFile.read(temp, 4);
+    // Retrieve stored autonomous index
+    std::ifstream autonModeFile("/home/lvuser/autonMode.txt");
+    if (autonModeFile.is_open()) {
+        if (autonModeFile >> m_curAutonMode) {
+            std::cout << "DSDisplay: restored auton " << m_curAutonMode
+                      << std::endl;
 
-        autonModeFile >> m_curAutonMode;
-    } else {
-        m_curAutonMode = 0;
-    }
-#endif
-
-    std::FILE* autonModeFile = std::fopen("/home/lvuser/autonMode.txt", "r");
-    if (autonModeFile) {
-        char temp[4];
-        std::fread(temp, 1, 4, autonModeFile);
-
-        if (std::strcmp(temp, "auto") == 0) {
-            std::fread(&m_curAutonMode, 1, sizeof(m_curAutonMode),
-                       autonModeFile);
+            // Selection is stored as ASCII number in file
+            m_curAutonMode -= '0';
         } else {
-            m_curAutonMode = 0;
+            std::cout << "DSDisplay: failed restoring auton" << std::endl;
         }
-
-        std::fclose(autonModeFile);
     } else {
+        std::cout << "DSDisplay: failed opening autonMode.txt" << std::endl;
         m_curAutonMode = 0;
     }
 }
