@@ -27,8 +27,6 @@ public:
     void Disabled();
     void Test();
 
-    void AutoNoop();
-    // TODO: void AutoCenterGear();
     void AutoLeftGear();
     void AutoCenterGear();
     void AutoRightGear();

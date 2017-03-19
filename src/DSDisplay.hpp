@@ -4,6 +4,7 @@
 
 #include <stdint.h>
 
+#include <functional>
 #include <string>
 
 #include "AutonContainer.hpp"
@@ -58,9 +59,8 @@ public:
     const std::string ReceiveFromDS();
 
     // Add and remove autonomous functions
-    template <class T>
-    void AddAutoMethod(const std::string& methodName, void (T::*function)(),
-                       T* object);
+    void AddAutoMethod(const std::string& methodName,
+                       std::function<void()> func);
     void DeleteAllMethods();
 
     // Runs autonomous function currently selected
@@ -116,5 +116,3 @@ private:
     AutonContainer m_autonModes;
     char m_curAutonMode;
 };
-
-#include "DSDisplay.inl"

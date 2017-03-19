@@ -4,7 +4,6 @@
 
 #include <cstring>
 #include <fstream>
-#include <functional>
 #include <iostream>
 
 DSDisplay& DSDisplay::GetInstance(uint16_t dsPort) {
@@ -120,6 +119,11 @@ const std::string DSDisplay::ReceiveFromDS() {
     }
 
     return "NONE";
+}
+
+void DSDisplay::AddAutoMethod(const std::string& methodName,
+                              std::function<void()> func) {
+    m_autonModes.AddMethod(methodName, func);
 }
 
 DSDisplay::DSDisplay(uint16_t portNumber) : m_dsPort(portNumber) {
