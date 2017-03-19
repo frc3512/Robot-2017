@@ -6,7 +6,6 @@
 
 #include <CANTalon.h>
 #include <CameraServer.h>
-#include <Compressor.h>
 #include <DoubleSolenoid.h>
 #include <Joystick.h>
 #include <SampleRobot.h>
@@ -39,7 +38,6 @@ public:
 
 private:
     DriveTrain robotDrive;
-    Compressor robotCompressor;
     Solenoid claw{0};
     DoubleSolenoid arm{1, 2};
     DoubleSolenoid gearPunch{3, 4};
