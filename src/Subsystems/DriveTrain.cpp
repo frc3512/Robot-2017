@@ -170,7 +170,7 @@ void DriveTrain::SetPositionReference(double position) {
 
 void DriveTrain::SetAngleReference(double angle) { m_angleRef.Set(angle); }
 
-double DriveTrain::GetPosition() {
+double DriveTrain::GetPosition() const {
     return (m_leftGrbx.GetPosition() + m_rightGrbx.GetPosition()) / 2;
 }
 
@@ -188,11 +188,11 @@ double DriveTrain::GetPosReference() const { return m_posRef.Get(); }
 
 double DriveTrain::GetAngleReference() const { return m_angleRef.Get(); }
 
-bool DriveTrain::PosAtReference() {
+bool DriveTrain::PosAtReference() const {
     return std::abs(GetPosReference() - GetPosition()) < 1.5;
 }
 
-bool DriveTrain::AngleAtReference() {
+bool DriveTrain::AngleAtReference() const {
     return std::abs(GetAngleReference() - GetAngle()) < 1.5;
 }
 

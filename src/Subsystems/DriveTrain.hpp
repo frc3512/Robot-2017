@@ -59,7 +59,7 @@ public:
 
     void SetAngleReference(double angle);
 
-    double GetPosition();
+    double GetPosition() const;
 
     void StartClosedLoop();
     void StopClosedLoop();
@@ -68,8 +68,8 @@ public:
     double GetPosReference() const;
     double GetAngleReference() const;
 
-    bool PosAtReference();
-    bool AngleAtReference();
+    bool PosAtReference() const;
+    bool AngleAtReference() const;
 
     // Return gyro's angle
     double GetAngle() const;
