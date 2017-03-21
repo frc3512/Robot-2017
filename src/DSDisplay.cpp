@@ -15,7 +15,7 @@ DSDisplay& DSDisplay::GetInstance(uint16_t dsPort) {
 void DSDisplay::Clear() { m_packet.clear(); }
 
 void DSDisplay::SendToDS() {
-    if (m_dsIP != sf::IpAddress::None) {
+    if (m_dsIP != 0) {
         m_socket.send(m_packet, m_dsIP, m_dsPort);
     }
 }
@@ -27,12 +27,13 @@ const std::string DSDisplay::ReceiveFromDS() {
     SendToDS();
 
     if (m_socket.receive(m_recvBuffer, 256, m_recvAmount, m_recvIP,
-                         m_recvPort) == sf::Socket::Done) {
+                         m_recvPort) == UdpSocket::Done) {
         if (std::strncmp(m_recvBuffer, "connect\r\n", 9) == 0) {
             m_dsIP = m_recvIP;
             m_dsPort = m_recvPort;
 
             // Send GUI element file to DS
+
             Clear();
 
             m_packet << static_cast<std::string>("guiCreate\r\n");
