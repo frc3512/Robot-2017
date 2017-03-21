@@ -55,32 +55,38 @@ public:
     double GetLeftRate() const;
     double GetRightRate() const;
 
-    void SetPositionReference(double position);
-
-    void SetAngleReference(double angle);
-
+    // Returns robot's current position
     double GetPosition() const;
 
+    // Return gyro's rate
+    double GetRate() const;
+
+    // Return gyro's angle
+    double GetAngle() const;
+
+    // Enters or exits PID loops
     void StartClosedLoop();
     void StopClosedLoop();
+
+    // Sets encoder PID setpoints
+    void SetPositionReference(double position);
+    void SetAngleReference(double angle);
 
     // Returns encoder PID loop setpoints
     double GetPosReference() const;
     double GetAngleReference() const;
 
+    // Returns whether or not robot has reached setpoint
     bool PosAtReference() const;
     bool AngleAtReference() const;
-
-    // Return gyro's angle
-    double GetAngle() const;
-
-    double GetRate() const;
 
     // Resets gyro
     void ResetGyro();
 
+    // Calibrates gyro
     void CalibrateGyro();
 
+    // Sends print statements for debugging purposes
     void Debug();
 
 private:
