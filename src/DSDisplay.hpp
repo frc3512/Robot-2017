@@ -7,9 +7,8 @@
 #include <string>
 
 #include "AutonContainer.hpp"
-#include "SFML/Network/IpAddress.hpp"
-#include "SFML/Network/Packet.hpp"
-#include "SFML/Network/UdpSocket.hpp"
+#include "Packet.hpp"
+#include "UdpSocket.hpp"
 
 /* This class allows you to pack data into an SFML packet and send it to an
  * application on the DriverStation that displays it in a GUI.
@@ -96,14 +95,14 @@ private:
     DSDisplay(const DSDisplay&) = delete;
     DSDisplay& operator=(const DSDisplay&) = delete;
 
-    sf::Packet m_packet;
+    Packet m_packet;
 
-    sf::UdpSocket m_socket;  // socket for sending data to Driver Station
-    sf::IpAddress m_dsIP{sf::IpAddress::None};  // IP address of Driver Station
-    uint16_t m_dsPort;                          // port to which to send data
+    UdpSocket m_socket;  // socket for sending data to Driver Station
+    uint32_t m_dsIP;     // IP address of Driver Station
+    uint16_t m_dsPort;   // port to which to send data
 
     // Stores IP address temporarily during receive
-    sf::IpAddress m_recvIP{0, 0, 0, 0};
+    uint32_t m_recvIP;
 
     // Stores port temporarily during receive
     uint16_t m_recvPort = 0;
