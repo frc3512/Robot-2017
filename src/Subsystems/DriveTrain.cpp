@@ -165,15 +165,13 @@ double DriveTrain::GetLeftRate() const { return m_leftGrbx.GetSpeed(); }
 
 double DriveTrain::GetRightRate() const { return m_rightGrbx.GetSpeed(); }
 
-void DriveTrain::SetPositionReference(double position) {
-    m_posRef.Set(position);
-}
-
-void DriveTrain::SetAngleReference(double angle) { m_angleRef.Set(angle); }
-
 double DriveTrain::GetPosition() const {
     return (m_leftGrbx.GetPosition() + m_rightGrbx.GetPosition()) / 2;
 }
+
+double DriveTrain::GetAngle() const { return m_gyro.GetAngle(); }
+
+double DriveTrain::GetAngularRate() const { return m_gyro.GetRate(); }
 
 void DriveTrain::StartClosedLoop() {
     m_leftOutput.Start();
@@ -184,6 +182,12 @@ void DriveTrain::StopClosedLoop() {
     m_leftOutput.Stop();
     m_rightOutput.Stop();
 }
+
+void DriveTrain::SetPositionReference(double position) {
+    m_posRef.Set(position);
+}
+
+void DriveTrain::SetAngleReference(double angle) { m_angleRef.Set(angle); }
 
 double DriveTrain::GetPosReference() const { return m_posRef.Get(); }
 
@@ -196,10 +200,6 @@ bool DriveTrain::PosAtReference() const {
 bool DriveTrain::AngleAtReference() const {
     return std::abs(GetAngleReference() - GetAngle()) < 1.5;
 }
-
-double DriveTrain::GetAngle() const { return m_gyro.GetAngle(); }
-
-double DriveTrain::GetRate() const { return m_gyro.GetRate(); }
 
 void DriveTrain::ResetGyro() { m_gyro.Reset(); }
 
