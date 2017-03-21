@@ -5,8 +5,6 @@
 #include <iostream>
 #include <memory>
 
-#include "../DigitalInputHandler.hpp"
-
 GearBox::GearBox(int shifterChan, int forwardLimitPin, int reverseLimitPin,
                  int motor1, int motor2, int motor3) {
     if (shifterChan != -1) {
@@ -14,11 +12,11 @@ GearBox::GearBox(int shifterChan, int forwardLimitPin, int reverseLimitPin,
     }
 
     if (forwardLimitPin != -1) {
-        m_forwardLimit = DigitalInputHandler::Get(forwardLimitPin);
+        m_forwardLimit = std::make_unique<frc::DigitalInput>(forwardLimitPin);
     }
 
     if (reverseLimitPin != -1) {
-        m_reverseLimit = DigitalInputHandler::Get(reverseLimitPin);
+        m_reverseLimit = std::make_unique<frc::DigitalInput>(reverseLimitPin);
     }
 
     // Create motor controllers of specified template type
