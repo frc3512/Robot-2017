@@ -7,13 +7,10 @@
 #include <vector>
 
 #include <CANTalon.h>
+#include <DigitalInput.h>
 #include <PIDOutput.h>
 #include <PIDSource.h>
 #include <Solenoid.h>
-
-namespace frc {
-class DigitalInput;
-}
 
 /**
  * Represents a gear box with up to 3 motors and an encoder
@@ -96,10 +93,10 @@ private:
     std::unique_ptr<frc::Solenoid> m_shifter;
 
     // Prevents motor from rotating forward when switch is pressed
-    frc::DigitalInput* m_forwardLimit = nullptr;
+    std::unique_ptr<frc::DigitalInput> m_forwardLimit;
 
     // Prevents motor from rotating in reverse when switch is pressed
-    frc::DigitalInput* m_reverseLimit = nullptr;
+    std::unique_ptr<frc::DigitalInput> m_reverseLimit;
 
     std::vector<std::unique_ptr<CANTalon>> m_motors;
 };

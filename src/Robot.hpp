@@ -15,7 +15,6 @@
 #include "ButtonTracker.hpp"
 #include "Constants.hpp"
 #include "DSDisplay.hpp"
-#include "DigitalInputHandler.hpp"
 #include "LiveGrapher/GraphHost.hpp"
 #include "Subsystems/DriveTrain.hpp"
 
