@@ -219,8 +219,8 @@ void DriveTrain::Debug() {
     // Velocity and Position
     // std::cout << "Left Velocity: " << m_leftGrbx.GetSpeed() << std::endl;
     // std::cout << "Right Velocity: " << m_rightGrbx.GetSpeed() << std::endl;
-    // std::cout << "Left Position: " << m_leftGrbx.GetPosition()
-    // << "Right: " << m_rightGrbx.GetPosition() << std::endl;
+    std::cout << "Left Position: " << m_leftGrbx.GetPosition()
+     << "Right: " << m_rightGrbx.GetPosition() << std::endl;
 
     // PID
     // std::cout << "Pos PID: " << m_posPID.Get() << std::endl;

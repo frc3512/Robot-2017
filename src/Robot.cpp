@@ -119,9 +119,23 @@ void Robot::Autonomous() {
 
 void Robot::Disabled() {
     while (IsDisabled()) {
+
+        // Camera
+
+        if (armButtons.PressedButton(11)) {
+            if (server.GetSource() == camera1) {
+                server.SetSource(camera2);
+                std::cout << "Swap" << std::endl;
+            } else {
+                server.SetSource(camera1);
+            }
+        }
+
+        armButtons.Update();
         DS_PrintOut();
         std::this_thread::sleep_for(10ms);
     }
+
 }
 
 void Robot::Test() {
