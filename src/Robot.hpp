@@ -53,16 +53,17 @@ private:
     ButtonTracker drive2Buttons{k_driveStick2Port};
 
     frc::Timer autoTimer;
+    frc::Timer dsUpdate;
 
     // Used for sending data to the Driver Station
     DSDisplay& dsDisplay{DSDisplay::GetInstance(k_dsPort)};
 
     // LiveGrapher host
-    GraphHost liveGrapher{k_liveGrapherPort};
+    // GraphHost liveGrapher{k_liveGrapherPort};
 
     // Camera
     cs::UsbCamera camera1{"Camera 1", 0};
-    cs::UsbCamera camera2{"Camera 2", 1};
+    // cs::UsbCamera camera2{"Camera 2", 1};
 
     cs::MjpegServer server{"Server", k_mjpegServerPort};
 };

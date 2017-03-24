@@ -22,7 +22,8 @@ void Robot::AutoCenterGear() {
 
     robotDrive.StartClosedLoop();
 
-    while (IsAutonomous() && IsEnabled() && !robotDrive.PosAtReference()) {
+    while (IsAutonomous() && IsEnabled() && !robotDrive.PosAtReference() &&
+           !autoTimer.HasPeriodPassed(8)) {
         DS_PrintOut();
 
         std::this_thread::sleep_for(10ms);
