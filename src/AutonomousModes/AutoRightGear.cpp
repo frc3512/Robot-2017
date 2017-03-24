@@ -30,7 +30,7 @@ void Robot::AutoRightGear() {
                 robotDrive.ResetGyro();
                 robotDrive.StartClosedLoop();
                 robotDrive.SetPositionReference(
-                    104 - (39 / 2) /*robot length*/ - 4.5);
+                    104 - (39 / 2) /*robot length*/ - 2.5);
                 robotDrive.SetAngleReference(0);
                 state = State::InitForward;
                 break;
@@ -60,13 +60,14 @@ void Robot::AutoRightGear() {
 
                     robotDrive.ResetEncoders();
                     robotDrive.SetPositionReference(
-                        47 - (39 / 2) /*robot length*/ + 17.5);
+                        47 - (39 / 2) /*robot length*/ + 18);
                 }
                 break;
 
             // FinalForward
             case State::FinalForward:
-                if (robotDrive.PosAtReference()) {
+                if (robotDrive.PosAtReference() ||
+                    autoTimer.HasPeriodPassed(8)) {
                     robotDrive.StopClosedLoop();
                     gearPunch.Set(frc::DoubleSolenoid::kReverse);
                     robotDrive.Drive(0.0, 0.0, false);

@@ -22,14 +22,13 @@ Robot::Robot() {
     dsDisplay.AddAutoMethod("BaseLine", std::bind(&Robot::AutoBaseLine, this));
 
     server.SetSource(camera1);
-    camera1.SetResolution(320, 240);
+
+    camera1.SetResolution(160, 120);
     camera1.SetFPS(15);
-    camera2.SetResolution(320, 240);
-    camera2.SetFPS(15);
+    // camera2.SetResolution(320, 240);
+    // camera2.SetFPS(15);
 
     // liveGrapher.SetSendInterval(50ms);
-
-    robotGrabber.SetLimitOnHigh(false);
 }
 
 void Robot::OperatorControl() {
@@ -87,18 +86,16 @@ void Robot::OperatorControl() {
 
         // Camera
 
-        if (armButtons.PressedButton(11)) {
+        /*if (armButtons.PressedButton(11)) {
             if (server.GetSource() == camera1) {
                 server.SetSource(camera2);
-                std::cout << "Swap" << std::endl;
             } else {
                 server.SetSource(camera1);
             }
         }
-
+    */
         drive2Buttons.Update();
         armButtons.Update();
-        // robotDrive.Debug();
 
         DS_PrintOut();
 
@@ -112,6 +109,7 @@ void Robot::Autonomous() {
     std::cout << "Autonomous Called" << std::endl;
 
     // AutoCenterGear();
+    // AutoRightGear();
     dsDisplay.ExecAutonomous();
 
     // DS_PrintOut();
@@ -119,6 +117,23 @@ void Robot::Autonomous() {
 
 void Robot::Disabled() {
     while (IsDisabled()) {
+        // Camera
+
+        /* if (armButtons.PressedButton(11)) {
+            if (server.GetSource() == camera1) {
+                server.SetSource(camera2);
+                std::cout << "Swap" << std::endl;
+            } else {
+                server.SetSource(camera1);
+            }
+        }
+*/
+        if (armButtons.PressedButton(12)) {
+            robotDrive.CalibrateGyro();
+            std::cout << "Calibrating" << std::endl;
+        }
+
+        armButtons.Update();
         DS_PrintOut();
         std::this_thread::sleep_for(10ms);
     }
@@ -150,7 +165,10 @@ void Robot::DS_PrintOut() {
     // liveGrapher.ResetInterval();
     //}
     robotDrive.Debug();
-    dsDisplay.ReceiveFromDS();
+
+    if (dsUpdate.HasPeriodPassed(0.250)) {
+        dsDisplay.ReceiveFromDS();
+    }
 }
 
 START_ROBOT_CLASS(Robot)

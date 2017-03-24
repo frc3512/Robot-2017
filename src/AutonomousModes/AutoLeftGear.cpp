@@ -5,8 +5,8 @@
 
 using namespace std::chrono_literals;
 
-/* Moves forward, rotates, then moves forward again to hang gear on left side of
- * airship as viewed from the Driver Station.
+/* Moves forward, rotates, then moves forward again to hang gear on left side
+ * of airship as viewed from the Driver Station.
  */
 
 enum class State { Idle, InitForward, Rotate, FinalForward };
@@ -28,8 +28,8 @@ void Robot::AutoLeftGear() {
                 robotDrive.ResetEncoders();
                 robotDrive.ResetGyro();
                 robotDrive.StartClosedLoop();
-                robotDrive.SetPositionReference(104 -
-                                                (39 / 2) /*robot length*/ - 30);
+                robotDrive.SetPositionReference(
+                    104 - (39 / 2) /*robot length*/ - 2.5);
                 robotDrive.SetAngleReference(0);
                 state = State::InitForward;
                 break;
@@ -41,7 +41,7 @@ void Robot::AutoLeftGear() {
                           << " Pos: " << robotDrive.GetPosition() << std::endl;
                 if (robotDrive.PosAtReference()) {
                     // Angle references are all scaled by 7 (don't ask why)
-                    robotDrive.SetAngleReference(45 / 7);
+                    robotDrive.SetAngleReference(60 / 7);
 
                     state = State::Rotate;
                 }
@@ -59,13 +59,14 @@ void Robot::AutoLeftGear() {
 
                     robotDrive.ResetEncoders();
                     robotDrive.SetPositionReference(
-                        47 - (39 / 2) /*robot length*/ - 13.5);
+                        47 - (39 / 2) /*robot length*/ + 18);
                 }
                 break;
 
             // FinalForward
             case State::FinalForward:
-                if (robotDrive.PosAtReference()) {
+                if (robotDrive.PosAtReference() ||
+                    autoTimer.HasPeriodPassed(8)) {
                     robotDrive.StopClosedLoop();
                     gearPunch.Set(frc::DoubleSolenoid::kReverse);
                     robotDrive.Drive(0.0, 0.0, false);
@@ -77,4 +78,6 @@ void Robot::AutoLeftGear() {
         DS_PrintOut();
         std::this_thread::sleep_for(10ms);
     }
+
+    robotDrive.StopClosedLoop();
 }
