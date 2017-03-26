@@ -67,7 +67,7 @@ void Robot::AutoRightGear() {
             // FinalForward
             case State::FinalForward:
                 if (robotDrive.PosAtReference() ||
-                    autoTimer.HasPeriodPassed(8)) {
+                    autoTimer.HasPeriodPassed(7)) {
                     robotDrive.StopClosedLoop();
                     gearPunch.Set(frc::DoubleSolenoid::kReverse);
                     robotDrive.Drive(0.0, 0.0, false);

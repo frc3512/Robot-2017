@@ -140,6 +140,9 @@ void Robot::Disabled() {
 }
 
 void Robot::Test() {
+    arm.Set(DoubleSolenoid::kReverse);        // Raise arm
+    gearPunch.Set(DoubleSolenoid::kForward);  // Extends gear punch
+
     while (IsEnabled() && IsTest()) {
         // DS_PrintOut();
         std::this_thread::sleep_for(10ms);
@@ -165,10 +168,7 @@ void Robot::DS_PrintOut() {
     // liveGrapher.ResetInterval();
     //}
     robotDrive.Debug();
-
-    if (dsUpdate.HasPeriodPassed(0.250)) {
-        dsDisplay.ReceiveFromDS();
-    }
+    dsDisplay.ReceiveFromDS();
 }
 
 START_ROBOT_CLASS(Robot)
