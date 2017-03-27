@@ -111,23 +111,10 @@ void Robot::Autonomous() {
     // AutoCenterGear();
     // AutoRightGear();
     dsDisplay.ExecAutonomous();
-
-    // DS_PrintOut();
 }
 
 void Robot::Disabled() {
     while (IsDisabled()) {
-        // Camera
-
-        /* if (armButtons.PressedButton(11)) {
-            if (server.GetSource() == camera1) {
-                server.SetSource(camera2);
-                std::cout << "Swap" << std::endl;
-            } else {
-                server.SetSource(camera1);
-            }
-        }
-*/
         if (armButtons.PressedButton(12)) {
             robotDrive.CalibrateGyro();
             std::cout << "Calibrating" << std::endl;
@@ -135,6 +122,7 @@ void Robot::Disabled() {
 
         armButtons.Update();
         DS_PrintOut();
+
         std::this_thread::sleep_for(10ms);
     }
 }
@@ -167,6 +155,7 @@ void Robot::DS_PrintOut() {
 
     // liveGrapher.ResetInterval();
     //}
+
     robotDrive.Debug();
     dsDisplay.ReceiveFromDS();
 }

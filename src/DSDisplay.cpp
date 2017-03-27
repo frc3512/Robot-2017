@@ -6,6 +6,8 @@
 #include <fstream>
 #include <iostream>
 
+using namespace std::chrono_literals;
+
 DSDisplay& DSDisplay::GetInstance(uint16_t dsPort) {
     static DSDisplay dsDisplay(dsPort);
     return dsDisplay;
@@ -20,10 +22,15 @@ void DSDisplay::SendToDS() {
 }
 
 const std::string DSDisplay::ReceiveFromDS() {
-    // Send keepalive
-    Clear();
-    m_packet << static_cast<std::string>("\r\n");
-    SendToDS();
+    // Send keepalive every 250ms
+    auto time = steady_clock::now();
+    if (time - prevTime > 250ms) {
+        Clear();
+        m_packet << static_cast<std::string>("\r\n");
+        SendToDS();
+
+        prevTime = time;
+    }
 
     if (m_socket.receive(m_recvBuffer, 256, m_recvAmount, m_recvIP,
                          m_recvPort) == UdpSocket::Done) {
