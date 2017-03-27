@@ -4,6 +4,7 @@
 
 #include <stdint.h>
 
+#include <chrono>
 #include <functional>
 #include <string>
 
@@ -90,6 +91,8 @@ public:
     void AddData(std::string ID, double data);
 
 private:
+    using steady_clock = std::chrono::steady_clock;
+
     explicit DSDisplay(uint16_t portNumber);
 
     DSDisplay(const DSDisplay&) = delete;
@@ -100,6 +103,9 @@ private:
     UdpSocket m_socket;  // socket for sending data to Driver Station
     uint32_t m_dsIP;     // IP address of Driver Station
     uint16_t m_dsPort;   // port to which to send data
+
+    // Rate-limits keepalive
+    steady_clock::time_point prevTime = steady_clock::now();
 
     // Stores IP address temporarily during receive
     uint32_t m_recvIP;
