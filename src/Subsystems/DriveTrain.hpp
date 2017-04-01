@@ -4,9 +4,7 @@
 
 #include <memory>
 
-#include <ADXRS450_Gyro.h>
-#include <Encoder.h>
-
+#include "../ADXRS450_Gyro.h"
 #include "../Constants.hpp"
 #include "../CtrlSys/FuncNode.hpp"
 #include "../CtrlSys/LinearDigitalFilter.hpp"
@@ -102,9 +100,20 @@ private:
     RefInput m_angleRef{0.0};
     RefInput m_posRef{0.0};
 
-    // Angle PID
     ADXRS450_Gyro m_gyro;
-    FuncNode m_angleSensor{[this] { return GetAngle(); }};
+    FuncNode m_biasCalc{[this] {
+        double rate = m_gyro.GetRate();
+        return rate -
+               (m_leftGrbx.GetSpeed() - m_rightGrbx.GetSpeed()) / k_robotWidth;
+    }};
+    LinearDigitalFilter m_biasFilter =
+        LinearDigitalFilter::SinglePoleIIR(&m_biasCalc, 0.35, 0.005);
+
+    // Angle PID
+    FuncNode m_angleSensor{[this] {
+        m_gyro.SetRateBias(m_biasFilter.Get());
+        return GetAngle();
+    }};
     SumNode m_angleError{&m_angleRef, true, &m_angleSensor, false};
     PIDNode m_anglePID{k_angleP, k_angleI, k_angleD, &m_angleError};
 
