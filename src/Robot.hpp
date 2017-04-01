@@ -22,10 +22,10 @@
 class Robot : public SampleRobot {
 public:
     Robot();
-    void OperatorControl();
-    void Autonomous();
-    void Disabled();
-    void Test();
+    void OperatorControl() override;
+    void Autonomous() override;
+    void Disabled() override;
+    void Test() override;
 
     void AutoLeftGear();
     void AutoCenterGear();
