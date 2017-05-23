@@ -38,8 +38,8 @@ constexpr double k_joystickDeadband = 0.02;
  */
 
 // DriveTrain GearBox ID
-constexpr int k_leftDriveMasterID = 1;
-constexpr int k_leftDriveSlaveID = 2;
+constexpr int k_leftDriveMasterID = 0;
+constexpr int k_leftDriveSlaveID = 12;
 constexpr int k_rightDriveMasterID = 13;
 constexpr int k_rightDriveSlaveID = 14;
 
