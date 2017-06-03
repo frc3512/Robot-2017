@@ -4,7 +4,7 @@
 
 #include <cscore.h>
 
-#include <CANTalon.h>
+#include <ctrlib/CANTalon.h>
 #include <CameraServer.h>
 #include <DoubleSolenoid.h>
 #include <Joystick.h>

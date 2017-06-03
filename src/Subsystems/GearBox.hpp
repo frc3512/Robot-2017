@@ -6,7 +6,7 @@
 #include <memory>
 #include <vector>
 
-#include <CANTalon.h>
+#include <ctrlib/CANTalon.h>
 #include <PIDOutput.h>
 #include <PIDSource.h>
 #include <Solenoid.h>
