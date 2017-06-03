@@ -3,8 +3,8 @@
 #pragma once
 
 #include <cscore.h>
+#include <ctrlib/CANTalon.h>
 
-#include <CANTalon.h>
 #include <CameraServer.h>
 #include <DoubleSolenoid.h>
 #include <Joystick.h>
