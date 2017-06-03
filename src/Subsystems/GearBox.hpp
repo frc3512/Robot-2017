@@ -2,11 +2,12 @@
 
 #pragma once
 
+#include <ctrlib/CANTalon.h>
+
 #include <limits>
 #include <memory>
 #include <vector>
 
-#include <CANTalon.h>
 #include <PIDOutput.h>
 #include <PIDSource.h>
 #include <Solenoid.h>
