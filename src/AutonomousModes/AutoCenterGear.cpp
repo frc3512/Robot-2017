@@ -1,13 +1,12 @@
 // Copyright (c) 2016-2017 FRC Team 3512. All Rights Reserved.
 
-#include <cmath>
-
 #include "../Robot.hpp"
 
 using namespace std::chrono_literals;
 
 /* Moves forwards a set distance and then stops with gear penetrated by
- * airship's divot*/
+ * airship's divot
+ */
 void Robot::AutoCenterGear() {
     robotDrive.StopClosedLoop();
 
@@ -16,8 +15,7 @@ void Robot::AutoCenterGear() {
 
     robotDrive.ResetEncoders();
     robotDrive.ResetGyro();
-    robotDrive.SetPositionReference(110 - 39 /*robot length*/
-                                    /*Comp Tuning*/);
+    robotDrive.SetPositionReference(110.0 - k_robotLength);
     robotDrive.SetAngleReference(0);
 
     robotDrive.StartClosedLoop();
