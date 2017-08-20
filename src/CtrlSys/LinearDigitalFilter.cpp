@@ -1,9 +1,10 @@
 // Copyright (c) 2015-2017 FRC Team 3512. All Rights Reserved.
 
-#include "LinearDigitalFilter.h"
+#include "LinearDigitalFilter.hpp"
 
 #include <cassert>
 #include <cmath>
+#include <utility>
 
 /**
  * Create a linear FIR or IIR filter.

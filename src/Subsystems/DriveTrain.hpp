@@ -9,7 +9,7 @@
 
 #include "../Constants.hpp"
 #include "../CtrlSys/FuncNode.hpp"
-#include "../CtrlSys/LinearDigitalFilter.h"
+#include "../CtrlSys/LinearDigitalFilter.hpp"
 #include "../CtrlSys/Output.hpp"
 #include "../CtrlSys/PIDNode.hpp"
 #include "../CtrlSys/RefInput.hpp"
