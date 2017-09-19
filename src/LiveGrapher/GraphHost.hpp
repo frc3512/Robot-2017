@@ -1,4 +1,4 @@
-// Copyright (c) 2013-2017 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2013-2018 FRC Team 3512. All Rights Reserved.
 
 #pragma once
 
@@ -13,6 +13,7 @@
 #include <thread>
 #include <vector>
 
+#include "Protocol.hpp"
 #include "SocketConnection.hpp"
 
 /**
@@ -30,21 +31,18 @@
  * in looping situations.
  *
  * Example:
- *     GraphHost liveGrapher(3513);
- *     liveGrapher.SetSendInterval(5ms);
+ *     GraphHost pidGraph(3513);
+ *     pidGraph.SetSendInterval(5ms);
  *
  *     while (IsOperatorControl() && IsEnabled()) {
- *         if (liveGrapher.HasIntervalPassed()) {
- *             liveGrapher.GraphData(frisbeeShooter.getRPM(), "PID0");
- *             liveGrapher.GraphData(frisbeeShooter.getTargetRPM(), "PID1");
+ *         if (pidGraph.HasIntervalPassed()) {
+ *             pidGraph.GraphData(frisbeeShooter.getRPM(), "PID0");
+ *             pidGraph.GraphData(frisbeeShooter.getTargetRPM(), "PID1");
  *
- *             liveGrapher.ResetInterval();
+ *             pidGraph.ResetInterval();
  *         }
  *     }
  */
-
-#include "../../common/Protocol.hpp"
-
 class GraphHost {
 public:
     explicit GraphHost(int port);
