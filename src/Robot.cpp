@@ -2,17 +2,9 @@
 
 #include "Robot.hpp"
 
-using namespace std::chrono_literals;
-
 Robot::Robot() {
     // Auton: does nothing
-    dsDisplay.AddAutoMethod("No-op", [this] {
-        while (IsAutonomous() && IsEnabled()) {
-            DS_PrintOut();
-
-            std::this_thread::sleep_for(10ms);
-        }
-    });
+    dsDisplay.AddAutoMethod("No-op", [] {});
 
     dsDisplay.AddAutoMethod("LeftGear", std::bind(&Robot::AutoLeftGear, this));
     dsDisplay.AddAutoMethod("CenterGear",
@@ -31,108 +23,96 @@ Robot::Robot() {
     // liveGrapher.SetSendInterval(50ms);
 }
 
-void Robot::OperatorControl() {
+void Robot::DisabledInit() { robotDrive.StopClosedLoop(); }
+
+void Robot::AutonomousInit() {
+    autoTimer.Reset();
+    autoTimer.Start();
+}
+
+void Robot::TeleopInit() {
     robotDrive.StopClosedLoop();
 
     robotDrive.ResetEncoders();
     robotDrive.ResetGyro();
-    while (IsEnabled() && IsOperatorControl()) {
-        // Drive Stick Controls
-        if (driveStick1.GetTrigger()) {
-            robotDrive.Drive(driveStick1.GetY() * 0.5, driveStick2.GetX() * 0.5,
-                             driveStick2.GetRawButton(2));
-        } else {
-            robotDrive.Drive(driveStick1.GetY(), driveStick2.GetX(),
-                             driveStick2.GetRawButton(2));
-        }
+}
 
-        if (grabberStick.GetRawButton(4)) {
-            robotGrabber.Set(1);
-        } else if (grabberStick.GetRawButton(6)) {
-            robotGrabber.Set(-1);
-        }
+void Robot::TestInit() {
+    arm.Set(DoubleSolenoid::kReverse);        // Raise arm
+    gearPunch.Set(DoubleSolenoid::kForward);  // Extends gear punch
+}
 
-        if (drive2Buttons.PressedButton(1)) {
-            shifter.Set(!shifter.Get());
-        }
+void Robot::RobotPeriodic() { DS_PrintOut(); }
 
-        // Appendage Stick Controls
-
-        if (armButtons.PressedButton(1)) {
-            claw.Set(!claw.Get());
-        }
-
-        if (grabberStick.GetRawButton(3)) {
-            arm.Set(frc::DoubleSolenoid::kForward);
-        }
-        if (grabberStick.GetRawButton(5)) {
-            arm.Set(frc::DoubleSolenoid::kReverse);
-        }
-
-        if (grabberStick.GetRawButton(4)) {
-            gearPunch.Set(frc::DoubleSolenoid::kReverse);
-        }
-        if (grabberStick.GetRawButton(6)) {
-            gearPunch.Set(frc::DoubleSolenoid::kForward);
-        }
-
-        if (grabberStick.GetPOV() == 0) {
-            robotWinch.Set(1);
-        } else if (grabberStick.GetPOV() == 180) {
-            robotWinch.Set(-1);
-        } else {
-            robotWinch.Set(0);
-        }
-
-        // Camera
-
-        /*if (armButtons.PressedButton(11)) {
-            if (server.GetSource() == camera1) {
-                server.SetSource(camera2);
-            } else {
-                server.SetSource(camera1);
-            }
-        }
-    */
-        drive2Buttons.Update();
-        armButtons.Update();
-
-        DS_PrintOut();
-
-        std::this_thread::sleep_for(10ms);
+void Robot::DisabledPeriodic() {
+    if (grabberStick.GetRawButtonPressed(12)) {
+        robotDrive.CalibrateGyro();
     }
 }
 
-void Robot::Autonomous() {
-    autoTimer.Reset();
-    autoTimer.Start();
-
+void Robot::AutonomousPeriodic() {
     // AutoCenterGear();
     // AutoRightGear();
     dsDisplay.ExecAutonomous();
 }
 
-void Robot::Disabled() {
-    while (IsDisabled()) {
-        if (armButtons.PressedButton(12)) {
-            robotDrive.CalibrateGyro();
+void Robot::TeleopPeriodic() {
+    // Drive Stick Controls
+    if (driveStick1.GetRawButton(1)) {
+        robotDrive.Drive(driveStick1.GetY() * 0.5, driveStick2.GetX() * 0.5,
+                         driveStick2.GetRawButton(2));
+    } else {
+        robotDrive.Drive(driveStick1.GetY(), driveStick2.GetX(),
+                         driveStick2.GetRawButton(2));
+    }
+
+    if (grabberStick.GetRawButton(4)) {
+        robotGrabber.Set(1);
+    } else if (grabberStick.GetRawButton(6)) {
+        robotGrabber.Set(-1);
+    }
+
+    if (driveStick2.GetRawButtonPressed(1)) {
+        shifter.Set(!shifter.Get());
+    }
+
+    // Appendage Stick Controls
+
+    if (grabberStick.GetRawButtonPressed(1)) {
+        claw.Set(!claw.Get());
+    }
+
+    if (grabberStick.GetRawButtonPressed(3)) {
+        arm.Set(frc::DoubleSolenoid::kForward);
+    }
+    if (grabberStick.GetRawButtonPressed(5)) {
+        arm.Set(frc::DoubleSolenoid::kReverse);
+    }
+
+    if (grabberStick.GetRawButtonPressed(4)) {
+        gearPunch.Set(frc::DoubleSolenoid::kReverse);
+    }
+    if (grabberStick.GetRawButtonPressed(6)) {
+        gearPunch.Set(frc::DoubleSolenoid::kForward);
+    }
+
+    if (grabberStick.GetPOV() == 0) {
+        robotWinch.Set(1);
+    } else if (grabberStick.GetPOV() == 180) {
+        robotWinch.Set(-1);
+    } else {
+        robotWinch.Set(0);
+    }
+
+    // Camera
+
+    /*if (grabberStick.GetRawButtonPressed(11)) {
+        if (server.GetSource() == camera1) {
+            server.SetSource(camera2);
+        } else {
+            server.SetSource(camera1);
         }
-
-        armButtons.Update();
-        DS_PrintOut();
-
-        std::this_thread::sleep_for(10ms);
-    }
-}
-
-void Robot::Test() {
-    arm.Set(DoubleSolenoid::kReverse);        // Raise arm
-    gearPunch.Set(DoubleSolenoid::kForward);  // Extends gear punch
-
-    while (IsEnabled() && IsTest()) {
-        // DS_PrintOut();
-        std::this_thread::sleep_for(10ms);
-    }
+    }*/
 }
 
 void Robot::DS_PrintOut() {
