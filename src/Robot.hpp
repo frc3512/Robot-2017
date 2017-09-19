@@ -1,30 +1,35 @@
-// Copyright (c) 2017 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2017-2018 FRC Team 3512. All Rights Reserved.
 
 #pragma once
-
-#include <cscore.h>
-#include <ctrlib/CANTalon.h>
 
 #include <CameraServer.h>
 #include <DoubleSolenoid.h>
 #include <Joystick.h>
-#include <SampleRobot.h>
 #include <Solenoid.h>
+#include <TimedRobot.h>
 #include <Timer.h>
+#include <cscore.h>
+#include <ctre/phoenix/MotorControl/CAN/TalonSRX.h>
 
-#include "ButtonTracker.hpp"
 #include "Constants.hpp"
 #include "DSDisplay/DSDisplay.hpp"
 #include "LiveGrapher/GraphHost.hpp"
+#include "Subsystems/CANTalonGroup.hpp"
 #include "Subsystems/DriveTrain.hpp"
 
-class Robot : public SampleRobot {
+class Robot : public TimedRobot {
 public:
     Robot();
-    void OperatorControl() override;
-    void Autonomous() override;
-    void Disabled() override;
-    void Test() override;
+
+    void DisabledInit() override;
+    void AutonomousInit() override;
+    void TeleopInit() override;
+    void TestInit() override;
+
+    void RobotPeriodic() override;
+    void DisabledPeriodic() override;
+    void AutonomousPeriodic() override;
+    void TeleopPeriodic() override;
 
     void AutoLeftGear();
     void AutoCenterGear();
@@ -34,22 +39,24 @@ public:
     void DS_PrintOut();
 
 private:
+    using TalonSRX = ctre::phoenix::motorcontrol::can::TalonSRX;
+
     DriveTrain robotDrive;
-    Solenoid claw{0};
-    DoubleSolenoid arm{1, 2};
-    DoubleSolenoid gearPunch{3, 4};
+    frc::Solenoid claw{0};
+    frc::DoubleSolenoid arm{1, 2};
+    frc::DoubleSolenoid gearPunch{3, 4};
 
-    Solenoid shifter{5};
+    frc::Solenoid shifter{5};
 
-    GearBox robotGrabber{-1, 1, 0, 15};
-    GearBox robotWinch{-1, -1, -1, 3};
+    TalonSRX grabberMotor{15};
+    CANTalonGroup robotGrabber{1, 0, grabberMotor};
+
+    TalonSRX winchMotor{3};
+    CANTalonGroup robotWinch{winchMotor};
 
     frc::Joystick driveStick1{k_driveStick1Port};
     frc::Joystick driveStick2{k_driveStick2Port};
     frc::Joystick grabberStick{k_grabberStickPort};
-
-    ButtonTracker armButtons{k_grabberStickPort};
-    ButtonTracker drive2Buttons{k_driveStick2Port};
 
     frc::Timer autoTimer;
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2017 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2017-2018 FRC Team 3512. All Rights Reserved.
 
 #include "UdpSocket.hpp"
 
