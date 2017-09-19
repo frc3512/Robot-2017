@@ -1,4 +1,4 @@
-// Copyright (c) 2017 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2017-2018 FRC Team 3512. All Rights Reserved.
 
 #include "Packet.hpp"
 
@@ -25,7 +25,7 @@ const void* Packet::getData() const {
     }
 }
 
-std::size_t Packet::getDataSize() const { return m_packetData.size(); }
+size_t Packet::getDataSize() const { return m_packetData.size(); }
 
 Packet& Packet::operator<<(bool data) {
     *this << static_cast<uint8_t>(data);
