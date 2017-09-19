@@ -2,29 +2,35 @@
 
 #pragma once
 
-#include <cscore.h>
-#include <ctrlib/CANTalon.h>
-
 #include <CameraServer.h>
 #include <DoubleSolenoid.h>
 #include <Joystick.h>
-#include <SampleRobot.h>
 #include <Solenoid.h>
+#include <TimedRobot.h>
 #include <Timer.h>
+#include <cscore.h>
+#include <ctrlib/CANTalon.h>
 
 #include "ButtonTracker.hpp"
 #include "Constants.hpp"
 #include "DSDisplay.hpp"
 #include "LiveGrapher/GraphHost.hpp"
+#include "Subsystems/CANTalonGroup.hpp"
 #include "Subsystems/DriveTrain.hpp"
 
-class Robot : public SampleRobot {
+class Robot : public TimedRobot {
 public:
     Robot();
-    void OperatorControl() override;
-    void Autonomous() override;
-    void Disabled() override;
-    void Test() override;
+
+    void DisabledInit() override;
+    void AutonomousInit() override;
+    void TeleopInit() override;
+    void TestInit() override;
+
+    void RobotPeriodic() override;
+    void DisabledPeriodic() override;
+    void AutonomousPeriodic() override;
+    void TeleopPeriodic() override;
 
     void AutoLeftGear();
     void AutoCenterGear();
@@ -41,8 +47,11 @@ private:
 
     Solenoid shifter{5};
 
-    GearBox robotGrabber{-1, 1, 0, 15};
-    GearBox robotWinch{-1, -1, -1, 3};
+    CANTalon grabberMotor{15};
+    CANTalonGroup robotGrabber{1, 0, grabberMotor};
+
+    CANTalon winchMotor{3};
+    CANTalonGroup robotWinch{winchMotor};
 
     frc::Joystick driveStick1{k_driveStick1Port};
     frc::Joystick driveStick2{k_driveStick2Port};
