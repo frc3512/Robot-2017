@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2017 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2016-2018 FRC Team 3512. All Rights Reserved.
 
 #pragma once
 
@@ -12,7 +12,8 @@
 #include "Packet.hpp"
 #include "UdpSocket.hpp"
 
-/* This class allows you to pack data into an SFML packet and send it to an
+/**
+ * This class allows you to pack data into an SFML packet and send it to an
  * application on the DriverStation that displays it in a GUI.
  *
  * USAGE:
@@ -43,7 +44,6 @@
  *
  * The packets are always sent to 10.35.12.42 for testing purposes
  */
-
 class DSDisplay {
 public:
     enum StatusLight : int8_t { active, standby, inactive };
@@ -85,9 +85,7 @@ public:
     void AddData(std::string ID, bool data);
     void AddData(std::string ID, int8_t data);
     void AddData(std::string ID, int32_t data);
-    void AddData(std::string ID, uint32_t data);
     void AddData(std::string ID, std::string data);
-    void AddData(std::string ID, float data);
     void AddData(std::string ID, double data);
 
 private:

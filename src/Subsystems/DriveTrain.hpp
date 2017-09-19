@@ -1,31 +1,27 @@
-// Copyright (c) 2016-2017 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2016-2018 FRC Team 3512. All Rights Reserved.
 
 #pragma once
 
-#include <memory>
-
 #include <ADXRS450_Gyro.h>
+#include <CtrlSys/DiffDriveController.h>
+#include <CtrlSys/FuncNode.h>
+#include <CtrlSys/RefInput.h>
+#include <Drive/DifferentialDrive.h>
 #include <Encoder.h>
+#include <ctre/phoenix/MotorControl/CAN/TalonSRX.h>
 
 #include "../Constants.hpp"
-#include "../CtrlSys/FuncNode.hpp"
-#include "../CtrlSys/LinearDigitalFilter.hpp"
-#include "../CtrlSys/Output.hpp"
-#include "../CtrlSys/PIDNode.hpp"
-#include "../CtrlSys/RefInput.hpp"
-#include "../CtrlSys/Sensor.hpp"
-#include "../CtrlSys/SumNode.hpp"
-#include "../Utility.hpp"
-#include "GearBox.hpp"
-#include "SubsystemBase.hpp"
+#include "CANTalonGroup.hpp"
 
-class GearBox;
+class CANTalonGroup;
 
 /**
  * Provides an interface for this year's drive train
  */
-class DriveTrain : public SubsystemBase {
+class DriveTrain {
 public:
+    using TalonSRX = ctre::phoenix::motorcontrol::can::TalonSRX;
+
     DriveTrain();
     virtual ~DriveTrain() = default;
 
@@ -36,9 +32,6 @@ public:
      * This is a convenience function for use in Operator Control.
      */
     void Drive(double throttle, double turn, bool isQuickTurn = false);
-
-    // Sets joystick deadband
-    void SetDeadband(double band);
 
     // Set encoder distances to 0
     void ResetEncoders();
@@ -56,10 +49,10 @@ public:
     double GetRightRate() const;
 
     // Returns robot's current position
-    double GetPosition() const;
+    double GetPosition();
 
     // Return gyro's angle
-    double GetAngle() const;
+    double GetAngle();
 
     // Return gyro's rate
     double GetAngularRate() const;
@@ -90,40 +83,31 @@ public:
     void Debug();
 
 private:
-    double m_deadband = k_joystickDeadband;
-    double m_sensitivity;
+    // Left gearbox used in position PID
+    TalonSRX m_leftFront{k_leftDriveMasterID};
+    TalonSRX m_leftRear{k_leftDriveSlaveID};
+    CANTalonGroup m_leftGrbx{m_leftFront, m_leftRear};
 
-    // Cheesy Drive variables
-    double m_oldTurn = 0.0;
-    double m_quickStopAccumulator = 0.0;
-    double m_negInertiaAccumulator = 0.0;
+    // Right gearbox used in position PID
+    TalonSRX m_rightFront{k_rightDriveMasterID};
+    TalonSRX m_rightRear{k_rightDriveSlaveID};
+    CANTalonGroup m_rightGrbx{m_rightFront, m_rightRear};
+
+    frc::DifferentialDrive m_drive{m_leftGrbx, m_rightGrbx};
+
+    // Gyro used for angle PID
+    ADXRS450_Gyro m_gyro;
 
     // Control system references
-    RefInput m_angleRef{0.0};
-    RefInput m_posRef{0.0};
+    frc::RefInput m_posRef{0.0};
+    frc::RefInput m_angleRef{0.0};
 
-    // Angle PID
-    ADXRS450_Gyro m_gyro;
-    FuncNode m_angleSensor{[this] { return GetAngle(); }};
-    SumNode m_angleError{&m_angleRef, true, &m_angleSensor, false};
-    PIDNode m_anglePID{k_angleP, k_angleI, k_angleD, &m_angleError};
+    // Sensor adapters
+    frc::FuncNode m_leftEncoder{[this] { return m_leftGrbx.GetPosition(); }};
+    frc::FuncNode m_rightEncoder{[this] { return m_rightGrbx.GetPosition(); }};
+    frc::FuncNode m_angleSensor{[this] { return GetAngle(); }};
 
-    // Gearboxes used in position PID
-    GearBox m_leftGrbx{-1, -1, -1, k_leftDriveMasterID, k_leftDriveSlaveID};
-    GearBox m_rightGrbx{-1, -1, -1, k_rightDriveMasterID, k_rightDriveSlaveID};
-
-    // Position PID
-    FuncNode m_posCalc{[&] {
-        return (m_leftGrbx.GetPosition() + m_rightGrbx.GetPosition()) / 2.0;
-    }};
-    SumNode m_posError{&m_posRef, true, &m_posCalc, false};
-    PIDNode m_posPID{k_posP, k_posI, k_posD, &m_posError};
-
-    // Combine outputs for left motor
-    SumNode m_leftMotorInput{&m_posPID, true, &m_anglePID, true};
-    Output m_leftOutput{&m_leftMotorInput, &m_leftGrbx, 0.005};
-
-    // Combine outputs for right motor
-    SumNode m_rightMotorInput{&m_posPID, true, &m_anglePID, false};
-    Output m_rightOutput{&m_rightMotorInput, &m_rightGrbx, 0.005};
+    frc::DiffDriveController m_controller{
+        m_posRef,      m_angleRef, m_leftEncoder, m_rightEncoder,
+        m_angleSensor, true,       m_leftGrbx,    m_rightGrbx};
 };
