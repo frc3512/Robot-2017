@@ -1,6 +1,6 @@
-// Copyright (c) 2016-2017 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2016-2018 FRC Team 3512. All Rights Reserved.
 
-#include "AutonContainer.hpp"
+#include "DSDisplay/AutonContainer.hpp"
 
 AutonMethod::AutonMethod(const std::string& methodName,
                          std::function<void()> func) {
