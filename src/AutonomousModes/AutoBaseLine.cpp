@@ -2,28 +2,38 @@
 
 #include "../Robot.hpp"
 
-using namespace std::chrono_literals;
-
 constexpr double k_safetyInches = 10.0;
+
+enum class State { Init, MoveForward, Idle };
 
 // Drives forward until passing white line 120 inches away from start
 void Robot::AutoBaseLine() {
-    robotDrive.StartClosedLoop();
+    static State state = State::Init;
 
-    shifter.Set(false);  // false = high gear
-    gearPunch.Set(frc::DoubleSolenoid::kForward);
+    switch (state) {
+        case State::Init:
+            robotDrive.StartClosedLoop();
 
-    robotDrive.ResetEncoders();
-    robotDrive.ResetGyro();
-    shifter.Set(true);  // low gear
-    robotDrive.SetPositionReference(k_robotLength + 120.0 + k_safetyInches);
-    robotDrive.SetAngleReference(0);
+            shifter.Set(false);  // false = high gear
+            gearPunch.Set(frc::DoubleSolenoid::kForward);
 
-    while (IsAutonomous() && IsEnabled() && !robotDrive.PosAtReference()) {
-        DS_PrintOut();
+            robotDrive.ResetEncoders();
+            robotDrive.ResetGyro();
+            shifter.Set(true);  // low gear
+            robotDrive.SetPositionReference(k_robotLength + 120.0 +
+                                            k_safetyInches);
+            robotDrive.SetAngleReference(0);
 
-        std::this_thread::sleep_for(10ms);
+            state = State::MoveForward;
+            break;
+        case State::MoveForward:
+            if (robotDrive.PosAtReference()) {
+                robotDrive.StopClosedLoop();
+
+                state = State::Idle;
+            }
+            break;
+        case State::Idle:
+            break;
     }
-
-    robotDrive.StopClosedLoop();
 }
