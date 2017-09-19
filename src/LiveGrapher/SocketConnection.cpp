@@ -1,6 +1,6 @@
-// Copyright (c) 2013-2017 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2013-2018 FRC Team 3512. All Rights Reserved.
 
-#include "SocketConnection.hpp"
+#include "LiveGrapher/SocketConnection.hpp"
 
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -13,8 +13,6 @@
 #include <algorithm>
 #include <cstring>
 #include <utility>
-
-#include "GraphHost.hpp"
 
 SocketConnection::SocketConnection(int nfd, int ipcWriteSock) {
     fd = nfd;

@@ -1,6 +1,6 @@
-// Copyright (c) 2016-2017 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2016-2018 FRC Team 3512. All Rights Reserved.
 
-#include "DSDisplay.hpp"
+#include "DSDisplay/DSDisplay.hpp"
 
 #include <cstring>
 #include <fstream>
@@ -9,136 +9,16 @@
 
 using namespace std::chrono_literals;
 
-DSDisplay& DSDisplay::GetInstance(uint16_t dsPort) {
-    static DSDisplay dsDisplay(dsPort);
-    return dsDisplay;
-}
-
-void DSDisplay::Clear() { m_packet.clear(); }
-
-void DSDisplay::SendToDS() {
-    if (m_dsIP != 0) {
-        m_socket.send(m_packet, m_dsIP, m_dsPort);
-    }
-}
-
-const std::string DSDisplay::ReceiveFromDS() {
-    // Send keepalive every 250ms
-    auto time = steady_clock::now();
-    if (time - prevTime > 250ms) {
-        Clear();
-        m_packet << static_cast<std::string>("\r\n");
-        SendToDS();
-
-        prevTime = time;
-    }
-
-    if (m_socket.receive(m_recvBuffer, 256, m_recvAmount, m_recvIP,
-                         m_recvPort) == UdpSocket::Done) {
-        if (std::strncmp(m_recvBuffer, "connect\r\n", 9) == 0) {
-            m_dsIP = m_recvIP;
-            m_dsPort = m_recvPort;
-
-            // Send GUI element file to DS
-
-            Clear();
-
-            m_packet << static_cast<std::string>("guiCreate\r\n");
-
-            // Open the file
-            std::ifstream guiFile("/home/lvuser/GUISettings.txt",
-                                  std::ifstream::binary);
-
-            if (guiFile.is_open()) {
-                // Get its length
-                guiFile.seekg(0, guiFile.end);
-                unsigned int fileSize = guiFile.tellg();
-                guiFile.seekg(0, guiFile.beg);
-
-                // Send the length
-                m_packet << static_cast<uint32_t>(fileSize);
-
-                // Allocate a buffer for the file
-                auto tempBuf = std::make_unique<char>(fileSize);
-
-                // Send the data
-                guiFile.read(tempBuf.get(), fileSize);
-                m_packet.append(tempBuf.get(), fileSize);
-
-                guiFile.close();
-            }
-
-            SendToDS();
-
-            // Send a list of available autonomous modes
-            Clear();
-
-            m_packet << static_cast<std::string>("autonList\r\n");
-
-            for (unsigned int i = 0; i < m_autonModes.Size(); i++) {
-                m_packet << m_autonModes.Name(i);
-            }
-
-            SendToDS();
-
-            // Make sure driver knows which autonomous mode is selected
-            Clear();
-
-            m_packet << static_cast<std::string>("autonConfirmed\r\n");
-            m_packet << m_autonModes.Name(m_curAutonMode);
-
-            SendToDS();
-
-            return "connect\r\n";
-        } else if (std::strncmp(m_recvBuffer, "autonSelect\r\n", 13) == 0) {
-            // Next byte after command is selection choice
-            m_curAutonMode = m_recvBuffer[13];
-
-            Clear();
-
-            m_packet << static_cast<std::string>("autonConfirmed\r\n");
-            m_packet << m_autonModes.Name(m_curAutonMode);
-
-            // Store newest autonomous choice to file for persistent storage
-            std::ofstream autonModeFile("/home/lvuser/autonMode.txt",
-                                        std::fstream::trunc);
-            if (autonModeFile.is_open()) {
-                // Selection is stored as ASCII number in file
-                char autonNum = '0' + m_curAutonMode;
-
-                if (autonModeFile << autonNum) {
-                    std::cout << "DSDisplay: autonSelect: wrote auton "
-                              << autonNum << " to file" << std::endl;
-                } else {
-                    std::cout << "DSDisplay: autonSelect: failed writing auton "
-                              << autonNum << " into open file" << std::endl;
-                }
-            } else {
-                std::cout
-                    << "DSDisplay: autonSelect: failed to open autonMode.txt"
-                    << std::endl;
-            }
-
-            SendToDS();
-
-            return "autonSelect\r\n";
-        }
-    }
-
-    return "NONE";
-}
-
-void DSDisplay::AddAutoMethod(const std::string& methodName,
-                              std::function<void()> func) {
-    m_autonModes.AddMethod(methodName, func);
-}
-
-DSDisplay::DSDisplay(uint16_t portNumber) : m_dsPort(portNumber) {
-    m_socket.bind(portNumber);
+DSDisplay::DSDisplay(int port) : m_dsPort(port) {
+    m_socket.bind(port);
     m_socket.setBlocking(false);
 
     // Retrieve stored autonomous index
+#ifdef __FRC_ROBORIO__
     std::ifstream autonModeFile("/home/lvuser/autonMode.txt");
+#else
+    std::ifstream autonModeFile("autonMode.txt");
+#endif
     if (autonModeFile.is_open()) {
         if (autonModeFile >> m_curAutonMode) {
             std::cout << "DSDisplay: restored auton " << m_curAutonMode
@@ -153,15 +33,16 @@ DSDisplay::DSDisplay(uint16_t portNumber) : m_dsPort(portNumber) {
         std::cout << "DSDisplay: failed opening autonMode.txt" << std::endl;
         m_curAutonMode = 0;
     }
+
+    m_recvThread = std::thread([this] {
+        while (true) {
+            ReceiveFromDS();
+            std::this_thread::sleep_for(10ms);
+        }
+    });
 }
 
-void DSDisplay::DeleteAllMethods() { m_autonModes.DeleteAllMethods(); }
-
-void DSDisplay::ExecAutonomous() {
-    m_autonModes.ExecAutonomous(m_curAutonMode);
-}
-
-char DSDisplay::GetAutonID() const { return m_curAutonMode; }
+void DSDisplay::Clear() { m_packet.clear(); }
 
 void DSDisplay::AddData(std::string ID, StatusLight data) {
     // If packet is empty, add "display\r\n" header to packet
@@ -212,17 +93,6 @@ void DSDisplay::AddData(std::string ID, int32_t data) {
     m_packet << data;
 }
 
-void DSDisplay::AddData(std::string ID, uint32_t data) {
-    // If packet is empty, add "display\r\n" header to packet
-    if (m_packet.getData() == nullptr) {
-        m_packet << std::string("display\r\n");
-    }
-
-    m_packet << static_cast<int8_t>('u');
-    m_packet << ID;
-    m_packet << data;
-}
-
 void DSDisplay::AddData(std::string ID, std::string data) {
     // If packet is empty, add "display\r\n" header to packet
     if (m_packet.getData() == nullptr) {
@@ -234,9 +104,11 @@ void DSDisplay::AddData(std::string ID, std::string data) {
     m_packet << data;
 }
 
-void DSDisplay::AddData(std::string ID, float data) {
+void DSDisplay::AddData(std::string ID, double data) {
     // If packet is empty, add "display\r\n" header to packet
     if (m_packet.getData() == nullptr) {
+        // doubles are converted to strings because VxWorks messes up floating
+        // point values over the network.
         m_packet << std::string("display\r\n");
     }
 
@@ -245,13 +117,149 @@ void DSDisplay::AddData(std::string ID, float data) {
     m_packet << std::to_string(data);
 }
 
-void DSDisplay::AddData(std::string ID, double data) {
-    // If packet is empty, add "display\r\n" header to packet
-    if (m_packet.getData() == nullptr) {
-        m_packet << std::string("display\r\n");
+void DSDisplay::SendToDS() {
+    uint32_t dsIP;
+    uint16_t dsPort;
+
+    {
+        std::lock_guard<std::mutex> lock(m_ipMutex);
+        dsIP = m_dsIP;
+        dsPort = m_dsPort;
     }
 
-    m_packet << static_cast<int8_t>('s');
-    m_packet << ID;
-    m_packet << std::to_string(data);
+    if (dsIP != 0) {
+        m_socket.send(m_packet, dsIP, dsPort);
+        Clear();
+    }
+}
+
+void DSDisplay::AddAutoMethod(const std::string& methodName,
+                              std::function<void()> func) {
+    m_autonModes.AddMethod(methodName, func);
+}
+
+void DSDisplay::DeleteAllMethods() { m_autonModes.DeleteAllMethods(); }
+
+void DSDisplay::ExecAutonomous() {
+    m_autonModes.ExecAutonomous(m_curAutonMode);
+}
+
+void DSDisplay::SendToDS(Packet& packet) {
+    // No locking needed here because this function is only used by
+    // ReceiveFromDS(). Only other reads of m_dsIP and m_dsPort can occur at
+    // this point.
+    if (m_dsIP != 0) {
+        m_socket.send(packet, m_dsIP, m_dsPort);
+        m_packet.clear();
+    }
+}
+
+void DSDisplay::ReceiveFromDS() {
+    // Send keepalive every 250ms
+    auto time = steady_clock::now();
+    if (time - m_prevTime > 250ms) {
+        Packet packet;
+        packet << static_cast<std::string>("\r\n");
+        SendToDS(packet);
+
+        m_prevTime = time;
+    }
+
+    if (m_socket.receive(m_recvBuffer, 256, m_recvAmount, m_recvIP,
+                         m_recvPort) == UdpSocket::Done) {
+        if (std::strncmp(m_recvBuffer, "connect\r\n", 9) == 0) {
+            {
+                std::lock_guard<std::mutex> lock(m_ipMutex);
+                m_dsIP = m_recvIP;
+                m_dsPort = m_recvPort;
+            }
+
+            // Send GUI element file to DS
+
+            Packet packet;
+            packet << static_cast<std::string>("guiCreate\r\n");
+
+            // Open the file
+#ifdef __FRC_ROBORIO__
+            std::ifstream guiFile("/home/lvuser/GUISettings.txt",
+                                  std::ifstream::binary);
+#else
+            std::ifstream guiFile("GUISettings.txt", std::ifstream::binary);
+#endif
+
+            if (guiFile.is_open()) {
+                // Get its length
+                guiFile.seekg(0, guiFile.end);
+                unsigned int fileSize = guiFile.tellg();
+                guiFile.seekg(0, guiFile.beg);
+
+                // Send the length
+                packet << static_cast<uint32_t>(fileSize);
+
+                // Allocate a buffer for the file
+                auto tempBuf = std::make_unique<char[]>(fileSize);
+
+                // Send the data
+                guiFile.read(tempBuf.get(), fileSize);
+                packet.append(tempBuf.get(), fileSize);
+
+                guiFile.close();
+            }
+
+            SendToDS(packet);
+
+            // Send a list of available autonomous modes
+            packet.clear();
+
+            packet << static_cast<std::string>("autonList\r\n");
+
+            for (unsigned int i = 0; i < m_autonModes.Size(); i++) {
+                packet << m_autonModes.Name(i);
+            }
+
+            SendToDS(packet);
+
+            // Make sure driver knows which autonomous mode is selected
+            packet.clear();
+
+            packet << static_cast<std::string>("autonConfirmed\r\n");
+            packet << m_autonModes.Name(m_curAutonMode);
+
+            SendToDS(packet);
+        } else if (std::strncmp(m_recvBuffer, "autonSelect\r\n", 13) == 0) {
+            // Next byte after command is selection choice
+            m_curAutonMode = m_recvBuffer[13];
+
+            Packet packet;
+
+            packet << static_cast<std::string>("autonConfirmed\r\n");
+            packet << m_autonModes.Name(m_curAutonMode);
+
+            // Store newest autonomous choice to file for persistent storage
+#ifdef __FRC_ROBORIO__
+            std::ofstream autonModeFile("/home/lvuser/autonMode.txt",
+                                        std::fstream::trunc);
+#else
+            std::ofstream autonModeFile("autonMode.txt", std::fstream::trunc);
+#endif
+            if (autonModeFile.is_open()) {
+                // Selection is stored as ASCII number in file
+                char autonNum = '0' + m_curAutonMode;
+
+                if (autonModeFile << autonNum) {
+                    std::cout << "DSDisplay: autonSelect: wrote auton "
+                              << autonNum << " to file" << std::endl;
+                } else {
+                    std::cout << "DSDisplay: autonSelect: failed writing auton "
+                              << autonNum << " into open file" << std::endl;
+                }
+            } else {
+                std::cout
+                    << "DSDisplay: autonSelect: failed to open autonMode.txt"
+                    << std::endl;
+            }
+
+            SendToDS(packet);
+        }
+    }
 }
