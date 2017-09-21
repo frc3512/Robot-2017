@@ -36,9 +36,6 @@ void Robot::AutoRightGear() {
 
             // Initial Forward
             case State::InitForward:
-                std::cout << "InitForward: PosRef:"
-                          << robotDrive.GetPosReference()
-                          << " Pos: " << robotDrive.GetPosition() << std::endl;
                 if (robotDrive.PosAtReference()) {
                     // Angle references are all scaled by 7 (don't ask why)
                     robotDrive.SetAngleReference(-60 / 7);
@@ -49,9 +46,6 @@ void Robot::AutoRightGear() {
 
             // Rotate
             case State::Rotate:
-                std::cout << "Rotate: AngleRef:"
-                          << robotDrive.GetAngleReference()
-                          << " Angle: " << robotDrive.GetAngle() << std::endl;
                 if (robotDrive.AngleAtReference()) {
                     state = State::FinalForward;
                     // Angle set to prevent overshoot

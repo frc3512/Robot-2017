@@ -106,7 +106,6 @@ void Robot::OperatorControl() {
 void Robot::Autonomous() {
     autoTimer.Reset();
     autoTimer.Start();
-    std::cout << "Autonomous Called" << std::endl;
 
     // AutoCenterGear();
     // AutoRightGear();
@@ -117,7 +116,6 @@ void Robot::Disabled() {
     while (IsDisabled()) {
         if (armButtons.PressedButton(12)) {
             robotDrive.CalibrateGyro();
-            std::cout << "Calibrating" << std::endl;
         }
 
         armButtons.Update();

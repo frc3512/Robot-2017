@@ -77,7 +77,6 @@ double GearBox::GetSpeed() const {
         // RPM * degrees/rev / (seconds/min)
         return m_motors[0]->GetSpeed() * m_distancePerPulse / 60.0;
     } else {
-        // std::cout << "Else: " << m_feedbackDevice << std::endl;
         return m_motors[0]->GetSpeed() * m_distancePerPulse * 10.0 / 4.0;
     }
 }
@@ -87,7 +86,6 @@ void GearBox::SetDistancePerPulse(double distancePerPulse) {
 }
 
 void GearBox::SetFeedbackDevice(CANTalon::FeedbackDevice device) {
-    std::cout << "SetFeedbackDevice " << device << std::endl;
     m_feedbackDevice = device;
     m_motors[0]->SetFeedbackDevice(device);
 }
@@ -135,14 +133,12 @@ void GearBox::PIDWrite(double output) {
          * now and motor is rotating into limit switch
          */
         m_motors[0]->PIDWrite(0);
-        std::cout << "forwardLimit" << std::endl;
     } else if (m_reverseLimit != nullptr &&
                m_limitOnHigh == m_reverseLimit->Get() && output < 0) {
         /* If stopping motor in same limit switch state that limit switch is in
          * now and motor is rotating into limit switch
          */
         m_motors[0]->PIDWrite(0);
-        std::cout << "reverseLimit" << std::endl;
     } else {
         m_motors[0]->PIDWrite(output);
     }
