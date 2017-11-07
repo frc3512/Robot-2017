@@ -5,6 +5,7 @@
 #include <cstring>
 #include <fstream>
 #include <iostream>
+#include <memory>
 
 using namespace std::chrono_literals;
 
@@ -58,13 +59,12 @@ const std::string DSDisplay::ReceiveFromDS() {
                 m_packet << static_cast<uint32_t>(fileSize);
 
                 // Allocate a buffer for the file
-                auto tempBuf = new char[fileSize];
+                auto tempBuf = std::make_unique<char>(fileSize);
 
                 // Send the data
-                guiFile.read(tempBuf, fileSize);
-                m_packet.append(tempBuf, fileSize);
+                guiFile.read(tempBuf.get(), fileSize);
+                m_packet.append(tempBuf.get(), fileSize);
 
-                delete[] tempBuf;
                 guiFile.close();
             }
 
