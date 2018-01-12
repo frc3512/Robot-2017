@@ -1,6 +1,5 @@
 #!/bin/bash
 HOST='10.35.12.2'
-USER='admin'
 
 if [ $# -ne 1 ] ; then
     echo usage: ./deploy.sh DIRECTORY
@@ -9,6 +8,7 @@ if [ $# -ne 1 ] ; then
     exit 1
 fi
 
-ssh $USER@$HOST "rm -f /home/lvuser/FRCUserProgram; killall -q netconsole-host || :"
-scp $1/FRCUserProgram $USER@$HOST:/home/lvuser
-ssh $USER@$HOST "setcap 'cap_sys_nice=pe' /home/lvuser/FRCUserProgram;. /etc/profile.d/natinst-path.sh; chmod a+x /home/lvuser/FRCUserProgram; /usr/local/frc/bin/frcKillRobot.sh -t -r;"
+ssh lvuser@$HOST "rm -f /home/lvuser/FRCUserProgram; killall -q netconsole-host || :"
+scp $1/FRCUserProgram lvuser@$HOST:/home/lvuser
+ssh admin@$HOST "setcap 'cap_sys_nice=pe' /home/lvuser/FRCUserProgram;"
+ssh lvuser@$HOST ". /etc/profile.d/natinst-path.sh; chmod a+x /home/lvuser/FRCUserProgram; /usr/local/frc/bin/frcKillRobot.sh -t -r; /usr/local/frc/bin/frcKillRobot.sh -t -r;"
