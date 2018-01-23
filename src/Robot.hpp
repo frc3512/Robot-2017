@@ -39,7 +39,7 @@ public:
     void DS_PrintOut();
 
 private:
-    using TalonSRX = ctre::phoenix::motorcontrol::can::TalonSRX;
+    using WPI_TalonSRX = ctre::phoenix::motorcontrol::can::WPI_TalonSRX;
 
     DriveTrain robotDrive;
     frc::Solenoid claw{0};
@@ -48,10 +48,10 @@ private:
 
     frc::Solenoid shifter{5};
 
-    TalonSRX grabberMotor{15};
-    CANTalonGroup robotGrabber{1, 0, grabberMotor};
+    WPI_TalonSRX grabberMotor{15};
+    CANTalonGroup robotGrabber{grabberMotor};
 
-    TalonSRX winchMotor{3};
+    WPI_TalonSRX winchMotor{3};
     CANTalonGroup robotWinch{winchMotor};
 
     frc::Joystick driveStick1{k_driveStick1Port};

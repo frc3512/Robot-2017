@@ -3,6 +3,8 @@
 #include "Robot.hpp"
 
 Robot::Robot() {
+    robotGrabber.EnableHardLimits(1, 0);
+
     // Auton: does nothing
     dsDisplay.AddAutoMethod("No-op", [] {});
 
