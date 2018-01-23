@@ -6,8 +6,6 @@
 #include <iostream>
 #include <limits>
 
-using ctre::phoenix::motorcontrol::FeedbackDevice;
-
 DriveTrain::DriveTrain() {
     m_drive.SetDeadband(k_joystickDeadband);
 
@@ -17,9 +15,6 @@ DriveTrain::DriveTrain() {
     m_rightRear.SetInverted(true);
 
     m_leftGrbx.SetSensorDirection(true);
-
-    m_leftGrbx.SetFeedbackDevice(FeedbackDevice::QuadEncoder);
-    m_rightGrbx.SetFeedbackDevice(FeedbackDevice::QuadEncoder);
 
     m_leftGrbx.SetDistancePerPulse(k_driveDpP);
     m_rightGrbx.SetDistancePerPulse(k_driveDpP);
@@ -51,6 +46,7 @@ void DriveTrain::ResetEncoders() {
     m_leftGrbx.ResetEncoder();
     m_rightGrbx.ResetEncoder();
 }
+
 void DriveTrain::SetLeftManual(double value) { m_leftGrbx.Set(value); }
 
 void DriveTrain::SetRightManual(double value) { m_rightGrbx.Set(value); }
