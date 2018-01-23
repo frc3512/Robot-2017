@@ -105,7 +105,7 @@ private:
     // Sensor adapters
     frc::FuncNode m_leftEncoder{[this] { return m_leftGrbx.GetPosition(); }};
     frc::FuncNode m_rightEncoder{[this] { return m_rightGrbx.GetPosition(); }};
-    frc::FuncNode m_angleSensor{[this] { return GetAngle(); }};
+    frc::FuncNode m_angleSensor{[this] { return m_gyro.GetAngle(); }};
 
     frc::DiffDriveController m_controller{
         m_posRef,      m_angleRef, m_leftEncoder, m_rightEncoder,
