@@ -8,6 +8,7 @@
 #include <Solenoid.h>
 #include <TimedRobot.h>
 #include <Timer.h>
+#include <XboxController.h>
 #include <cscore.h>
 #include <ctre/phoenix/MotorControl/CAN/TalonSRX.h>
 
@@ -56,7 +57,8 @@ private:
 
     frc::Joystick driveStick1{k_driveStick1Port};
     frc::Joystick driveStick2{k_driveStick2Port};
-    frc::Joystick grabberStick{k_grabberStickPort};
+    // frc::Joystick grabberStick{k_grabberStickPort};
+    frc::XboxController controller{k_grabberStickPort};
 
     frc::Timer autoTimer;
 

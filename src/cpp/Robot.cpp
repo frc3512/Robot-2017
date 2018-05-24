@@ -45,9 +45,9 @@ void Robot::TestInit() {
 void Robot::RobotPeriodic() { DS_PrintOut(); }
 
 void Robot::DisabledPeriodic() {
-    if (grabberStick.GetRawButtonPressed(12)) {
+    /*if (grabberStick.GetRawButtonPressed(12)) {
         robotDrive.CalibrateGyro();
-    }
+    }*/
 }
 
 void Robot::AutonomousPeriodic() {
@@ -66,43 +66,45 @@ void Robot::TeleopPeriodic() {
                          driveStick2.GetRawButton(2));
     }
 
-    if (grabberStick.GetRawButton(4)) {
+    /*if (grabberStick.GetRawButton(4)) {
         robotGrabber.Set(1);
     } else if (grabberStick.GetRawButton(6)) {
         robotGrabber.Set(-1);
     }
-
+	*/
     if (driveStick2.GetRawButtonPressed(1)) {
         shifter.Set(!shifter.Get());
     }
 
     // Appendage Stick Controls
 
-    if (grabberStick.GetRawButtonPressed(1)) {
+    if (controller.GetBumperPressed(GenericHID::kLeftHand)) {
         claw.Set(!claw.Get());
     }
 
-    if (grabberStick.GetRawButtonPressed(3)) {
+    if (controller.GetXButtonPressed()) {
         arm.Set(frc::DoubleSolenoid::kForward);
     }
-    if (grabberStick.GetRawButtonPressed(5)) {
+    if (controller.GetYButtonPressed()) {
         arm.Set(frc::DoubleSolenoid::kReverse);
     }
 
-    if (grabberStick.GetRawButtonPressed(4)) {
+    if (controller.GetAButtonPressed()) {
         gearPunch.Set(frc::DoubleSolenoid::kReverse);
     }
-    if (grabberStick.GetRawButtonPressed(6)) {
+    if (controller.GetBButtonPressed()) {
         gearPunch.Set(frc::DoubleSolenoid::kForward);
     }
 
-    if (grabberStick.GetPOV() == 0) {
+    /*if (grabberStick.GetPOV() == 0) {
         robotWinch.Set(1);
     } else if (grabberStick.GetPOV() == 180) {
         robotWinch.Set(-1);
     } else {
         robotWinch.Set(0);
-    }
+    }*/
+
+    robotWinch.Set(-1* controller.GetY(GenericHID::kLeftHand));
 
     // Camera
 
