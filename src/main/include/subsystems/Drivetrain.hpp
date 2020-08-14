@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2020 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2016-2021 FRC Team 3512. All Rights Reserved.
 
 #pragma once
 
@@ -9,11 +9,10 @@
 #include <frc/ctrlsys/RefInput.h>
 #include <frc/drive/DifferentialDrive.h>
 
+#include "CANEncoder.hpp"
 #include "Constants.hpp"
 #include "DiffDriveController.hpp"
-#include "subsystems/CANTalonGroup.hpp"
-
-class CANTalonGroup;
+#include "TalonSRXGroup.hpp"
 
 /**
  * Provides an interface for this year's drive train
@@ -40,12 +39,12 @@ public:
     void SetRightManual(double value);
 
     // Returns encoder distances
-    double GetLeftDisplacement() const;
-    double GetRightDisplacement() const;
+    double GetLeftDisplacement();
+    double GetRightDisplacement();
 
     // Returns encoder rates
-    double GetLeftRate() const;
-    double GetRightRate() const;
+    double GetLeftRate();
+    double GetRightRate();
 
     // Returns robot's current position
     double GetPosition();
@@ -85,12 +84,14 @@ private:
     // Left gearbox used in position PID
     WPI_TalonSRX m_leftFront{k_leftDriveMasterID};
     WPI_TalonSRX m_leftRear{k_leftDriveSlaveID};
-    CANTalonGroup m_leftGrbx{m_leftFront, m_leftRear};
+    TalonSRXGroup m_leftGrbx{m_leftFront, m_leftRear};
+    CANEncoder m_leftEncoder{m_leftFront, k_driveDpP};
 
     // Right gearbox used in position PID
     WPI_TalonSRX m_rightFront{k_rightDriveMasterID};
     WPI_TalonSRX m_rightRear{k_rightDriveSlaveID};
-    CANTalonGroup m_rightGrbx{m_rightFront, m_rightRear};
+    TalonSRXGroup m_rightGrbx{m_rightFront, m_rightRear};
+    CANEncoder m_rightEncoder{m_rightFront, k_driveDpP};
 
     frc::DifferentialDrive m_drive{m_leftGrbx, m_rightGrbx};
 
@@ -102,11 +103,18 @@ private:
     frc::RefInput m_angleRef{0.0};
 
     // Sensor adapters
-    frc::FuncNode m_leftEncoder{[this] { return m_leftGrbx.GetPosition(); }};
-    frc::FuncNode m_rightEncoder{[this] { return m_rightGrbx.GetPosition(); }};
+    frc::FuncNode m_leftEncoderDistance{
+        [this] { return m_leftEncoder.GetDistance(); }};
+    frc::FuncNode m_rightEncoderDistance{
+        [this] { return m_rightEncoder.GetDistance(); }};
     frc::FuncNode m_angleSensor{[this] { return m_gyro.GetAngle(); }};
 
-    frc::DiffDriveController m_controller{
-        m_posRef,      m_angleRef, m_leftEncoder, m_rightEncoder,
-        m_angleSensor, true,       m_leftGrbx,    m_rightGrbx};
+    frc::DiffDriveController m_controller{m_posRef,
+                                          m_angleRef,
+                                          m_leftEncoderDistance,
+                                          m_rightEncoderDistance,
+                                          m_angleSensor,
+                                          true,
+                                          m_leftGrbx,
+                                          m_rightGrbx};
 };

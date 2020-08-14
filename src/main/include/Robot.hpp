@@ -6,6 +6,7 @@
 
 #include <cscore.h>
 #include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
+#include <frc/DigitalInput.h>
 #include <frc/DoubleSolenoid.h>
 #include <frc/Joystick.h>
 #include <frc/Solenoid.h>
@@ -13,7 +14,6 @@
 
 #include "AutonomousChooser.hpp"
 #include "Constants.hpp"
-#include "subsystems/CANTalonGroup.hpp"
 #include "subsystems/Drivetrain.hpp"
 
 class Robot : public frc::TimedRobot {
@@ -47,10 +47,10 @@ private:
     frc::Solenoid shifter{5};
 
     WPI_TalonSRX grabberMotor{15};
-    CANTalonGroup robotGrabber{grabberMotor};
+    frc::DigitalInput forwardGrabberLimit{1};
+    frc::DigitalInput reverseGrabberLimit{0};
 
     WPI_TalonSRX winchMotor{3};
-    CANTalonGroup robotWinch{winchMotor};
 
     frc::Joystick driveStick1{k_driveStick1Port};
     frc::Joystick driveStick2{k_driveStick2Port};

@@ -3,8 +3,6 @@
 #include "Robot.hpp"
 
 Robot::Robot() {
-    robotGrabber.EnableHardLimits(1, 0);
-
     m_autonChooser.AddAutonomous("LeftGear", [=] { AutoLeftGear(); });
     m_autonChooser.AddAutonomous("CenterGear", [=] { AutoCenterGear(); });
     m_autonChooser.AddAutonomous("RightGear", [=] { AutoRightGear(); });
@@ -52,10 +50,12 @@ void Robot::TeleopPeriodic() {
                          driveStick2.GetRawButton(2));
     }
 
-    if (grabberStick.GetRawButton(4)) {
-        robotGrabber.Set(1);
-    } else if (grabberStick.GetRawButton(6)) {
-        robotGrabber.Set(-1);
+    if (grabberStick.GetRawButton(4) && !forwardGrabberLimit.Get()) {
+        grabberMotor.Set(1.0);
+    } else if (grabberStick.GetRawButton(6) && !reverseGrabberLimit.Get()) {
+        grabberMotor.Set(-1.0);
+    } else {
+        grabberMotor.Set(0.0);
     }
 
     if (driveStick2.GetRawButtonPressed(1)) {
@@ -83,11 +83,11 @@ void Robot::TeleopPeriodic() {
     }
 
     if (grabberStick.GetPOV() == 0) {
-        robotWinch.Set(1);
+        winchMotor.Set(1.0);
     } else if (grabberStick.GetPOV() == 180) {
-        robotWinch.Set(-1);
+        winchMotor.Set(-1.0);
     } else {
-        robotWinch.Set(0);
+        winchMotor.Set(0.0);
     }
 
     // Camera

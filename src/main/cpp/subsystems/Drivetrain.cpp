@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2020 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2016-2021 FRC Team 3512. All Rights Reserved.
 
 #include "subsystems/Drivetrain.hpp"
 
@@ -13,11 +13,6 @@ Drivetrain::Drivetrain() {
     m_leftRear.SetInverted(true);
     m_rightFront.SetInverted(true);
     m_rightRear.SetInverted(true);
-
-    m_leftGrbx.SetSensorDirection(true);
-
-    m_leftGrbx.SetDistancePerPulse(k_driveDpP);
-    m_rightGrbx.SetDistancePerPulse(k_driveDpP);
 
     m_leftGrbx.Set(0.0);
     m_rightGrbx.Set(0.0);
@@ -43,25 +38,23 @@ void Drivetrain::Drive(double throttle, double turn, bool isQuickTurn) {
 }
 
 void Drivetrain::ResetEncoders() {
-    m_leftGrbx.ResetEncoder();
-    m_rightGrbx.ResetEncoder();
+    m_leftEncoder.Reset();
+    m_rightEncoder.Reset();
 }
 
 void Drivetrain::SetLeftManual(double value) { m_leftGrbx.Set(value); }
 
 void Drivetrain::SetRightManual(double value) { m_rightGrbx.Set(value); }
 
-double Drivetrain::GetLeftDisplacement() const {
-    return m_leftGrbx.GetPosition();
+double Drivetrain::GetLeftDisplacement() { return m_leftEncoder.GetDistance(); }
+
+double Drivetrain::GetRightDisplacement() {
+    return m_rightEncoder.GetDistance();
 }
 
-double Drivetrain::GetRightDisplacement() const {
-    return m_rightGrbx.GetPosition();
-}
+double Drivetrain::GetLeftRate() { return m_leftEncoder.GetRate(); }
 
-double Drivetrain::GetLeftRate() const { return m_leftGrbx.GetSpeed(); }
-
-double Drivetrain::GetRightRate() const { return m_rightGrbx.GetSpeed(); }
+double Drivetrain::GetRightRate() { return m_rightEncoder.GetRate(); }
 
 double Drivetrain::GetPosition() { return m_controller.GetPosition(); }
 
