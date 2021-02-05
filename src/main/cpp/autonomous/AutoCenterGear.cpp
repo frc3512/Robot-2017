@@ -16,7 +16,7 @@ void Robot::AutoCenterGear() {
     // Move forward
     robotDrive.ResetEncoders();
     robotDrive.ResetGyro();
-    robotDrive.SetPositionReference(110.0 - k_robotLength);
+    robotDrive.SetPositionReference(110.0 - kRobotLength);
     robotDrive.SetAngleReference(0);
 
     frc2::Timer timer;

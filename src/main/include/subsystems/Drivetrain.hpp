@@ -82,16 +82,16 @@ public:
 
 private:
     // Left gearbox used in position PID
-    WPI_TalonSRX m_leftFront{k_leftDriveMasterID};
-    WPI_TalonSRX m_leftRear{k_leftDriveSlaveID};
+    WPI_TalonSRX m_leftFront{kLeftDriveMasterID};
+    WPI_TalonSRX m_leftRear{kLeftDriveSlaveID};
     TalonSRXGroup m_leftGrbx{m_leftFront, m_leftRear};
-    CANEncoder m_leftEncoder{m_leftFront, k_driveDpP};
+    CANEncoder m_leftEncoder{m_leftFront, kDriveDpP};
 
     // Right gearbox used in position PID
-    WPI_TalonSRX m_rightFront{k_rightDriveMasterID};
-    WPI_TalonSRX m_rightRear{k_rightDriveSlaveID};
+    WPI_TalonSRX m_rightFront{kRightDriveMasterID};
+    WPI_TalonSRX m_rightRear{kRightDriveSlaveID};
     TalonSRXGroup m_rightGrbx{m_rightFront, m_rightRear};
-    CANEncoder m_rightEncoder{m_rightFront, k_driveDpP};
+    CANEncoder m_rightEncoder{m_rightFront, kDriveDpP};
 
     frc::DifferentialDrive m_drive{m_leftGrbx, m_rightGrbx};
 

@@ -52,9 +52,9 @@ private:
 
     WPI_TalonSRX winchMotor{3};
 
-    frc::Joystick driveStick1{k_driveStick1Port};
-    frc::Joystick driveStick2{k_driveStick2Port};
-    frc::Joystick grabberStick{k_grabberStickPort};
+    frc::Joystick driveStick1{kDriveStick1Port};
+    frc::Joystick driveStick2{kDriveStick2Port};
+    frc::Joystick grabberStick{kGrabberStickPort};
 
     frc3512::AutonomousChooser m_autonChooser{"No-op", [] {}};
 
@@ -62,5 +62,5 @@ private:
     cs::UsbCamera camera1{"Camera 1", 0};
     // cs::UsbCamera camera2{"Camera 2", 1};
 
-    cs::MjpegServer server{"Server", k_mjpegServerPort};
+    cs::MjpegServer server{"Server", kMjpegServerPort};
 };

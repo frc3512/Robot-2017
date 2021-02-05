@@ -13,55 +13,55 @@
  */
 
 // DS port
-constexpr int k_dsPort = 5800;
+constexpr int kDsPort = 5800;
 
 // MJPEG server port
-constexpr int k_mjpegServerPort = 1180;
+constexpr int kMjpegServerPort = 1180;
 
 /*
  * Joystick and buttons
  */
 
 // Joystick ports
-constexpr int k_driveStick1Port = 0;
-constexpr int k_driveStick2Port = 1;
-constexpr int k_grabberStickPort = 2;
+constexpr int kDriveStick1Port = 0;
+constexpr int kDriveStick2Port = 1;
+constexpr int kGrabberStickPort = 2;
 
 // Joystick axis deadband range
-constexpr double k_joystickDeadband = 0.02;
+constexpr double kJoystickDeadband = 0.02;
 
 /*
  * DriveTrain
  */
 
 // DriveTrain GearBox ID
-constexpr int k_leftDriveMasterID = 0;
-constexpr int k_leftDriveSlaveID = 12;
-constexpr int k_rightDriveMasterID = 13;
-constexpr int k_rightDriveSlaveID = 14;
+constexpr int kLeftDriveMasterID = 0;
+constexpr int kLeftDriveSlaveID = 12;
+constexpr int kRightDriveMasterID = 13;
+constexpr int kRightDriveSlaveID = 14;
 
 // DriveTrain distance per pulse
-constexpr double k_driveDpP = 240.0 / ((6552 + 6522) / 2.0);  // in/pulse
+constexpr double kDriveDpP = 240.0 / ((6552 + 6522) / 2.0);  // in/pulse
 
 // Robot dimensions
-constexpr double k_robotWidth = 30.0;   // inches
-constexpr double k_robotLength = 39.0;  // inches
+constexpr double kRobotWidth = 30.0;   // inches
+constexpr double kRobotLength = 39.0;  // inches
 
 // DriveTrain position PID, Extra //'s mean practice PID values
-constexpr double k_driveMaxSpeed = 24000;  // in/sec
-constexpr double k_posP = 0.07;            // 0.07
-constexpr double k_posI = 0.00;            // 0.00
-constexpr double k_posD = 0.08;            // 0.08
+constexpr double kDriveMaxSpeed = 24000;  // in/sec
+constexpr double kPosP = 0.07;            // 0.07
+constexpr double kPosI = 0.00;            // 0.00
+constexpr double kPosD = 0.08;            // 0.08
 
 // DriveTrain angle PID
-constexpr double k_rotateMaxSpeed = 320;
-constexpr double k_angleP = 0.75;  // 0.75
-constexpr double k_angleI = 0.00;  // 0.00
-constexpr double k_angleD = 0.05;  // 0.05
+constexpr double kRotateMaxSpeed = 320;
+constexpr double kAngleP = 0.75;  // 0.75
+constexpr double kAngleI = 0.00;  // 0.00
+constexpr double kAngleD = 0.05;  // 0.05
 
 // CheesyDrive constants
-constexpr double k_lowGearSensitive = 0.75;
-constexpr double k_turnNonLinearity = 1.0;
-constexpr double k_inertiaDampen = 2.5;
-constexpr double k_inertiaHighTurn = 3.0;
-constexpr double k_inertiaLowTurn = 3.0;
+constexpr double kLowGearSensitive = 0.75;
+constexpr double kTurnNonLinearity = 1.0;
+constexpr double kInertiaDampen = 2.5;
+constexpr double kInertiaHighTurn = 3.0;
+constexpr double kInertiaLowTurn = 3.0;
