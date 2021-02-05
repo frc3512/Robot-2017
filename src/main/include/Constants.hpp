@@ -12,9 +12,6 @@
  * > Other (i.e. miscellaneous constants)
  */
 
-// DS port
-constexpr int kDsPort = 5800;
-
 // MJPEG server port
 constexpr int kMjpegServerPort = 1180;
 
