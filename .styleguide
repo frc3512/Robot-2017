@@ -21,4 +21,7 @@ includeOtherLibs {
   cscore\.h$
   ctre/
   frc/
+  frc2/
+  networktables/
+  wpi/
 }

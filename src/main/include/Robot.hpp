@@ -3,7 +3,6 @@
 #pragma once
 
 #include <cameraserver/CameraServer.h>
-#include <frc2/Timer.h>
 
 #include <cscore.h>
 #include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
@@ -12,8 +11,8 @@
 #include <frc/Solenoid.h>
 #include <frc/TimedRobot.h>
 
+#include "AutonomousChooser.hpp"
 #include "Constants.hpp"
-#include "dsdisplay/DSDisplay.hpp"
 #include "subsystems/CANTalonGroup.hpp"
 #include "subsystems/Drivetrain.hpp"
 
@@ -22,7 +21,6 @@ public:
     Robot();
 
     void DisabledInit() override;
-    void AutonomousInit() override;
     void TeleopInit() override;
     void TestInit() override;
 
@@ -58,10 +56,7 @@ private:
     frc::Joystick driveStick2{k_driveStick2Port};
     frc::Joystick grabberStick{k_grabberStickPort};
 
-    frc2::Timer autoTimer;
-
-    // Used for sending data to the Driver Station
-    DSDisplay dsDisplay{k_dsPort};
+    frc3512::AutonomousChooser m_autonChooser{"No-op", [] {}};
 
     // Camera
     cs::UsbCamera camera1{"Camera 1", 0};

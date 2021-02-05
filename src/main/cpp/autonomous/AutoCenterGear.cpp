@@ -1,40 +1,34 @@
-// Copyright (c) 2016-2020 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2016-2021 FRC Team 3512. All Rights Reserved.
+
+#include <frc2/Timer.h>
 
 #include "Robot.hpp"
-
-enum class State { Init, MoveForward, Idle };
 
 /* Moves forwards a set distance and then stops with gear penetrated by
  * airship's divot
  */
 void Robot::AutoCenterGear() {
-    static State state = State::Init;
+    robotDrive.StartClosedLoop();
 
-    switch (state) {
-        case State::Init:
-            robotDrive.StopClosedLoop();
+    shifter.Set(false);  // false = high gear
+    gearPunch.Set(frc::DoubleSolenoid::kForward);
 
-            shifter.Set(false);  // false = high gear
-            gearPunch.Set(frc::DoubleSolenoid::kForward);
+    // Move forward
+    robotDrive.ResetEncoders();
+    robotDrive.ResetGyro();
+    robotDrive.SetPositionReference(110.0 - k_robotLength);
+    robotDrive.SetAngleReference(0);
 
-            robotDrive.ResetEncoders();
-            robotDrive.ResetGyro();
-            robotDrive.SetPositionReference(110.0 - k_robotLength);
-            robotDrive.SetAngleReference(0);
+    frc2::Timer timer;
+    timer.Start();
 
-            robotDrive.StartClosedLoop();
-
-            state = State::MoveForward;
-            break;
-        case State::MoveForward:
-            if (robotDrive.PosAtReference() || autoTimer.HasPeriodPassed(8_s)) {
-                robotDrive.StopClosedLoop();
-                gearPunch.Set(frc::DoubleSolenoid::kReverse);
-
-                state = State::Idle;
-            }
-            break;
-        case State::Idle:
-            break;
+    while (!robotDrive.PosAtReference() && !timer.HasPeriodPassed(8_s)) {
+        m_autonChooser.YieldToMain();
+        if (!IsAutonomousEnabled()) {
+            return;
+        }
     }
+
+    robotDrive.StopClosedLoop();
+    gearPunch.Set(frc::DoubleSolenoid::kReverse);
 }

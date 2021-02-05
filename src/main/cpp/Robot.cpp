@@ -5,18 +5,10 @@
 Robot::Robot() {
     robotGrabber.EnableHardLimits(1, 0);
 
-    // Auton: does nothing
-    dsDisplay.AddAutoMethod(
-        "No-op", [] {}, [] {});
-
-    dsDisplay.AddAutoMethod(
-        "LeftGear", [] {}, std::bind(&Robot::AutoLeftGear, this));
-    dsDisplay.AddAutoMethod(
-        "CenterGear", [] {}, std::bind(&Robot::AutoCenterGear, this));
-    dsDisplay.AddAutoMethod(
-        "RightGear", [] {}, std::bind(&Robot::AutoRightGear, this));
-    dsDisplay.AddAutoMethod(
-        "BaseLine", [] {}, std::bind(&Robot::AutoBaseLine, this));
+    m_autonChooser.AddAutonomous("LeftGear", [=] { AutoLeftGear(); });
+    m_autonChooser.AddAutonomous("CenterGear", [=] { AutoCenterGear(); });
+    m_autonChooser.AddAutonomous("RightGear", [=] { AutoRightGear(); });
+    m_autonChooser.AddAutonomous("BaseLine", [=] { AutoBaseLine(); });
 
     server.SetSource(camera1);
 
@@ -27,12 +19,6 @@ Robot::Robot() {
 }
 
 void Robot::DisabledInit() { robotDrive.StopClosedLoop(); }
-
-void Robot::AutonomousInit() {
-    autoTimer.Reset();
-    autoTimer.Start();
-    dsDisplay.ExecAutonomousInit();
-}
 
 void Robot::TeleopInit() {
     robotDrive.StopClosedLoop();
@@ -54,7 +40,7 @@ void Robot::DisabledPeriodic() {
     }
 }
 
-void Robot::AutonomousPeriodic() { dsDisplay.ExecAutonomousPeriodic(); }
+void Robot::AutonomousPeriodic() { m_autonChooser.AwaitRunAutonomous(); }
 
 void Robot::TeleopPeriodic() {
     // Drive Stick Controls
