@@ -72,7 +72,6 @@ private:
     frc::SumNode m_sum;
     frc::PIDNode m_pid;
     frc::Output m_output;
-    double m_tolerance = 0.05;
     bool m_enabled = false;
 };
 
