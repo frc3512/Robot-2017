@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2020 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2016-2021 FRC Team 3512. All Rights Reserved.
 
 #pragma once
 
@@ -14,9 +14,6 @@
 
 // DS port
 constexpr int k_dsPort = 5800;
-
-// LiveGrapher host port
-constexpr int k_liveGrapherPort = 3513;
 
 // MJPEG server port
 constexpr int k_mjpegServerPort = 1180;

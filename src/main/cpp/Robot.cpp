@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2020 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2017-2021 FRC Team 3512. All Rights Reserved.
 
 #include "Robot.hpp"
 
@@ -24,8 +24,6 @@ Robot::Robot() {
     camera1.SetFPS(15);
     // camera2.SetResolution(320, 240);
     // camera2.SetFPS(15);
-
-    // liveGrapher.SetSendInterval(50ms);
 }
 
 void Robot::DisabledInit() { robotDrive.StopClosedLoop(); }
@@ -117,27 +115,7 @@ void Robot::TeleopPeriodic() {
     }*/
 }
 
-void Robot::DS_PrintOut() {
-    // if (liveGrapher.HasIntervalPassed()) {
-    // liveGrapher.GraphData(robotDrive.GetAngle(), "Gyro Angle");
-    // liveGrapher.GraphData(robotDrive.GetRate(), "Gyro Rate");
-    // liveGrapher.GraphData((300 * driveStick2.GetX()), "Gyro Rate Ref");
-    // liveGrapher.GraphData(-robotDrive.GetRightRate(), "Encoder Right
-    // Rate");
-    // liveGrapher.GraphData(robotDrive.GetLeftRate(), "Encoder Left Rate");
-
-    // liveGrapher.GraphData(robotDrive.GetFilteredRate(), "Filtered Gyro");
-
-    // liveGrapher.GraphData(robotDrive.GetPosition(), "Position");
-    // liveGrapher.GraphData(93.3 * -driveStick1.GetY(), "Position Ref");
-    // liveGrapher.GraphData(robotDrive.GetAngle(), "Angle");
-    // liveGrapher.GraphData(/*30 * driveStick2.GetX()*/ 0, "Angle Ref");
-
-    // liveGrapher.ResetInterval();
-    //}
-
-    robotDrive.Debug();
-}
+void Robot::DS_PrintOut() { robotDrive.Debug(); }
 
 #ifndef RUNNING_FRC_TESTS
 int main() { return frc::StartRobot<Robot>(); }

@@ -1,4 +1,4 @@
-// Copyright (c) 2017-2020 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2017-2021 FRC Team 3512. All Rights Reserved.
 
 #pragma once
 
@@ -14,7 +14,6 @@
 
 #include "Constants.hpp"
 #include "dsdisplay/DSDisplay.hpp"
-#include "livegrapher/LiveGrapher.hpp"
 #include "subsystems/CANTalonGroup.hpp"
 #include "subsystems/Drivetrain.hpp"
 
@@ -63,9 +62,6 @@ private:
 
     // Used for sending data to the Driver Station
     DSDisplay dsDisplay{k_dsPort};
-
-    // LiveGrapher host
-    // LiveGrapher liveGrapher{k_liveGrapherPort};
 
     // Camera
     cs::UsbCamera camera1{"Camera 1", 0};
