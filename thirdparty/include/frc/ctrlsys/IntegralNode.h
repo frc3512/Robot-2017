@@ -5,7 +5,7 @@
 #include <limits>
 #include <mutex>
 
-#include <units/units.h>
+#include <units/time.h>
 
 #include "frc/ctrlsys/INode.h"
 #include "frc/ctrlsys/NodeBase.h"

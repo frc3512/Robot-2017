@@ -1,8 +1,8 @@
-// Copyright (c) 2017-2020 FRC Team 3512. All Rights Reserved.
+// Copyright (c) 2017-2021 FRC Team 3512. All Rights Reserved.
 
 #pragma once
 
-#include <units/units.h>
+#include <units/time.h>
 
 #include <frc/PIDOutput.h>
 #include <frc/ctrlsys/FuncNode.h>

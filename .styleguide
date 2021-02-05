@@ -1,7 +1,11 @@
-cppHeaderFileInclude {
+cHeaderFileInclude {
   \.h$
+}
+
+cppHeaderFileInclude {
   \.hpp$
   \.inl$
+  \.inc$
 }
 
 cppSrcFileInclude {
