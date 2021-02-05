@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <mutex>
+#include <wpi/mutex.h>
 
 #include <units/time.h>
 
@@ -32,7 +32,7 @@ private:
 
     double m_prevInput = 0.0;
 
-    mutable std::mutex m_mutex;
+    mutable wpi::mutex m_mutex;
 };
 
 }  // namespace frc

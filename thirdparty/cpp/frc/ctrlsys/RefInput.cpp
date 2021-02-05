@@ -16,7 +16,7 @@ void RefInput::SetCallback(Output& output) {
  * Returns value of reference input.
  */
 double RefInput::GetOutput() {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock(m_mutex);
     return m_reference;
 }
 
@@ -24,7 +24,7 @@ double RefInput::GetOutput() {
  * Returns value of reference input.
  */
 double RefInput::GetOutput() const {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock(m_mutex);
     return m_reference;
 }
 
@@ -33,7 +33,7 @@ double RefInput::GetOutput() const {
  */
 void RefInput::Set(double reference) {
     {
-        std::lock_guard<std::mutex> lock(m_mutex);
+        std::scoped_lock lock(m_mutex);
         m_reference = reference;
     }
 

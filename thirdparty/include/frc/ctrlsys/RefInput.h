@@ -4,7 +4,7 @@
 
 #include <functional>
 #include <memory>
-#include <mutex>
+#include <wpi/mutex.h>
 
 #include "INode.h"
 
@@ -31,7 +31,7 @@ private:
     double m_reference;
     std::function<void()> m_callback = [] {};
 
-    mutable std::mutex m_mutex;
+    mutable wpi::mutex m_mutex;
 };
 
 }  // namespace frc

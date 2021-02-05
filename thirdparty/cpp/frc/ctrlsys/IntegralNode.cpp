@@ -23,7 +23,7 @@ IntegralNode::IntegralNode(double K, INode& input, units::second_t period)
 double IntegralNode::GetOutput() {
     double input = NodeBase::GetOutput();
 
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock(m_mutex);
 
     if (std::abs(input) > m_maxInputMagnitude) {
         m_total = 0.0;
@@ -42,7 +42,7 @@ double IntegralNode::GetOutput() {
  * @param K a gain to apply
  */
 void IntegralNode::SetGain(double K) {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock(m_mutex);
     m_gain = K;
 }
 
@@ -50,7 +50,7 @@ void IntegralNode::SetGain(double K) {
  * Return gain applied to node output.
  */
 double IntegralNode::GetGain() const {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock(m_mutex);
     return m_gain;
 }
 
@@ -62,7 +62,7 @@ double IntegralNode::GetGain() const {
  *                          occur
  */
 void IntegralNode::SetIZone(double maxInputMagnitude) {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock(m_mutex);
     m_maxInputMagnitude = maxInputMagnitude;
 }
 
@@ -70,6 +70,6 @@ void IntegralNode::SetIZone(double maxInputMagnitude) {
  * Clears integral state.
  */
 void IntegralNode::Reset() {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock(m_mutex);
     m_total = 0.0;
 }

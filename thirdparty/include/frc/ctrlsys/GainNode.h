@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <mutex>
+#include <wpi/mutex.h>
 
 #include "frc/ctrlsys/INode.h"
 #include "frc/ctrlsys/NodeBase.h"
@@ -22,7 +22,7 @@ public:
 private:
     double m_gain;
 
-    mutable std::mutex m_mutex;
+    mutable wpi::mutex m_mutex;
 };
 
 }  // namespace frc

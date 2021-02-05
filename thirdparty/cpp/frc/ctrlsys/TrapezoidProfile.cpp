@@ -18,7 +18,7 @@ TrapezoidProfile::TrapezoidProfile(double maxV, double timeToMaxV) {
  * @param currentSource the current position
  */
 void TrapezoidProfile::SetGoal(double goal, double currentSource) {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock(m_mutex);
 
     // Subtract current source for profile calculations
     m_goal = goal - currentSource;
@@ -87,7 +87,7 @@ void TrapezoidProfile::SetGoal(double goal, double currentSource) {
  * Sets maximum velocity of profile.
  */
 void TrapezoidProfile::SetMaxVelocity(double velocity) {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock(m_mutex);
     m_velocity = velocity;
 }
 
@@ -95,7 +95,7 @@ void TrapezoidProfile::SetMaxVelocity(double velocity) {
  * Returns maximum velocity of profile.
  */
 double TrapezoidProfile::GetMaxVelocity() const {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock(m_mutex);
     return m_velocity;
 }
 
@@ -103,7 +103,7 @@ double TrapezoidProfile::GetMaxVelocity() const {
  * Sets time to max velocity of profile from rest.
  */
 void TrapezoidProfile::SetTimeToMaxV(double timeToMaxV) {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock(m_mutex);
     m_acceleration = m_velocity / timeToMaxV;
 }
 

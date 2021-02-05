@@ -13,7 +13,7 @@ using namespace frc;
 GainNode::GainNode(double K, INode& input) : NodeBase(input) { m_gain = K; }
 
 double GainNode::GetOutput() {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock(m_mutex);
     return m_gain * NodeBase::GetOutput();
 }
 
@@ -23,7 +23,7 @@ double GainNode::GetOutput() {
  * @param K a gain to apply
  */
 void GainNode::SetGain(double K) {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock(m_mutex);
     m_gain = K;
 }
 
@@ -31,6 +31,6 @@ void GainNode::SetGain(double K) {
  * Return gain applied to node output.
  */
 double GainNode::GetGain() const {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock(m_mutex);
     return m_gain;
 }

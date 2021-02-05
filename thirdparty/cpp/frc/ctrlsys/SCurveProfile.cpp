@@ -26,7 +26,7 @@ SCurveProfile::SCurveProfile(double maxV, double maxA, double timeToMaxA) {
  * @param currentSource the current position
  */
 void SCurveProfile::SetGoal(double goal, double currentSource) {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock(m_mutex);
 
     // Subtract current source for profile calculations
     m_goal = goal - currentSource;
@@ -79,7 +79,7 @@ void SCurveProfile::SetGoal(double goal, double currentSource) {
  * @param velocity maximum velocity
  */
 void SCurveProfile::SetMaxVelocity(double velocity) {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock(m_mutex);
     m_maxVelocity = velocity;
 }
 
@@ -87,7 +87,7 @@ void SCurveProfile::SetMaxVelocity(double velocity) {
  * Returns maximum velocity of profile.
  */
 double SCurveProfile::GetMaxVelocity() const {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock(m_mutex);
     return m_maxVelocity;
 }
 
@@ -97,7 +97,7 @@ double SCurveProfile::GetMaxVelocity() const {
  * @param acceleration maximum acceleration
  */
 void SCurveProfile::SetMaxAcceleration(double acceleration) {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock(m_mutex);
     m_acceleration = acceleration;
     m_jerk = m_acceleration / m_timeToMaxA;
 }
@@ -108,7 +108,7 @@ void SCurveProfile::SetMaxAcceleration(double acceleration) {
  * @param timeToMaxA time to maximum acceleration
  */
 void SCurveProfile::SetTimeToMaxA(double timeToMaxA) {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock(m_mutex);
     m_timeToMaxA = timeToMaxA;
     m_jerk = m_acceleration / m_timeToMaxA;
 }

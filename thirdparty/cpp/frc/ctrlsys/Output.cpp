@@ -42,7 +42,7 @@ void Output::Disable() {
  * @param maxU maximum control action
  */
 void Output::SetRange(double minU, double maxU) {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock(m_mutex);
 
     m_minU = minU;
     m_maxU = maxU;
@@ -51,7 +51,7 @@ void Output::SetRange(double minU, double maxU) {
 void Output::OutputFunc() {
     double controlAction = m_input.GetOutput();
 
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock(m_mutex);
 
     if (controlAction > m_maxU) {
         m_output.PIDWrite(m_maxU);

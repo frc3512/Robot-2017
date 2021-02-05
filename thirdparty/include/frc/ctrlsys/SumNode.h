@@ -4,7 +4,7 @@
 
 #include <limits>
 #include <memory>
-#include <mutex>
+#include <wpi/mutex.h>
 #include <utility>
 #include <vector>
 
@@ -47,7 +47,7 @@ private:
     double m_tolerance = std::numeric_limits<double>::infinity();
     double m_deltaTolerance = std::numeric_limits<double>::infinity();
 
-    mutable std::mutex m_mutex;
+    mutable wpi::mutex m_mutex;
 };
 
 }  // namespace frc

@@ -3,9 +3,9 @@
 #pragma once
 
 #include <limits>
-#include <mutex>
 
 #include <units/time.h>
+#include <wpi/mutex.h>
 
 #include "frc/ctrlsys/INode.h"
 #include "frc/ctrlsys/NodeBase.h"
@@ -36,7 +36,7 @@ private:
     double m_total = 0.0;
     double m_maxInputMagnitude = std::numeric_limits<double>::infinity();
 
-    mutable std::mutex m_mutex;
+    mutable wpi::mutex m_mutex;
 };
 
 }  // namespace frc

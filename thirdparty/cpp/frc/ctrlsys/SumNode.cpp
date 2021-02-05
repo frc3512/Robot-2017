@@ -27,7 +27,7 @@ double SumNode::GetOutput() {
         }
     }
 
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock(m_mutex);
 
     m_lastResult = m_currentResult;
     m_currentResult = sum;
@@ -56,7 +56,7 @@ double SumNode::GetOutput() {
  * @param continuous true turns on continuous; false turns off continuous
  */
 void SumNode::SetContinuous(bool continuous) {
-    std::lock_guard<std::mutex> sync(m_mutex);
+    std::scoped_lock sync(m_mutex);
     m_continuous = continuous;
 }
 
@@ -67,7 +67,7 @@ void SumNode::SetContinuous(bool continuous) {
  * @param maximumInput the maximum value expected from the input
  */
 void SumNode::SetInputRange(double minimumInput, double maximumInput) {
-    std::lock_guard<std::mutex> sync(m_mutex);
+    std::scoped_lock sync(m_mutex);
     m_inputRange = maximumInput - minimumInput;
 }
 
@@ -79,7 +79,7 @@ void SumNode::SetInputRange(double minimumInput, double maximumInput) {
  * @param deltaTolerance change in absolute error which is tolerable
  */
 void SumNode::SetTolerance(double tolerance, double deltaTolerance) {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock(m_mutex);
 
     m_tolerance = tolerance;
     m_deltaTolerance = deltaTolerance;
@@ -90,7 +90,7 @@ void SumNode::SetTolerance(double tolerance, double deltaTolerance) {
  * by SetTolerance().
  */
 bool SumNode::InTolerance() const {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock(m_mutex);
     return std::abs(m_currentResult) < m_tolerance &&
            std::abs(m_currentResult - m_lastResult) < m_deltaTolerance;
 }

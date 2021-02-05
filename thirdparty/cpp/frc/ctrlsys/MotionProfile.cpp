@@ -27,7 +27,7 @@ INode& MotionProfile::GetAccelerationNode() { return m_accelerationNode; }
  * Returns profile's goal state.
  */
 double MotionProfile::GetGoal() const {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock(m_mutex);
     return m_goal;
 }
 
@@ -35,7 +35,7 @@ double MotionProfile::GetGoal() const {
  * Returns true if motion profile has reached goal state.
  */
 bool MotionProfile::AtGoal() const {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock(m_mutex);
     return m_timer.Get() >= m_timeTotal ||
            std::abs(m_goal - std::get<0>(m_ref)) < 0.001;
 }
