@@ -16,9 +16,13 @@ Robot::Robot() {
     // camera2.SetFPS(15);
 }
 
-void Robot::DisabledInit() { robotDrive.StopClosedLoop(); }
+void Robot::DisabledInit() {
+    m_autonChooser.EndAutonomous();
+    robotDrive.StopClosedLoop();
+}
 
 void Robot::TeleopInit() {
+    m_autonChooser.EndAutonomous();
     robotDrive.StopClosedLoop();
 
     robotDrive.ResetEncoders();
@@ -26,6 +30,8 @@ void Robot::TeleopInit() {
 }
 
 void Robot::TestInit() {
+    m_autonChooser.EndAutonomous();
+
     arm.Set(frc::DoubleSolenoid::kReverse);        // Raise arm
     gearPunch.Set(frc::DoubleSolenoid::kForward);  // Extends gear punch
 }
