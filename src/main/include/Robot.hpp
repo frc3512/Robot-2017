@@ -21,6 +21,7 @@ public:
     Robot();
 
     void DisabledInit() override;
+    void AutonomousInit() override;
     void TeleopInit() override;
     void TestInit() override;
 

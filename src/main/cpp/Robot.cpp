@@ -21,6 +21,8 @@ void Robot::DisabledInit() {
     robotDrive.StopClosedLoop();
 }
 
+void Robot::AutonomousInit() { m_autonChooser.AwaitStartAutonomous(); }
+
 void Robot::TeleopInit() {
     m_autonChooser.EndAutonomous();
     robotDrive.StopClosedLoop();
